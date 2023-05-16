@@ -1,7 +1,7 @@
 # Monero_Subscriptions_Wallet
 ![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-orange.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-3776ab.svg)
-![Uses](https://img.shields.io/badge/Uses%20Monero%20RPC-yellow.svg)
+![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-yellow.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Supported OS](https://img.shields.io/badge/Version-1.2.0-orange.svg)
 
