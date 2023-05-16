@@ -3,7 +3,7 @@
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-3776ab.svg)
 ![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-yellow.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-orange.svg)
+![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-purple.svg)
 
 A Monero wallet that automatically pays subscriptions.
 
