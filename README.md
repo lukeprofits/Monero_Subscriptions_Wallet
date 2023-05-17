@@ -46,3 +46,24 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 
 # Documentation For Merchants
 - How To Create `monero-subscription` codes: https://github.com/lukeprofits/Monero_Subscriptions_Standard
+
+## Features
+* Lets you type in custom text and generates a Monero wallet with the custom text at the end
+* Convenient .bat launcher
+* Cool Monero color scheme & ASCII Art
+
+
+## Requirements
+* [Python 3.8](https://www.python.org/downloads/) or above
+* [Monero CLI Wallet](https://www.getmonero.org/downloads/#cli)
+* [monero_usd_price](https://github.com/lukeprofits/Monero-USD-Price)
+* psutil
+* qrcode
+* requests
+* pyperclip
+* PySimpleGUI
+* lxml
+
+
+## License
+[MIT](https://github.com/Equim-chan/vanity-monero/blob/master/LICENSE)
