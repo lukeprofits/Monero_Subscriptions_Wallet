@@ -2,8 +2,9 @@
 ![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-blueviolet.svg)
 ![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)
-![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-orange.svg)
+
 
 A Monero wallet that automatically pays subscriptions. 
 
