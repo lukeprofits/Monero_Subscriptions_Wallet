@@ -8,7 +8,7 @@
 
 A Monero wallet that automatically pays subscriptions. 
 
-(This wallet is to be a designed to be a starting point that more experienced developers can build upon and improve.)
+(This wallet is designed to be a starting point that more experienced developers can build upon and improve.)
 
 
 # Releasing May 19th
