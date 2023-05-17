@@ -26,7 +26,7 @@ A Monero wallet that automatically pays subscriptions.
 
 
 # Donate
-If you use this, send me some XMR. It took weeks to develop, and I did not ask for or recieve any [CCS funding](https://ccs.getmonero.org/) for this project.
+If you use this, send me some XMR. It took weeks to develop, and I did not ask for, or recieve any [CCS funding](https://ccs.getmonero.org/) for this project.
 
 XMR: `4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S`
 
