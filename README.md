@@ -50,6 +50,7 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 * Send donations to your favorite content creators (or developers) on a set schedule
 * Supports Subscriptions Billing: Daily, Weekly, Monthly, Yearly, or anything in between!
 
+
 ## Works On
 - Windows
 - Mac - Testing Needed
