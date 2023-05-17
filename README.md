@@ -16,7 +16,7 @@ A Monero wallet that automatically pays subscriptions.
 
 # How To Use:
 
-{Video Coming Soon}
+(Video Coming Soon)
 
 * Make sure you have [Python 3.8](https://www.python.org/downloads/) or newer installed
 * [Download the Monero Subscripton Wallet files](https://github.com/lukeprofits/Monero_Subscriptions_Wallet/archive/refs/heads/main.zip) extract all the files from the .zip you downloaded and put them in a folder
