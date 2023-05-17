@@ -5,11 +5,11 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-orange.svg)
 
-A Monero wallet that automatically pays subscriptions. 
-
 <p align="center">
   <img src="Example.jpg" alt="Description of the photo">
 </p>
+
+A Monero wallet that automatically pays subscriptions.
 
 (This wallet is designed to be a starting point that more experienced developers can build upon and improve.)
 
