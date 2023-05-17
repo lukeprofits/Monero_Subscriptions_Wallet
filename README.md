@@ -12,13 +12,6 @@ A Monero wallet that automatically pays subscriptions.
 </p>
 
 
-# Features
-* Automatically send recurring payments without a middleman
-* Add subscriptions from merchants, or create them manaually
-* Send donations to your favorite content creators (or developers) on a set schedule
-* Supports Subscriptions Billing: Daily, Weekly, Monthly, Yearly, or anything in between!
-
-
 # How To Use:
 
 (Video Coming Soon)
@@ -30,6 +23,11 @@ A Monero wallet that automatically pays subscriptions.
 * On Windows, double click the "Windows_Launcher" file
 * On Mac/Linux, run the "Mac&Linux_Launcher" file 
 * Or if you are comfortable with the terminal, open your console and enter the command: `python Monero_Subscriptions_Wallet.py`
+
+
+# Documentation For Merchants
+* [How To Create `monero-subscription` codes](https://github.com/lukeprofits/Monero_Subscriptions_Standard)
+
 
 
 # Donate
@@ -47,13 +45,16 @@ $10/mo XMR donation: `monero-subscription:H4sIAIMbZGQC/12OXU+DMBSG/wrh2pkCAzPvYI
 $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLmkSJBBItIUWNpHjDI2FH5HtFGzEvxN3yaxm7j3SmR/EJuu0bAXtQKDbBB2oEOCSCs4g9AgmqbSijmuFrhJkYS6Nbb8uUMRXhcuOxJxf/bjXHyc5wdParp+dCf0WSDlBY+xn8c6XN6V+64bgrQ5BPzZlHg5q/9DfbfLiuy66uiYsNNtsmLf7zsrVsIFjuotSNhkDivmoe9lVMaJSTyr6U3KN53ukXoJyLe8jhP/N5XNHjWt76iASKU6zBSaLZR67jgvB1allngmYGW9nJsO/f8u/kXcdAQAA`
 
 
+## Features
+* Automatically send recurring payments without a middleman
+* Add subscriptions from merchants, or create them manaually
+* Send donations to your favorite content creators (or developers) on a set schedule
+* Supports Subscriptions Billing: Daily, Weekly, Monthly, Yearly, or anything in between!
+
 ## Works On
 - Windows
 - Mac - Testing Needed
 - Linux - Testing Needed
-
-# Documentation For Merchants
-- How To Create `monero-subscription` codes: https://github.com/lukeprofits/Monero_Subscriptions_Standard
 
 
 ## Requirements
