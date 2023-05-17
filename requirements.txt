@@ -1,0 +1,7 @@
+psutil
+qrcode
+requests
+pyperclip
+PySimpleGUI
+monero_usd_price
+lxml
