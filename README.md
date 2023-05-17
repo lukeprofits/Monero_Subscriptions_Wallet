@@ -12,7 +12,7 @@ A Monero wallet that automatically pays subscriptions.
 </p>
 
 
-## Features
+# Features
 * Automatically send recurring payments without a middleman
 * Add subscriptions from merchants, or create them manaually
 * Send donations to your favorite content creators (or developers) on a set schedule
