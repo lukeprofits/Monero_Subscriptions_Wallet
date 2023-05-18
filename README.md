@@ -40,12 +40,13 @@ $10/mo XMR donation: `monero-subscription:H4sIAIMbZGQC/12OXU+DMBSG/wrh2pkCAzPvYI
 $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLmkSJBBItIUWNpHjDI2FH5HtFGzEvxN3yaxm7j3SmR/EJuu0bAXtQKDbBB2oEOCSCs4g9AgmqbSijmuFrhJkYS6Nbb8uUMRXhcuOxJxf/bjXHyc5wdParp+dCf0WSDlBY+xn8c6XN6V+64bgrQ5BPzZlHg5q/9DfbfLiuy66uiYsNNtsmLf7zsrVsIFjuotSNhkDivmoe9lVMaJSTyr6U3KN53ukXoJyLe8jhP/N5XNHjWt76iASKU6zBSaLZR67jgvB1allngmYGW9nJsO/f8u/kXcdAQAA`
 
 
-# Documentation For Merchants
-* [How To Create `monero-subscription` codes](https://github.com/lukeprofits/Monero_Subscriptions_Standard)
-
 # Tools For Merchants
 * [Monero Subscription Code Creator](https://github.com/lukeprofits/Monero_Subscription_Code_Creator)
 * More useful monero-subscription integration tools coming soon...
+
+
+# Documentation For Merchants
+* [How To Create `monero-subscription` codes](https://github.com/lukeprofits/Monero_Subscriptions_Standard)
 
 
 ## Features
