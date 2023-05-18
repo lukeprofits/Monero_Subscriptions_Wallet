@@ -1,4 +1,4 @@
-# Monero Subscriptions Wallet: Releases May 19th
+# Monero Subscriptions Wallet: Releases Tomorrow
 ![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-blueviolet.svg)
 ![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)
