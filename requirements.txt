@@ -1,7 +1,7 @@
-psutil
-qrcode
-requests
-pyperclip
-PySimpleGUI
-monero_usd_price
-lxml
+lxml==4.9.2
+psutil==5.9.5
+qrcode==7.3.1
+requests==2.28.1
+pyperclip==1.8.2
+PySimpleGUI==4.60.4
+monero_usd_price==1.2.0
