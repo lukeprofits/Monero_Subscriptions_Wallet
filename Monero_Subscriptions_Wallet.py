@@ -1,7 +1,4 @@
 import os
-os.system('pip install --upgrade pip')
-os.system('pip install -r requirements.txt')
-
 import time
 import json
 import gzip
