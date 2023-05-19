@@ -41,7 +41,7 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 
 
 # Tools For Merchants
-* RECOMMENDED: [Monero Subscription Code Creator Website](https://monerosub.tux.pizza/)
+* Recommended: [Monero Subscription Code Creator Website](https://monerosub.tux.pizza/)
 * [Monero Subscription Code Creator Application](https://github.com/lukeprofits/Monero_Subscription_Code_Creator)
 * More "useful" monero-subscription integration tools coming soon...
 
