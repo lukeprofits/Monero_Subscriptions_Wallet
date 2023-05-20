@@ -913,7 +913,7 @@ if os.name in 'posix':
     monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on LINUX
 elif os.name in 'nt':
     monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
-wallet_name = "subscriptions_wallet1"
+wallet_name = "subscriptions_wallet"
 wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
 rpc_bind_port = '18082'
