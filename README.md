@@ -21,7 +21,7 @@ A Monero wallet that automatically pays subscriptions.
 * [Download the Monero CLI Wallet](https://www.getmonero.org/downloads/#cli), extract all the files from the .zip you downloaded and put them in the same folder
 * Optional: Download and install [the font Nunito Sans](https://fonts.google.com/specimen/Nunito+Sans)
 * On Windows, double click the "Windows_Launcher" file
-* On Mac/Linux, run the "Mac&Linux_Launcher" file 
+* On Mac/Linux, run the "Mac_Linux_Launcher" file 
 * Or if you are comfortable with the terminal, open your console and enter the command: `python Monero_Subscriptions_Wallet.py`
 
 
