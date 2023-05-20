@@ -913,7 +913,7 @@ elif os.name in 'nt':
 wallet_name = "subscriptions_wallet1"
 wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
-rpc_bind_port = '18085'
+rpc_bind_port = '18082'
 local_rpc_url = f"http://127.0.0.1:{rpc_bind_port}/json_rpc"
 rpc_username = "monero"
 rpc_password = "monero"
