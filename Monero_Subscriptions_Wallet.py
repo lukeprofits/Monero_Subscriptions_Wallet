@@ -420,27 +420,33 @@ def decode_monero_subscription_code(monero_subscription_code):
 # RPC FUNCTIONS ########################################################################################################
 def kill_monero_wallet_rpc():
     global rpc_is_ready
-
-    process = subprocess.Popen("tasklist", stdout=subprocess.PIPE)
+    if os.name in 'posix':
+        process = subprocess.Popen("ps", stdout=subprocess.PIPE)
+        rpc_path = 'monero-wallet-r'
+    elif os.name in 'nt':
+        process = subprocess.Popen("tasklist", stdout=subprocess.PIPE)
+        rpc_path = 'monero-wallet-rpc.exe'
     out, err = process.communicate()
 
     for line in out.splitlines():
-        if b"monero-wallet-rpc.exe" in line:
-            pid = int(line.split()[1].decode("utf-8"))
+        if rpc_path.encode() in line:
+            if os.name in 'posix':
+                pid = int(line.split()[0].decode("utf-8"))
+            elif os.name in 'nt':
+                pid = int(line.split()[1].decode("utf-8"))
             os.kill(pid, 9)
             print(f"Successfully killed monero-wallet-rpc.exe with PID {pid}")
             rpc_is_ready = False
             break
 
         else:
-            print("monero-wallet-rpc.exe process not found")
+            print("monero-wallet-rpc process not found")
 
 
 def start_local_rpc_server_thread():
-    global wallet_name, host, port, rpc_is_ready, start_block_height
-
-    cmd = f'monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port 18082 --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
-
+    global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
+    cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
+    print(cmd)
     if start_block_height:
         command = f'{monero_wallet_cli_path} --wallet-file {os.path.join(wallet_file_path, wallet_name)} --password "" --restore-height {start_block_height} --command exit'
         proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -900,12 +906,15 @@ sg.theme_border_width(0)
 sg.theme_slider_border_width(0)
 
 # VARIABLES ############################################################################################################
-monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable
-wallet_name = "subscriptions_wallet"
-wallet_file_path = ""  # Update this path to the location where you want to save the wallet file
+if os.name in 'posix':
+    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on LINUX
+elif os.name in 'nt':
+    monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
+wallet_name = "subscriptions_wallet1"
+wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
-
-local_rpc_url = f"http://127.0.0.1:18082/json_rpc"
+rpc_bind_port = '18085'
+local_rpc_url = f"http://127.0.0.1:{rpc_bind_port}/json_rpc"
 rpc_username = "monero"
 rpc_password = "monero"
 
