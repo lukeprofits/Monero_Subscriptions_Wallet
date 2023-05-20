@@ -419,7 +419,9 @@ def decode_monero_subscription_code(monero_subscription_code):
 
 # RPC FUNCTIONS ########################################################################################################
 def kill_monero_wallet_rpc():
+    
     global rpc_is_ready
+    
     if os.name in 'posix':
         process = subprocess.Popen("ps", stdout=subprocess.PIPE)
         rpc_path = 'monero-wallet-r'
@@ -435,7 +437,7 @@ def kill_monero_wallet_rpc():
             elif os.name in 'nt':
                 pid = int(line.split()[1].decode("utf-8"))
             os.kill(pid, 9)
-            print(f"Successfully killed monero-wallet-rpc.exe with PID {pid}")
+            print(f"Successfully killed monero-wallet-rpc with PID {pid}")
             rpc_is_ready = False
             break
 
@@ -445,8 +447,9 @@ def kill_monero_wallet_rpc():
 
 def start_local_rpc_server_thread():
     global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
+    
     cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
-    print(cmd)
+    
     if start_block_height:
         command = f'{monero_wallet_cli_path} --wallet-file {os.path.join(wallet_file_path, wallet_name)} --password "" --restore-height {start_block_height} --command exit'
         proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
