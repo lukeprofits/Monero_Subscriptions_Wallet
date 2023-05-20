@@ -1,4 +1,4 @@
 #!/bin/bash
-pip install --upgrade pip
-pip install -r requirements.txt
-python Monero_Subscriptions_Wallet.py
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+python3 Monero_Subscriptions_Wallet.py
