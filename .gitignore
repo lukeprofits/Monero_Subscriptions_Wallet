@@ -1,0 +1,12 @@
+ANONYMITY_NETWORKS.md
+monero-blockchain-*
+monero-gen-*
+monero-wallet-*
+monerod
+node_to_use.txt
+subscriptions_wallet
+subscriptions_wallet.keys
+subscriptions_wallet_seed.txt
+Subscriptions.json
+wallet_qr_code.png
+.DS_Store

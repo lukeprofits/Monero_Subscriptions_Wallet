@@ -14,6 +14,7 @@ from lxml import html
 import monero_usd_price
 import PySimpleGUI as sg
 from datetime import datetime
+import platform
 
 
 # OVERALL FUNCTIONS ####################################################################################################
@@ -422,20 +423,20 @@ def kill_monero_wallet_rpc():
     
     global rpc_is_ready
     
-    if os.name in 'posix':
-        process = subprocess.Popen("ps", stdout=subprocess.PIPE)
-        rpc_path = 'monero-wallet-r'
-    elif os.name in 'nt':
+    if platform.system() == 'Windows':
         process = subprocess.Popen("tasklist", stdout=subprocess.PIPE)
         rpc_path = 'monero-wallet-rpc.exe'
+    else:
+        process = subprocess.Popen("ps", stdout=subprocess.PIPE)
+        rpc_path = 'monero-wallet-r'
     out, err = process.communicate()
 
     for line in out.splitlines():
         if rpc_path.encode() in line:
-            if os.name in 'posix':
-                pid = int(line.split()[0].decode("utf-8"))
-            elif os.name in 'nt':
+            if platform.system() == 'Windows':
                 pid = int(line.split()[1].decode("utf-8"))
+            else:
+                pid = int(line.split()[0].decode("utf-8"))
             os.kill(pid, 9)
             print(f"Successfully killed monero-wallet-rpc with PID {pid}")
             rpc_is_ready = False
@@ -909,10 +910,10 @@ sg.theme_border_width(0)
 sg.theme_slider_border_width(0)
 
 # VARIABLES ############################################################################################################
-if os.name in 'posix':
-    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on LINUX
-elif os.name in 'nt':
+if platform.system() == 'Windows':
     monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
+else:
+    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on LINUX
 wallet_name = "subscriptions_wallet"
 wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
@@ -1103,7 +1104,10 @@ window.close()
 threading.Thread(target=update_gui_balance).start()
 
 # Create the window
-window = sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon)
+if platform.system() == 'Darwin':
+    window = sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon)
+else:
+    window = sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon)
 
 # MAIN EVENT LOOP ######################################################################################################
 while True:
