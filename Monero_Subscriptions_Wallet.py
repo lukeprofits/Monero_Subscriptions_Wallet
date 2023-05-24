@@ -422,7 +422,7 @@ def decode_monero_subscription_code(monero_subscription_code):
 def kill_monero_wallet_rpc():
     
     global rpc_is_ready
-    
+    # Check which platform we are on and get the process list accordingly
     if platform.system() == 'Windows':
         process = subprocess.Popen("tasklist", stdout=subprocess.PIPE)
         rpc_path = 'monero-wallet-rpc.exe'
@@ -433,7 +433,7 @@ def kill_monero_wallet_rpc():
 
     for line in out.splitlines():
         if rpc_path.encode() in line:
-            if platform.system() == 'Windows':
+            if platform.system() == 'Windows': # Check if we are on Windows and get the PID accordingly
                 pid = int(line.split()[1].decode("utf-8"))
             else:
                 pid = int(line.split()[0].decode("utf-8"))
@@ -757,7 +757,7 @@ def add_subscription_from_merchant():
                     subscription_json = json.loads(subscription_info)
                     add_subscription(subscription_json)
                     window.close()
-                    window = create_window(subscriptions)
+                    window = create_window(subscriptions) # recreate the window to refresh the GUI
 
                 except:
                     print('JSON for subscription is not valid. Not adding.')
@@ -906,7 +906,7 @@ sg.theme_slider_border_width(0)
 if platform.system() == 'Windows':
     monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
 else:
-    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on LINUX
+    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
 wallet_name = "subscriptions_wallet"
 wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
@@ -1153,7 +1153,7 @@ while True:
             if index is not None:
                 subscriptions = subscriptions[:index] + subscriptions[index + 1:]
                 remove_subscription(subscriptions_list=subscriptions)
-                window.close()
-                window = create_window(subscriptions)
+                window.close() 
+                window = create_window(subscriptions) # recreate the window to refresh the GUI
                 
 window.close()
