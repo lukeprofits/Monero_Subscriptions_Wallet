@@ -67,12 +67,12 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 * [Python 3.8](https://www.python.org/downloads/) or above
 * [Monero CLI Wallet](https://www.getmonero.org/downloads/#cli)
 * [monero_usd_price](https://github.com/lukeprofits/Monero-USD-Price)
-* psutil
-* qrcode
-* requests
-* pyperclip
-* PySimpleGUI
-* lxml
+* [psutil](https://github.com/giampaolo/psutil)
+* [qrcode](https://github.com/lincolnloop/python-qrcode)
+* [requests](https://github.com/psf/requests)
+* [pyperclip](https://github.com/asweigart/pyperclip)
+* [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
+* [lxml](https://github.com/lxml/lxml)
 
 
 ## License
