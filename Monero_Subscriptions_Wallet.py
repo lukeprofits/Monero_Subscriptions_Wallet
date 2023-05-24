@@ -615,13 +615,6 @@ def send_monero(destination_address, amount, payment_id=None):
 
 
 # GUI FUNCTIONS ########################################################################################################
-def subscription_added_popup():
-    sg.popup("Subscription Added:\n\nWallet will now exit. Please relaunch.\n", no_titlebar=True, font=(font, 10), background_color=ui_overall_background)
-
-
-def subscription_removed_popup():
-    sg.popup("Subscription Canceled:\n\nWallet will now exit. Please relaunch.\n", no_titlebar=True, font=(font, 10), background_color=ui_overall_background)
-
 
 def create_subscription_rows(subscriptions):
     result = []
@@ -763,8 +756,8 @@ def add_subscription_from_merchant():
                 try:
                     subscription_json = json.loads(subscription_info)
                     add_subscription(subscription_json)
-                    subscription_added_popup()
-                    kill_everything()
+                    window.close()
+                    window = create_window(subscriptions)
 
                 except:
                     print('JSON for subscription is not valid. Not adding.')
@@ -773,8 +766,8 @@ def add_subscription_from_merchant():
                 try:
                     subscription_json = decode_monero_subscription_code(subscription_info)
                     add_subscription(subscription_json)
-                    subscription_added_popup()
-                    kill_everything()
+                    window.close()
+                    window = create_window(subscriptions)
 
                 except:
                     print('Monero subscription code is not valid. Not adding.')
@@ -844,8 +837,8 @@ def add_subscription_manually():
             print(payment_id)
             print(subscription_info)
 
-            subscription_added_popup()
-            kill_everything()
+            window.close()
+            window = create_window(subscriptions)
             break
 
     window.close()
@@ -1046,57 +1039,64 @@ except:
 threading.Thread(target=send_recurring_payments).start()
 
 # GUI LAYOUT ###########################################################################################################
-subscription_layout = create_subscription_layout(subscriptions)
-subscriptions_column = sg.Column(subscription_layout, key='subscriptions_column', pad=(10, 10))
-frame = sg.Frame('My Subscriptions', layout=[[subscriptions_column]], key='subscriptions_frame', element_justification='center', pad=(10, 10), background_color=subscription_background_color)
+def create_window(subscriptions): # Creates the main window and returns it
 
-# Define the window layout
-layout = [
-    [sg.Text("Monero Subscriptions Wallet", font=(font, 24), expand_x=True, justification='center', relief=sg.RELIEF_RIDGE, size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
-    [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=("Helvetica", 10), expand_x=True, justification='center', background_color=ui_overall_background, pad=(0, 0))],
-    [sg.Text("", font=(font, 8))],
-        [
-            sg.Column(
-                [
-                    ########
-                    [sg.Text(f'        Balance:  ${wallet_balance_usd} USD', size=(25, 1), font=(font, 18), key='wallet_balance_in_usd', text_color=ui_sub_font, background_color=ui_overall_background)],
-                    [sg.Text(f'        XMR: {wallet_balance_xmr}', size=(25, 1), font=(font, 18), key='wallet_balance_in_xmr', background_color=ui_overall_background)],
-                    ########
+    subscription_layout = create_subscription_layout(subscriptions)
+    subscriptions_column = sg.Column(subscription_layout, key='subscriptions_column', pad=(10, 10))
+    frame = sg.Frame('My Subscriptions', layout=[[subscriptions_column]], key='subscriptions_frame', element_justification='center', pad=(10, 10), background_color=subscription_background_color)
 
-                    ########
-                    [frame],
-                    ########
+    # Define the window layout
+    layout = [
+        [sg.Text("Monero Subscriptions Wallet", font=(font, 24), expand_x=True, justification='center', relief=sg.RELIEF_RIDGE, size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
+        [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=("Helvetica", 10), expand_x=True, justification='center', background_color=ui_overall_background, pad=(0, 0))],
+        [sg.Text("", font=(font, 8))],
+            [
+                sg.Column(
+                    [
+                        ########
+                        [sg.Text(f'        Balance:  ${wallet_balance_usd} USD', size=(25, 1), font=(font, 18), key='wallet_balance_in_usd', text_color=ui_sub_font, background_color=ui_overall_background)],
+                        [sg.Text(f'        XMR: {wallet_balance_xmr}', size=(25, 1), font=(font, 18), key='wallet_balance_in_xmr', background_color=ui_overall_background)],
+                        ########
 
-                ], element_justification='center', expand_x=True, expand_y=True
-            ),
-            sg.VerticalSeparator(pad=(0, 10)),
-            sg.Column(
-                [
+                        ########
+                        [frame],
+                        ########
 
-                    ########
-                    [sg.Text('Deposit XMR:', size=(20, 1), font=(font, 18), justification='center', text_color=ui_sub_font, background_color=ui_overall_background)],
-                    [sg.Column([
-                        [sg.Image(generate_monero_qr(wallet_address), size=(147, 147), key='qr_code', pad=(10, 0))],  # Placeholder for the QR code image
-                        [sg.Button("Copy Address", size=(16, 1), key='copy_address', pad=(10, 10))]],
-                        element_justification='center', pad=(0, 0))],
-                    ########
+                    ], element_justification='center', expand_x=True, expand_y=True
+                ),
+                sg.VerticalSeparator(pad=(0, 10)),
+                sg.Column(
+                    [
 
-                ], expand_x=True, expand_y=True, element_justification='c'
-            )
-        ],
-        [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
+                        ########
+                        [sg.Text('Deposit XMR:', size=(20, 1), font=(font, 18), justification='center', text_color=ui_sub_font, background_color=ui_overall_background)],
+                        [sg.Column([
+                            [sg.Image(generate_monero_qr(wallet_address), size=(147, 147), key='qr_code', pad=(10, 0))],  # Placeholder for the QR code image
+                            [sg.Button("Copy Address", size=(16, 1), key='copy_address', pad=(10, 10))]],
+                            element_justification='center', pad=(0, 0))],
+                        ########
 
-        ########
-        [sg.Column([
-            [sg.Text(f'      Send XMR:', size=(12, 1), font=(font, 14), pad=(10, 10), text_color=ui_sub_font, background_color=ui_overall_background),
-            sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10), justification='center', size=(46, 1)),
-            sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center', size=(20, 1)),
-            sg.Button("Send", size=(8, 1), key='send', pad=(10, 10), button_color=(ui_button_b_font, ui_button_b))]], element_justification='c', justification='center'),
-            sg.Text('', pad=(15, 15))],
-        ########
+                    ], expand_x=True, expand_y=True, element_justification='c'
+                )
+            ],
+            [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
 
-        [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
-]
+            ########
+            [sg.Column([
+                [sg.Text(f'      Send XMR:', size=(12, 1), font=(font, 14), pad=(10, 10), text_color=ui_sub_font, background_color=ui_overall_background),
+                sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10), justification='center', size=(46, 1)),
+                sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center', size=(20, 1)),
+                sg.Button("Send", size=(8, 1), key='send', pad=(10, 10), button_color=(ui_button_b_font, ui_button_b))]], element_justification='c', justification='center'),
+                sg.Text('', pad=(15, 15))],
+            ########
+
+            [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
+    ]
+    if platform.system() == 'Darwin':
+        return sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
+    else:
+        return sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon, finalize=True)
+
 
 window.close()
 
@@ -1104,10 +1104,7 @@ window.close()
 threading.Thread(target=update_gui_balance).start()
 
 # Create the window
-if platform.system() == 'Darwin':
-    window = sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon)
-else:
-    window = sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon)
+window = create_window(subscriptions)
 
 # MAIN EVENT LOOP ######################################################################################################
 while True:
@@ -1156,7 +1153,7 @@ while True:
             if index is not None:
                 subscriptions = subscriptions[:index] + subscriptions[index + 1:]
                 remove_subscription(subscriptions_list=subscriptions)
-                subscription_removed_popup()
-                kill_everything()
-
+                window.close()
+                window = create_window(subscriptions)
+                
 window.close()
