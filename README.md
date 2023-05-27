@@ -59,8 +59,8 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 
 ## Works On
 - Windows
+- Linux
 - Mac - Testing Needed
-- Linux - Testing Needed
 
 
 ## Requirements
