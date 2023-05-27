@@ -17,7 +17,6 @@ from datetime import datetime
 import platform
 
 
-
 # OVERALL FUNCTIONS ####################################################################################################
 def kill_everything():
     global stop_flag
@@ -450,7 +449,6 @@ def kill_monero_wallet_rpc():
 def start_local_rpc_server_thread():
     global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
     
-
     cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
     
     if start_block_height:
@@ -1095,7 +1093,9 @@ def create_window(subscriptions): # Creates the main window and returns it
             [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
     ]
     if platform.system() == 'Darwin':
-        return sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
+        return sg.Window('Monero Subscriptions Wallet', layout, margins=(25, 25), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
+    elif platform.system() == 'Linux':
+        return sg.Window('Monero Subscriptions Wallet', layout, margins=(25, 25), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
     else:
         return sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon, finalize=True)
 
