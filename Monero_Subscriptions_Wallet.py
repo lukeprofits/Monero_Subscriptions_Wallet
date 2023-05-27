@@ -8,13 +8,18 @@ import qrcode
 import random
 import requests
 import threading
-import pyperclip
 import subprocess
 from lxml import html
 import monero_usd_price
 import PySimpleGUI as sg
 from datetime import datetime
 import platform
+
+if platform.system() == 'Windows':
+    import pyperclip
+else:
+    import clipboard
+
 
 
 # OVERALL FUNCTIONS ####################################################################################################
@@ -1116,7 +1121,10 @@ while True:
         break
 
     elif event == 'copy_address':
-        pyperclip.copy(wallet_address)  # copy to clipboard
+        if platform.system() == 'Windows':
+            pyperclip.copy(wallet_address)  # copy to clipboard
+        else:
+            clipboard.copy(wallet_address)
         print(f'COPIED: {wallet_address}')
 
     elif event == 'add_subscription':
