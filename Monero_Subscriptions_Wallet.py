@@ -17,6 +17,7 @@ from datetime import datetime
 import platform
 
 
+
 # OVERALL FUNCTIONS ####################################################################################################
 def kill_everything():
     global stop_flag
@@ -449,6 +450,7 @@ def kill_monero_wallet_rpc():
 def start_local_rpc_server_thread():
     global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
     
+
     cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
     
     if start_block_height:
@@ -910,7 +912,7 @@ else:
 wallet_name = "subscriptions_wallet"
 wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
-rpc_bind_port = '18082'
+rpc_bind_port = '18088'
 local_rpc_url = f"http://127.0.0.1:{rpc_bind_port}/json_rpc"
 rpc_username = "monero"
 rpc_password = "monero"
