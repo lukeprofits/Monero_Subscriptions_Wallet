@@ -1093,9 +1093,9 @@ def create_window(subscriptions): # Creates the main window and returns it
             [sg.Text("", font=(font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
     ]
     if platform.system() == 'Darwin':
-        return sg.Window('Monero Subscriptions Wallet', layout, margins=(25, 25), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
+        return sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
     elif platform.system() == 'Linux':
-        return sg.Window('Monero Subscriptions Wallet', layout, margins=(25, 25), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
+        return sg.Window('Monero Subscriptions Wallet', layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=False, grab_anywhere=True, icon=icon, finalize=True)
     else:
         return sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon, finalize=True)
 
