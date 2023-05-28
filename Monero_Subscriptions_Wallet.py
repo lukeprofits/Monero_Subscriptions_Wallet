@@ -171,16 +171,6 @@ def create_subscription(custom_label='Subscription', payment_id='', sellers_wall
 def create_wallet(wallet_name):  # Using CLI Wallet
     global monero_wallet_cli_path, wallet_file_path
 
-    # Remove existing wallet if present
-    try:
-        os.remove(wallet_name)
-    except:
-        pass
-
-    try:
-        os.remove(f'{wallet_name}.keys')
-    except:
-        pass
 
     command = f"{monero_wallet_cli_path} --generate-new-wallet {os.path.join(wallet_file_path, wallet_name)} --mnemonic-language English --command exit"
     process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -293,7 +283,7 @@ def check_if_amount_is_proper_format(amount):
 
 def check_if_monero_wallet_address_is_valid_format(wallet_address):
     # Check if the wallet address starts with the number 4
-    if wallet_address[0] != "4":
+    if wallet_address[0] != "4" and wallet_address[0] != "8":
         return False
 
     # Check if the wallet address is exactly 95 or 106 characters long
