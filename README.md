@@ -73,6 +73,7 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 * [pyperclip](https://github.com/asweigart/pyperclip)
 * [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
 * [lxml](https://github.com/lxml/lxml)
+* [clipboard](https://pypi.org/project/clipboard)
 
 
 ## License
