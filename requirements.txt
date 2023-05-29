@@ -2,7 +2,6 @@ clipboard==0.0.4
 lxml==4.9.2
 monero_usd_price==1.2.0
 psutil==5.9.5
-pyperclip==1.8.2
 PySimpleGUI==4.60.4
 PySimpleGUI==4.60.5
 qrcode==7.3.1

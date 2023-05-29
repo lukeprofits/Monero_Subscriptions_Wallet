@@ -14,11 +14,7 @@ import monero_usd_price
 import PySimpleGUI as sg
 from datetime import datetime
 import platform
-
-if platform.system() == 'Windows':
-    import pyperclip
-else:
-    import clipboard
+import clipboard
 
 
 
@@ -1121,10 +1117,7 @@ while True:
         break
 
     elif event == 'copy_address':
-        if platform.system() == 'Windows':
-            pyperclip.copy(wallet_address)  # copy to clipboard
-        else:
-            clipboard.copy(wallet_address)
+        clipboard.copy(wallet_address)
         print(f'COPIED: {wallet_address}')
 
     elif event == 'add_subscription':

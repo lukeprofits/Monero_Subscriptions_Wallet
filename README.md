@@ -70,7 +70,6 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 * [psutil](https://github.com/giampaolo/psutil)
 * [qrcode](https://github.com/lincolnloop/python-qrcode)
 * [requests](https://github.com/psf/requests)
-* [pyperclip](https://github.com/asweigart/pyperclip)
 * [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
 * [lxml](https://github.com/lxml/lxml)
 * [clipboard](https://pypi.org/project/clipboard)
