@@ -672,7 +672,7 @@ def update_gui_balance():
             if not wallet_balance_usd == '---.--':
                 window['wallet_balance_in_usd'].update(f'        Balance:  ${wallet_balance_usd} USD')
 
-            window['wallet_balance_in_xmr'].update(f'        XMR: {wallet_balance_xmr}')
+            window['wallet_balance_in_xmr'].update(f'        XMR: {wallet_balance_xmr:.12f}')
 
             # Wait before updating again
             time.sleep(5)
