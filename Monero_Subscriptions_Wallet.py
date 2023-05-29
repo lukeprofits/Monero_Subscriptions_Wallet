@@ -450,7 +450,10 @@ def kill_monero_wallet_rpc():
 def start_local_rpc_server_thread():
     global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
     
-    cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
+    if platform.system() == 'Windows':
+        cmd = f'monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
+    else:
+        cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
     
     if start_block_height:
         command = f'{monero_wallet_cli_path} --wallet-file {os.path.join(wallet_file_path, wallet_name)} --password "" --restore-height {start_block_height} --command exit'
@@ -909,7 +912,10 @@ if platform.system() == 'Windows':
 else:
     monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
 wallet_name = "subscriptions_wallet"
-wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
+if platform.system() == 'Windows':
+    wallet_file_path = ""
+else:
+    wallet_file_path = f'{os.getcwd()}/'  # Update this path to the location where you want to save the wallet file
 subs_file_path = 'Subscriptions.json'
 rpc_bind_port = '18088'
 local_rpc_url = f"http://127.0.0.1:{rpc_bind_port}/json_rpc"
