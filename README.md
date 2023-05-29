@@ -1,6 +1,6 @@
 # Monero Subscriptions Wallet
 ![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-blueviolet.svg)
-![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)
+![Version 1.1.0](https://img.shields.io/badge/Version-1.1.0-blue.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-orange.svg)
@@ -59,8 +59,8 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 
 ## Works On
 - Windows
+- Linux
 - Mac - Testing Needed
-- Linux - Testing Needed
 
 
 ## Requirements
@@ -70,7 +70,6 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 * [psutil](https://github.com/giampaolo/psutil)
 * [qrcode](https://github.com/lincolnloop/python-qrcode)
 * [requests](https://github.com/psf/requests)
-* [pyperclip](https://github.com/asweigart/pyperclip)
 * [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
 * [lxml](https://github.com/lxml/lxml)
 * [clipboard](https://pypi.org/project/clipboard)
