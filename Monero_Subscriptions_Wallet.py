@@ -701,13 +701,12 @@ def read_subscriptions():
 
 def add_subscription(subscription):
     global subs_file_path
-
     if subscription:
         subscriptions = read_subscriptions()
         subscriptions.append(subscription)
-
         with open(subs_file_path, "w") as file:
             json.dump(subscriptions, file, indent=2)
+        refresh_gui()
 
 
 def remove_subscription(subscriptions_list):
@@ -760,9 +759,6 @@ def add_subscription_from_merchant():
                 try:
                     subscription_json = json.loads(subscription_info)
                     add_subscription(subscription_json)
-                    window.close()
-                    window = create_window(subscriptions) # recreate the window to refresh the GUI
-
                 except:
                     print('JSON for subscription is not valid. Not adding.')
 
@@ -770,16 +766,12 @@ def add_subscription_from_merchant():
                 try:
                     subscription_json = decode_monero_subscription_code(subscription_info)
                     add_subscription(subscription_json)
-                    window.close()
-                    window = create_window(subscriptions)
-
                 except:
                     print('Monero subscription code is not valid. Not adding.')
 
             break
 
     window.close()
-
 
 def add_subscription_manually():
     today = datetime.today().strftime("%Y-%m-%d")
@@ -864,6 +856,11 @@ def get_random_monero_node():
                 print(f'WORKS: {url}')
                 return url
 
+def refresh_gui():
+    global window
+    window.close()
+    subscriptions = read_subscriptions()
+    window = create_window(subscriptions) # recreate the window to refresh the GUI
 
 # THEME VARIABLES ######################################################################################################
 
@@ -1162,7 +1159,6 @@ while True:
             if index is not None:
                 subscriptions = subscriptions[:index] + subscriptions[index + 1:]
                 remove_subscription(subscriptions_list=subscriptions)
-                window.close() 
-                window = create_window(subscriptions) # recreate the window to refresh the GUI
+                refresh_gui() # recreate the window to refresh the GUI
                 
 window.close()
