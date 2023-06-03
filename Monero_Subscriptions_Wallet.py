@@ -758,21 +758,35 @@ def add_subscription_from_merchant():
             if '{' in subscription_info[0] and '}' in subscription_info[len(subscription_info)-1]:
                 try:
                     subscription_json = json.loads(subscription_info)
-                    add_subscription(subscription_json)
+                    show_subscription_model(subscription_json)
                 except:
                     print('JSON for subscription is not valid. Not adding.')
 
             else:  # Assume that the user submitted a monero-subscription code
                 try:
                     subscription_json = decode_monero_subscription_code(subscription_info)
-                    add_subscription(subscription_json)
+                    show_subscription_model(subscription_json)
                 except:
                     print('Monero subscription code is not valid. Not adding.')
-
             break
 
-    window.close()
-
+def show_subscription_model(subscription_json):
+    layout = [[sg.Text("Are you sure?", font=(font, 18), text_color=ui_sub_font)],
+    [sg.Text(str(subscription_json['custom_label']))],
+    [sg.Text("Every " + str(subscription_json['billing_cycle_days']) + " days")],
+    [sg.Text(str(subscription_json['amount']) + " XMR is being sent to " + str(subscription_json['sellers_wallet']))],
+    [sg.Button("Yes", key="yes"), sg.Button("No", key="no")]]
+    window = sg.Window("Are you sure?", layout=layout, modal=True, margins=(20, 20), background_color=ui_title_bar, titlebar_icon='', no_titlebar=True, use_custom_titlebar=True, grab_anywhere=True, icon=icon)
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == "no":
+            window.close()
+            break
+        elif event == "yes":
+            add_subscription(subscription_json)
+            window.close()
+            break      
+   
 def add_subscription_manually():
     today = datetime.today().strftime("%Y-%m-%d")
     layout = [
