@@ -19,11 +19,12 @@ A Monero wallet that automatically pays subscriptions.
 * Make sure you have [Python 3.8](https://www.python.org/downloads/) or newer installed
 * [Download the Monero Subscripton Wallet files](https://github.com/lukeprofits/Monero_Subscriptions_Wallet/archive/refs/heads/main.zip) extract all the files from the .zip you downloaded and put them in a folder
 * [Download the Monero CLI Wallet](https://www.getmonero.org/downloads/#cli), extract all the files from the .zip you downloaded and put them in the same folder
-* On Linux there are some required clipboard packages. For non-wayland sessions they are: xclip and xsel, for wayland sessions it is: wl-clipboard. Make sure to install them with your package manager.
+
 * Optional: Download and install [the font Nunito Sans](https://fonts.google.com/specimen/Nunito+Sans)
 * On Windows, double click the "Windows_Launcher" file
 * On Mac/Linux, run the "Mac_Linux_Launcher" file 
 * Or if you are comfortable with the terminal, open your console and enter the command: `python Monero_Subscriptions_Wallet.py`
+* On Linux there are some required clipboard packages. For non-wayland sessions they are: xclip and xsel, for wayland sessions it is: wl-clipboard. Make sure to install them with your package manager.
 
 
 # Donate
