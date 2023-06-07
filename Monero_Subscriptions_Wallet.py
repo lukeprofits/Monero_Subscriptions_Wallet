@@ -729,7 +729,8 @@ def make_visible():
 def add_subscription_from_merchant():
     global subscriptions, subscription_rows
 
-    dev_sub_code = 'monero-subscription:H4sIACsJZGQC/12OXU+DMBSG/wrh2pkCAzPvYICJRhO36eZuSFvOBrEfpC3T1vjfbXfpuTrnfZ/kOT8xnbWRvGOYAIvvo3iPGQMT1XABJidQUS0FNqMU8U0Ua/Cl0t3XFQr4sjTZIVeXdzvt5OnMZ3hZ6dWrUa7fQF7N0Cr9WR7H5K6SH2RwVkvn5HNbFW4vdk/9w7oov5uSNE1OXbvJBr89Es2XwxoO6TZI6awUCGqD7m1bhwhzOYvgT9At8veELQdhurEPEPo3188NVqbrsYFApCjNFihfJEXoyMjYKM4dtZSBZ6z2TIZ+/wAVPrHVHQEAAA=='
+    #dev_sub_code = 'monero-subscription:H4sIACsJZGQC/12OXU+DMBSG/wrh2pkCAzPvYICJRhO36eZuSFvOBrEfpC3T1vjfbXfpuTrnfZ/kOT8xnbWRvGOYAIvvo3iPGQMT1XABJidQUS0FNqMU8U0Ua/Cl0t3XFQr4sjTZIVeXdzvt5OnMZ3hZ6dWrUa7fQF7N0Cr9WR7H5K6SH2RwVkvn5HNbFW4vdk/9w7oov5uSNE1OXbvJBr89Es2XwxoO6TZI6awUCGqD7m1bhwhzOYvgT9At8veELQdhurEPEPo3188NVqbrsYFApCjNFihfJEXoyMjYKM4dtZSBZ6z2TIZ+/wAVPrHVHQEAAA=='
+    dev_sub_code = ''
 
     layout = [
         [sg.Column([
@@ -771,11 +772,11 @@ def add_subscription_from_merchant():
             break
 
 def show_subscription_model(subscription_json):
-    layout = [[sg.Text("Are you sure?", font=(font, 18), text_color=ui_sub_font)],
+    layout = [[sg.Text("     Are You Sure You Want To Add This Subscription?", font=(font, 18), text_color=ui_sub_font)],
     [sg.Text(str(subscription_json['custom_label']))],
     [sg.Text("Every " + str(subscription_json['billing_cycle_days']) + " days")],
-    [sg.Text(str(subscription_json['amount']) + " XMR is being sent to " + str(subscription_json['sellers_wallet']))],
-    [sg.Button("Yes", key="yes"), sg.Button("No", key="no")]]
+    [sg.Text(str(subscription_json['amount']) + " " + str(subscription_json['currency']) + " will be sent to the merchant")],  # str(subscription_json['sellers_wallet'])
+    [sg.Button("     Yes     ", key="yes"), sg.Button("     No     ", key="no")]]
     window = sg.Window("Are you sure?", layout=layout, modal=True, margins=(20, 20), background_color=ui_title_bar, titlebar_icon='', no_titlebar=True, use_custom_titlebar=True, grab_anywhere=True, icon=icon)
     while True:
         event, values = window.read()
