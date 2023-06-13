@@ -966,11 +966,9 @@ We're thrilled that you've chosen to use our Free and Open Source Software (FOSS
 
 2. Monero Subscriptions Wallet is intended to be a secondary wallet, rather than your primary one. As an internet-connected hot wallet, its security is only as robust as your computer's. We suggest using it as a side-wallet, maintaining just enough balance for your subscriptions.
 
-3. We're currently experiencing minor visual update issues when a subscription is added or canceled. As a temporary workaround, the wallet will close and need to be restarted after adding/canceling a subscription. We're working hard to resolve this!
+3. Upon launching this software, you'll automatically have a $10/mo subscription that serves as a donation to the wallet developer. This helps us continue the development and maintenance of this FOSS project. If you do not want to donate to the developer, you are able to cancel this at any time by clicking on 'Cancel' next to the subscription, and the wallet will continue working as normal.
 
-4. Upon launching this software, you'll automatically have a $10/mo subscription that serves as a donation to the wallet developer. This helps us continue the development and maintenance of this FOSS project. If you do not want to donate to the developer, you are able to cancel this at any time by clicking on 'Cancel' next to the subscription, and the wallet will continue working as normal.
-
-5. By using this software, you understand and agree that you're doing so at your own risk. The developers cannot be held responsible for any lost funds.
+4. By using this software, you understand and agree that you're doing so at your own risk. The developers cannot be held responsible for any lost funds.
 
 Enjoy using the Monero Subscriptions Wallet, thank you for your support, and if you are a Python developer, please consider helping us improve the project!
 
