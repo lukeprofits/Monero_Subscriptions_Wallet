@@ -770,6 +770,7 @@ def add_subscription_from_merchant():
                 except:
                     print('Monero subscription code is not valid. Not adding.')
             break
+    window.close()
 
 def show_subscription_model(subscription_json):
     layout = [[sg.Text("     Are You Sure You Want To Add This Subscription?", font=(font, 18), text_color=ui_sub_font)],
