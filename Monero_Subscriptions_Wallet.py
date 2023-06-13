@@ -755,20 +755,25 @@ def add_subscription_from_merchant():
             subscription_info = values["subscription_info"]
             subscription_info = subscription_info.strip()  # in case user added any spaces or new lines
 
-            # Check if the user submitted a dictionary rather than a monero-subscription code
-            if '{' in subscription_info[0] and '}' in subscription_info[len(subscription_info)-1]:
-                try:
-                    subscription_json = json.loads(subscription_info)
-                    show_subscription_model(subscription_json)
-                except:
-                    print('JSON for subscription is not valid. Not adding.')
+            if len(subscription_info) < 1:
+                print("Merchant code cannot be empty! Not adding.")
+            
+            else:
+                # Check if the user submitted a dictionary rather than a monero-subscription code
+                if '{' in subscription_info[0] and '}' in subscription_info[len(subscription_info)-1]:
+                    try:
+                        subscription_json = json.loads(subscription_info)
+                        show_subscription_model(subscription_json)
+                    except:
+                        print('JSON for subscription is not valid. Not adding.')
 
-            else:  # Assume that the user submitted a monero-subscription code
-                try:
-                    subscription_json = decode_monero_subscription_code(subscription_info)
-                    show_subscription_model(subscription_json)
-                except:
-                    print('Monero subscription code is not valid. Not adding.')
+                else:  # Assume that the user submitted a monero-subscription code
+                    try:
+                        subscription_json = decode_monero_subscription_code(subscription_info)
+                        show_subscription_model(subscription_json)
+                    except:
+                        print('Monero subscription code is not valid. Not adding.')
+                break
             break
     window.close()
 
