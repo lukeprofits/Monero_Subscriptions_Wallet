@@ -549,7 +549,7 @@ def get_wallet_balance():
 
         #print(usd_balance)
 
-        return xmr_balance, usd_balance
+        return xmr_balance, usd_balance, xmr_unlocked_balance
 
     except Exception as e:
         print(f'get_wallet_balance error: {e}')
@@ -663,13 +663,25 @@ def create_subscription_layout(subscriptions):
     return [*subscription_rows, [sg.Column([[sg.Button("Add New Subscription", size=(40, 1), key='add_subscription', pad=(10, 10))]], expand_x=True, element_justification='center')]]
 
 
+#def create_sweep_confirm_rows(address, unlocked_bal):
+#    result = []
+#
+#    row = [
+#        sg.Text(f'Are you sure you want to send all your XMR({unlocked_bal}) to {address} ?', justification='cener', size=(16, 1), text_color=subscription_text_color, background_color=subscription_background_color),
+#        sg.Button("Cancel", size=(7, 1), key=f'cancel_subscription_{i}', button_color=(ui_regular, ui_barely_visible)),
+#    ]
+#    result.append(row)
+#
+#    return result
+
+
 def update_gui_balance():
     global wallet_balance_xmr, wallet_balance_usd, wallet_address
 
     while not stop_flag.is_set():
         try:
             # Get the wallet balance info
-            wallet_balance_xmr, wallet_balance_usd = get_wallet_balance()
+            wallet_balance_xmr, wallet_balance_usd, xmr_unlocked_balance = get_wallet_balance()
 
             # Update the GUI with the new balance info
             if not wallet_balance_usd == '---.--':
@@ -1056,7 +1068,7 @@ wallet_balance_usd = '---.--'
 wallet_address = get_wallet_address()
 
 try:
-    wallet_balance_xmr, wallet_balance_usd = get_wallet_balance()
+    wallet_balance_xmr, wallet_balance_usd, xmr_unlocked_balance = get_wallet_balance()
 except:
     pass
 
@@ -1155,12 +1167,25 @@ while True:
     elif event == 'send':
         try:
             withdraw_to_wallet = values['withdraw_to_wallet']
-            withdraw_amount = float(values['withdraw_amount'])
+            if values['withdraw_amount'] == '':
+                withdraw_amount = None
+            else:
+                withdraw_amount = float(values['withdraw_amount'])
             print(withdraw_to_wallet)
             print(withdraw_amount)
-            send_monero(destination_address=withdraw_to_wallet, amount=withdraw_amount)
+            if withdraw_amount == None:
+                choice = sg.popup(f"Are you sure you want to send all your XMR to this address?\n", text_color=ui_sub_font, title='', custom_text=("    Yes, I am sure!    ", "    No, CANCEL!    "), no_titlebar=True, background_color=ui_title_bar, modal=True, grab_anywhere=True, icon=icon)
+                if "No, CANCEL!" in choice:
+                    print("Cancelled wallet sweep!")
+                    pass
+                elif "Yes, I am sure!" in choice:
+                    send_monero(destination_address=withdraw_to_wallet, amount=xmr_unlocked_balance)
+                    print("The wallet has been swept!")
+            else:
+                send_monero(destination_address=withdraw_to_wallet, amount=withdraw_amount)
 
-        except:
+        except Exception as e:
+            print(e)
             print('failed to send')
             window['withdraw_to_wallet'].update('Error: Enter a valid wallet address and XMR amount.')
 
