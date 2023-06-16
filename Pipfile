@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+clipboard = "==0.0.4"
+lxml = "==4.9.2"
+monero-usd-price = "==1.2.0"
+psutil = "==5.9.5"
+pysimplegui = "==4.60.5"
+qrcode = "==7.3.1"
+requests = "==2.31.0"
+pillow = "==9.5.0"
+pyinstaller = "*"
+psgtray = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
