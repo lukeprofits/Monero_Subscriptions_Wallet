@@ -15,8 +15,9 @@ import PySimpleGUI as sg
 from datetime import datetime
 import platform
 import clipboard
-
-
+from psgtray import SystemTray
+from src.ui.node_picker import NodePicker
+from src.subscriptions import Subscriptions
 
 # OVERALL FUNCTIONS ####################################################################################################
 def kill_everything():
@@ -305,32 +306,6 @@ def check_if_monero_wallet_address_is_valid_format(wallet_address):
     # If it passed all these checks
     return True
 
-
-def check_if_node_works(node):
-    url = f'http://{node}/json_rpc'
-    headers = {'Content-Type': 'application/json'}
-    payload = {
-        'jsonrpc': '2.0',
-        'id': '0',
-        'method': 'get_info',
-        'params': {}
-    }
-
-    try:
-        response = requests.post(url, data=json.dumps(payload), headers=headers)
-        response.raise_for_status()
-        result = response.json()
-
-        if 'result' in result and 'status' in result['result'] and result['result']['status'] == 'OK':
-            return True
-        else:
-            return False
-
-    except requests.exceptions.RequestException as e:
-        print(e)
-        return False
-
-
 def check_if_payment_id_is_valid(payment_id):
     if len(payment_id) != 16:
         return False
@@ -450,10 +425,7 @@ def kill_monero_wallet_rpc():
 def start_local_rpc_server_thread():
     global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
     
-    if platform.system() == 'Windows':
-        cmd = f'monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
-    else:
-        cmd = f'{os.getcwd()}/monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
+    cmd = f'monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
     
     if start_block_height:
         command = f'{monero_wallet_cli_path} --wallet-file {os.path.join(wallet_file_path, wallet_name)} --password "" --restore-height {start_block_height} --command exit'
@@ -872,22 +844,12 @@ def add_subscription_manually():
 
     window.close()
 
-
-def get_random_monero_node():
-    response = requests.get('https://monero.fail/')
-    tree = html.fromstring(response.content)
-    urls = tree.xpath('//span[@class="nodeURL"]/text()')
-    random.shuffle(urls)  # mix them up so we get a random one instead of top to bottom.
-
-    for url in urls:
-        if '://' in url:
-            url = url.split('://')[1]
-
-        if ':' in url:  # make sure that it has the port
-            print(url)
-            if check_if_node_works(url):
-                print(f'WORKS: {url}')
-                return url
+def build_system_tray(window):
+    menu = ['', ['Show Window', 'Hide Window', '---', '!Disabled Item', 'Change Icon', ['Happy', 'Sad', 'Plain'], 'Exit']]
+    tooltip = 'Tooltip'
+    tray = SystemTray(menu, single_click_events=False, window=window, tooltip=tooltip, icon=sg.DEFAULT_BASE64_ICON)
+    # tray.show_message('System Tray', 'System Tray Icon Started!')
+    return tray
 
 def refresh_gui():
     global window
@@ -895,9 +857,9 @@ def refresh_gui():
     subscriptions = read_subscriptions()
     window = create_window(subscriptions) # recreate the window to refresh the GUI
 
-# THEME VARIABLES ######################################################################################################
+# # THEME VARIABLES ######################################################################################################
 
-# Hex Colors
+# # Hex Colors
 ui_title_bar = '#222222'
 ui_overall_background = '#1D1D1D'
 ui_button_a = '#F96800'
@@ -916,7 +878,7 @@ monero_white = '#FFFFFF'
 monero_grayscale_top = '#7D7D7D'
 monero_grayscale_bottom = '#505050'
 
-# Set Theme
+# # Set Theme
 icon = 'icon.ico'
 font = 'Nunito Sans'
 title_bar_text = ''
@@ -936,11 +898,11 @@ sg.theme_input_text_color(monero_orange)
 sg.theme_border_width(0)
 sg.theme_slider_border_width(0)
 
-# VARIABLES ############################################################################################################
+# # VARIABLES ############################################################################################################
 if platform.system() == 'Windows':
     monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
 else:
-    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
+    monero_wallet_cli_path = 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
 wallet_name = "subscriptions_wallet"
 if platform.system() == 'Windows':
     wallet_file_path = ""
@@ -955,86 +917,18 @@ rpc_password = "monero"
 stop_flag = threading.Event()  # Define a flag to indicate if the threads should stop
 
 # Get subscriptions list
-subscriptions = read_subscriptions()
-
-welcome_popup_text = '''
-           Welcome to the Monero Subscriptions Wallet!
-
-We're thrilled that you've chosen to use our Free and Open Source Software (FOSS). Before you get started, there are a few important things you should know:
-
-1. Monero Subscriptions Wallet is currently in alpha. Your feedback is valuable to us in making this software better. Please let us know if you encounter any issues or, if you are a developer, help resolve them! All the code is on GitHub.
-
-2. Monero Subscriptions Wallet is intended to be a secondary wallet, rather than your primary one. As an internet-connected hot wallet, its security is only as robust as your computer's. We suggest using it as a side-wallet, maintaining just enough balance for your subscriptions.
-
-3. Upon launching this software, you'll automatically have a $10/mo subscription that serves as a donation to the wallet developer. This helps us continue the development and maintenance of this FOSS project. If you do not want to donate to the developer, you are able to cancel this at any time by clicking on 'Cancel' next to the subscription, and the wallet will continue working as normal.
-
-4. By using this software, you understand and agree that you're doing so at your own risk. The developers cannot be held responsible for any lost funds.
-
-Enjoy using the Monero Subscriptions Wallet, thank you for your support, and if you are a Python developer, please consider helping us improve the project!
-
-https://github.com/lukeprofits/Monero_Subscriptions_Wallet
-'''
+subscriptions = Subscriptions().all()
 
 # ADD DAEMON/NODE ######################################################################################################
 node_filename = "node_to_use.txt"
 
-if os.path.exists(node_filename):
-    with open(node_filename, 'r') as f:
-        node = f.readline().strip()  # read first line into 'node'
-else:
-    # welcome popup
-    sg.popup(welcome_popup_text, icon=icon, no_titlebar=True, background_color=ui_overall_background, grab_anywhere=True)
+node_picker = NodePicker()
 
-    # Define the window's layout
-    layout = [[sg.Column([
-        [sg.Text("Add A Monero Node:", font=(font, 24), text_color=monero_orange, background_color=ui_overall_background)],
-        [sg.Text("     For maximum privacy: Add your own node, or one run by someone you trust     \n", font=(font, 16), text_color=ui_sub_font, background_color=ui_overall_background)],
-        [sg.Input(default_text='node.sethforprivacy.com:18089', key='custom_node', justification='center', size=(30, 2), font=(font, 18)), sg.Button('Add Node', key='add_node', font=(font, 12), size=(12, 1), button_color=(ui_button_b_font, ui_button_b))],
-        [sg.Text('', font=(font, 4))],
-        [sg.Text("...or if you have a typical threat model and face minimal risks, you can add a random node\n", font=(font, 12), text_color=ui_sub_font, background_color=ui_overall_background)],
-        [sg.Button('          Add A Random Node          ', key='add_random_node', font=(font, 12), button_color=(ui_button_a_font, ui_button_a))],
-        [sg.Text('')],
-        [sg.Text("Random nodes pulled from: https://Monero.fail\n", font=(font, 10), text_color=monero_orange, background_color=ui_overall_background)],
-        ], element_justification='c', justification='center')
-    ]]
+if not node_picker.node_picked():
+    node_picker.pick_node()
+    node_picker.close_window()
 
-    # Create the window
-    window = sg.Window('Node Input', layout, keep_on_top=True, no_titlebar=True, grab_anywhere=True)
-
-    # Event loop
-    while True:
-        event, values = window.read()
-        if event == 'add_node':
-            node = values['custom_node']
-
-            if '://' in node:
-                node = node.split('://')[1]
-
-            print(node)
-
-            if check_if_node_works(node):
-                window['custom_node'].update(value="Success!")
-
-                # Save the node to the file
-                with open(node_filename, 'w') as f:
-                    f.write(node + '\n')
-                break
-
-            else:
-                window['custom_node'].update(value="Node did not respond. Try Another.")
-
-        elif event == 'add_random_node':
-            print('Adding a random node. Please wait. \nThe software will seem to be frozen until a node is found.')
-            node = get_random_monero_node()
-            # Save the node to the file
-            with open(node_filename, 'w') as f:
-                f.write(node + '\n')
-            break
-
-        if event == sg.WIN_CLOSED:
-            break
-
-    window.close()
+node = node_picker.picked_node()
 
 host = node.split(':')[0]
 port = node.split(':')[1]
@@ -1142,10 +1036,14 @@ threading.Thread(target=update_gui_balance).start()
 
 # Create the window
 window = create_window(subscriptions)
-
+tray = build_system_tray(window)
 # MAIN EVENT LOOP ######################################################################################################
 while True:
     event, values = window.read()
+
+    if event == tray.key:
+        sg.cprint(f'System Tray Event = ', values[event], c='white on red')
+        event = values[event]
 
     if event == sg.WIN_CLOSED:
         break
@@ -1186,6 +1084,10 @@ while True:
             print(e)
             print('failed to send')
             window['withdraw_to_wallet'].update('Error: Enter a valid wallet address and XMR amount.')
+
+    if event in ('Show Window', sg.EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED):
+        window.un_hide()
+        window.bring_to_front()
 
     for i, sub in enumerate(subscriptions):
         if event == f'cancel_subscription_{i}':
