@@ -18,7 +18,9 @@ import clipboard
 from psgtray import SystemTray
 from src.ui.node_picker import NodePicker
 from src.subscriptions import Subscriptions
-
+from src.wallet import Wallet
+from src.rpc_server import RPCServer
+from src.ui.please_wait import PleaseWait
 # OVERALL FUNCTIONS ####################################################################################################
 def kill_everything():
     global stop_flag
@@ -229,20 +231,6 @@ def generate_monero_qr(wallet_address):
 
 
 # CHECK FUNCTIONS ######################################################################################################
-def check_if_wallet_exists():
-    global wallet_name
-
-    if not os.path.isfile(f"{wallet_name}.keys") or not os.path.isfile(wallet_name):
-        # If either file doesn't exist
-        start_block_height = get_current_block_height()
-        create_wallet(wallet_name=wallet_name)
-        return start_block_height
-
-    else:
-        # If both files exist, do nothing
-        print('Wallet exists already.')
-        return None
-
 
 def check_date_for_how_many_days_until_payment_needed(date, number_of_days):
     # Returns the number of days left.
@@ -395,100 +383,6 @@ def decode_monero_subscription_code(monero_subscription_code):
 
 
 # RPC FUNCTIONS ########################################################################################################
-def kill_monero_wallet_rpc():
-    
-    global rpc_is_ready
-    # Check which platform we are on and get the process list accordingly
-    if platform.system() == 'Windows':
-        process = subprocess.Popen("tasklist", stdout=subprocess.PIPE)
-        rpc_path = 'monero-wallet-rpc.exe'
-    else:
-        process = subprocess.Popen("ps", stdout=subprocess.PIPE)
-        rpc_path = 'monero-wallet-r'
-    out, err = process.communicate()
-
-    for line in out.splitlines():
-        if rpc_path.encode() in line:
-            if platform.system() == 'Windows': # Check if we are on Windows and get the PID accordingly
-                pid = int(line.split()[1].decode("utf-8"))
-            else:
-                pid = int(line.split()[0].decode("utf-8"))
-            os.kill(pid, 9)
-            print(f"Successfully killed monero-wallet-rpc with PID {pid}")
-            rpc_is_ready = False
-            break
-
-        else:
-            print("monero-wallet-rpc process not found")
-
-
-def start_local_rpc_server_thread():
-    global wallet_name, host, port, rpc_is_ready, start_block_height, rpc_bind_port
-    
-    cmd = f'monero-wallet-rpc --wallet-file {wallet_name} --password "" --rpc-bind-port {rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {host} --daemon-port {port}'
-    
-    if start_block_height:
-        command = f'{monero_wallet_cli_path} --wallet-file {os.path.join(wallet_file_path, wallet_name)} --password "" --restore-height {start_block_height} --command exit'
-        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        blocks_synced = False
-
-        while not blocks_synced:
-            output = proc.stdout.readline().decode("utf-8").strip()
-
-            print(f'SYNCING BLOCKS:{output}')
-
-            if "Opened wallet:" in output:
-                blocks_synced = True
-                break
-
-            if proc.poll() is not None:
-                break
-
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    while True:
-        output = process.stdout.readline().decode("utf-8").strip()
-        print(f'RPC STARTING:{output}')
-
-        if "Starting wallet RPC server" in output:
-            rpc_is_ready = True
-            break
-
-        if process.poll() is not None:
-            break
-
-
-def start_local_rpc_server():
-    kill_monero_wallet_rpc()
-    rpc_server_thread = threading.Thread(target=start_local_rpc_server_thread)
-    rpc_server_thread.start()
-
-
-def get_current_block_height():
-    global daemon_rpc_url
-
-    # Set up the JSON-RPC request
-    headers = {'content-type': 'application/json'}
-    data = {
-        "jsonrpc": "2.0",
-        "id": "0",
-        "method": "get_info"
-    }
-
-    # Send the JSON-RPC request to the daemon
-    response = requests.post(daemon_rpc_url, data=json.dumps(data), headers=headers)
-
-    # Parse the response to get the block height
-    if response.status_code == 200:
-        response_data = response.json()
-        block_height = response_data["result"]["height"]
-        print(f'Block Height: {block_height}')
-        return block_height
-
-    else:
-        return None
-
 
 def get_wallet_balance():
     global local_rpc_url, rpc_username, rpc_password
@@ -936,22 +830,25 @@ port = node.split(':')[1]
 daemon_rpc_url = f"http://{host}:{port}/json_rpc"
 
 # START PREREQUISITES ##################################################################################################
-start_block_height = check_if_wallet_exists()  # auto-create one if it doesn't exist
+wallet = Wallet(daemon_rpc_url)
+rpc_server = RPCServer(wallet, host, port, rpc_bind_port)
+rpc_server.start()
+wallet.create()
 
-rpc_is_ready = False
-start_local_rpc_server()
+please_wait = PleaseWait()
+please_wait.open()
 
 # Set up the PySimpleGUI "please wait" popup window
-layout = [
-    [sg.Text("Please Wait: Monero RPC Server Is Starting", key="wait_text", font=(font, 18), background_color=ui_overall_background)],
-    [sg.Text("                                   This may take a few minutes on first launch.", key="wait_text2", font=(font, 10), background_color=ui_overall_background)]
-          ]
+# layout = [
+#     [sg.Text("Please Wait: Monero RPC Server Is Starting", key="wait_text", font=(font, 18), background_color=ui_overall_background)],
+#     [sg.Text("                                   This may take a few minutes on first launch.", key="wait_text2", font=(font, 10), background_color=ui_overall_background)]
+#           ]
 
-window = sg.Window("Waiting", layout, finalize=True, keep_on_top=True, no_titlebar=True, grab_anywhere=True)
+# window = sg.Window("Waiting", layout, finalize=True, keep_on_top=True, no_titlebar=True, grab_anywhere=True)
 
-while not rpc_is_ready:
+while not rpc_server.rpc_is_ready:
     # Check for window events
-    event, values = window.read(timeout=100)  # Read with a timeout so the window is updated
+    event, values = please_wait.update()  # Read with a timeout so the window is updated
 
 print('\n\nRPC Server has started')
 
@@ -1029,7 +926,7 @@ def create_window(subscriptions): # Creates the main window and returns it
         return sg.Window(title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=icon, finalize=True)
 
 
-window.close()
+please_wait.close()
 
 # Start a thread to update balance every 5 seconds
 threading.Thread(target=update_gui_balance).start()
