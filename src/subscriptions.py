@@ -9,6 +9,7 @@ from src.wallet import Wallet
 from src.thread_manager import ThreadManager
 import gzip
 import base64
+from src.rpc_client import RPCClient
 
 class Subscriptions():
     SUBS_FILE_PATH = 'Subscriptions.json'
@@ -165,26 +166,7 @@ class Subscription():
         return True, ''
 
     def make_integrated_address(self):
-        headers = {'Content-Type': 'application/json'}
-        data = {
-            "jsonrpc": "2.0",
-            "id": "0",
-            "method": "make_integrated_address",
-            "params": {
-                "standard_address": self.sellers_wallet,
-                "payment_id": self.payment_id
-            }
-        }
-
-        response = requests.post(f"{RPCConfig().local_url}", headers=headers, data=json.dumps(data))
-        result = response.json()
-
-        if 'error' in result:
-            print('Error:', result['error']['message'])
-
-        else:
-            integrated_address = result['result']['integrated_address']
-            return integrated_address
+        RPCClient().create_integrated_address(self.sellers_wallet, self.payment_id)
 
     def check_date_for_how_many_days_until_payment_needed(self, date):
         # Returns the number of days left.

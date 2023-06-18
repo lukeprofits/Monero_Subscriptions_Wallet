@@ -9,24 +9,15 @@ import qrcode
 import requests
 from src.rpc_config import RPCConfig
 from src.ui.common import CommonTheme
+from src.rpc_client import RPCClient
+
 class Wallet():
     def __init__(self):
         self.name = "subscriptions_wallet"
         self.path = self._get_path()
         self._block_height = 0
-        self._cli_path = None
         self._address = None
         self.config = RPCConfig()
-
-    @property
-    def cli_path(self):
-        if not self._cli_path:
-            if platform.system() == 'Windows':
-                cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
-            else:
-                cli_path = 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
-            self._cli_path = cli_path
-        return self._cli_path
 
     def _get_path(self):
         path = ''
@@ -58,13 +49,15 @@ class Wallet():
 
     @property
     def block_height(self):
-        if not os.path.isfile(f"{self.name}.keys") or not os.path.isfile(self.name):
-            # If either file doesn't exist
+        if not self._block_height:
+            if not os.path.isfile(f"{self.name}.keys") or not os.path.isfile(self.name):
+                # If either file doesn't exist
+                self.create()
+            else:
+                # If both files exist, do nothing
+                print('Wallet exists already.')
+
             self._block_height = self.get_current_block_height()
-            self.create()
-        else:
-            # If both files exist, do nothing
-            print('Wallet exists already.')
         return self._block_height
 
     def create(self):
@@ -79,7 +72,7 @@ class Wallet():
         except:
             pass
 
-        command = f"{self.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
+        command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
         process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Sending two newline characters, pressing 'Enter' twice
@@ -164,9 +157,10 @@ class Wallet():
             return '--.------------', '---.--'
 
     def send_subscription(self, subscription):
-        self.send(subscription.amount, subscripton.sellers_wallet)
+        self.send(address=subscription.sellers_wallet, amount=subscription.amount, payment_id=subscription.payment_id)
 
-    def send(self, address, amount):
+    def send(self, address, amount, payment_id=None):
+        client = RPCClient()
         # this needs to measure in atomic units, not xmr, so this converts it.
         atomic_amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
 
@@ -174,26 +168,11 @@ class Wallet():
             print('Address is valid. Trying to send Monero')
 
             # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
-            if subscription.payment_id:
+            if payment_id:
                 # generate the integrated address to pay (an address with the payment ID baked into it)
-                destination_address = subscription.make_integrated_address()
+                address = client.create_integrated_address(sellers_wallet=address, payment_id=payment_id)
 
-            headers = {"content-type": "application/json"}
-            payload = {
-                "jsonrpc": "2.0",
-                "id": "0",
-                "method": "transfer",
-                "params": {
-                    "destinations": [{"amount": atomic_amount, "address": address}],
-                    "priority": 1,
-                    #"ring_size": 11,
-                    "get_tx_key": True
-                }
-            }
-
-            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
-            response.raise_for_status()
-            result = response.json().get("result")
+            result = client.send_payment(amount=atomic_amount, address=address)
 
             print('Sent Monero')
 

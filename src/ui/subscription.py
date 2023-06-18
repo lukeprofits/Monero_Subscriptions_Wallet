@@ -8,12 +8,14 @@ from src.wallet import Wallet
 from src.thread_manager import ThreadManager
 import qrcode
 import clipboard
+from psgtray import SystemTray
 
 class SubscriptionUI(CommonTheme):
     def __init__(self):
         super().__init__()
         self._layout = None
         self._main_window = None
+        self._tray = None
         self.wallet = Wallet()
         self.xmr_balance = None
         self.usd_balance = None
@@ -134,9 +136,9 @@ class SubscriptionUI(CommonTheme):
         while True:
             event, values = self.main_window().read()
 
-            # if event == tray.key:
-            #     sg.cprint(f'System Tray Event = ', values[event], c='white on red')
-            #     event = values[event]
+            if event == self.tray().key:
+                sg.cprint(f'System Tray Event = ', values[event], c='white on red')
+                event = values[event]
 
             if event == sg.WIN_CLOSED:
                 break
@@ -213,6 +215,14 @@ class SubscriptionUI(CommonTheme):
 
             except Exception as e:
                 print(f'Exception in thread "update_gui_balance: {e}"')
+
+    def tray(self):
+        if not self._tray:
+            menu = ['', ['Show Window', 'Hide Window', '---', '!Disabled Item', 'Change Icon', ['Happy', 'Sad', 'Plain'], 'Exit']]
+            tooltip = 'Tooltip'
+            self._tray = SystemTray(menu, single_click_events=False, window=self.main_window(), tooltip=tooltip, icon=sg.DEFAULT_BASE64_ICON)
+            # self._tray.show_message('System Tray', 'System Tray Icon Started!')
+        return self._tray
 
     def refresh_gui(self):
         self.main_window().close()

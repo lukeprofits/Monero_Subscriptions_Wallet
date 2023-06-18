@@ -77,7 +77,3 @@ class ManualSubscription(CommonTheme):
                 break
 
         window.close()
-
-    def make_payment_id(self):
-        payment_id = ''.join([random.choice('0123456789abcdef') for _ in range(16)])
-        return payment_id

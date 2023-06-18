@@ -2,24 +2,17 @@ import os
 import threading
 import subprocess
 import platform
+from src.rpc_config import RPCConfig
 
 class RPCServer():
-    def __init__(self, wallet, config):
+    def __init__(self, wallet):
+        config = RPCConfig()
         self.wallet = wallet
         self.host = config.host
         self.port = config.port
+        self.cli_path = config.cli_path
         self.rpc_is_ready = 0
         self.rpc_bind_port = config.bind_port
-        self._cli_path = None
-
-    def cli_path(self):
-        if not self._cli_path:
-            if platform.system() == 'Windows':
-                cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
-            else:
-                cli_path = 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
-            self._cli_path = cli_path
-        return self._cli_path
 
     def _start(self):
         cmd = f'monero-wallet-rpc --wallet-file {self.wallet.name} --password "" --rpc-bind-port {self.rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {self.host} --daemon-port {self.port}'
