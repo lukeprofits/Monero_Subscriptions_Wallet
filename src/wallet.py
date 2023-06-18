@@ -4,14 +4,19 @@ import threading
 import subprocess
 import requests
 import json
-
+import monero_usd_price
+import qrcode
+import requests
+from src.rpc_config import RPCConfig
+from src.ui.common import CommonTheme
 class Wallet():
-    def __init__(self, daemon_rpc_url):
+    def __init__(self):
         self.name = "subscriptions_wallet"
         self.path = self._get_path()
         self._block_height = 0
         self._cli_path = None
-        self.daemon_rpc_url = daemon_rpc_url
+        self._address = None
+        self.config = RPCConfig()
 
     @property
     def cli_path(self):
@@ -39,7 +44,7 @@ class Wallet():
         }
 
         # Send the JSON-RPC request to the daemon
-        response = requests.post(self.daemon_rpc_url, data=json.dumps(data), headers=headers)
+        response = requests.post(self.config.daemon_url, data=json.dumps(data), headers=headers)
 
         # Parse the response to get the block height
         if response.status_code == 200:
@@ -103,3 +108,134 @@ class Wallet():
             return seed, wallet_address, view_key
         else:
             print(stderr)
+
+    def address(self):
+        if not self._address:
+            headers = {"content-type": "application/json"}
+            payload = {
+                "jsonrpc": "2.0",
+                "id": "0",
+                "method": "get_address"
+            }
+
+            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
+            response.raise_for_status()
+            result = response.json().get("result")
+            if result is None:
+                raise ValueError("Failed to get wallet address")
+
+            self._address = result["address"]
+            print(self._address)
+        return self._address
+
+    def balance(self):
+        headers = {"content-type": "application/json"}
+        payload = {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "get_balance"
+        }
+
+        try:
+            # get balance
+            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
+            response.raise_for_status()
+            result = response.json().get("result")
+
+            if result is None:
+                raise ValueError("Failed to get wallet balance")
+
+            xmr_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["balance"])
+            xmr_unlocked_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["unlocked_balance"])
+
+            #print(xmr_unlocked_balance)
+
+            try:
+                usd_balance = format(monero_usd_price.calculate_usd_from_monero(float(xmr_balance)), ".2f")
+            except:
+                usd_balance = '---.--'
+
+            #print(usd_balance)
+
+            return xmr_balance, usd_balance, xmr_unlocked_balance
+
+        except Exception as e:
+            print(f'get_wallet_balance error: {e}')
+            return '--.------------', '---.--'
+
+    def send_subscription(self, subscription):
+        self.send(subscription.amount, subscripton.sellers_wallet)
+
+    def send(self, address, amount):
+        # this needs to measure in atomic units, not xmr, so this converts it.
+        atomic_amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
+
+        if self.valid_format():
+            print('Address is valid. Trying to send Monero')
+
+            # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
+            if subscription.payment_id:
+                # generate the integrated address to pay (an address with the payment ID baked into it)
+                destination_address = subscription.make_integrated_address()
+
+            headers = {"content-type": "application/json"}
+            payload = {
+                "jsonrpc": "2.0",
+                "id": "0",
+                "method": "transfer",
+                "params": {
+                    "destinations": [{"amount": atomic_amount, "address": address}],
+                    "priority": 1,
+                    #"ring_size": 11,
+                    "get_tx_key": True
+                }
+            }
+
+            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
+            response.raise_for_status()
+            result = response.json().get("result")
+
+            print('Sent Monero')
+
+            if result is None:
+                print('Failed to send Monero transaction')
+
+        else:
+            print('Wallet is not a valid monero wallet address.')
+
+    def valid_format(self):
+        # Check if the wallet address starts with the number 4
+
+        if self.address()[0] != "4":
+            return False
+
+        # Check if the wallet address is exactly 95 or 106 characters long
+        if len(self.address()) not in [95, 106]:
+            return False
+
+        # Check if the wallet address contains only valid characters
+        valid_chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+        for char in self.address():
+            if char not in valid_chars:
+                return False
+
+        # If it passed all these checks
+        return True
+
+    def generate_qr(self):
+        if self.valid_format():
+            # Generate the QR code
+            qr = qrcode.QRCode(version=1, box_size=3, border=4)
+            qr.add_data("monero:" + self.address())
+            qr.make(fit=True)
+            theme = CommonTheme()
+            qr_img = qr.make_image(fill_color=theme.monero_orange, back_color=theme.ui_overall_background)
+            # Save the image to a file
+            filename = "wallet_qr_code.png"
+            with open(filename, "wb") as f:
+                qr_img.save(f, format="PNG")
+            return filename
+
+        else:
+            print('Monero Address is not valid')
+            return None

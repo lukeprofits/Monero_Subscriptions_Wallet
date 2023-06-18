@@ -4,12 +4,12 @@ import subprocess
 import platform
 
 class RPCServer():
-    def __init__(self, wallet, host, port, rpc_bind_port):
+    def __init__(self, wallet, config):
         self.wallet = wallet
-        self.host = host
-        self.port = port
+        self.host = config.host
+        self.port = config.port
         self.rpc_is_ready = 0
-        self.rpc_bind_port = rpc_bind_port
+        self.rpc_bind_port = config.bind_port
         self._cli_path = None
 
     def cli_path(self):
