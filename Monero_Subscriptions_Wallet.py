@@ -1083,7 +1083,7 @@ def create_window(subscriptions): # Creates the main window and returns it
     # Define the window layout
     layout = [
         [sg.Text("Monero Subscriptions Wallet", font=(font, 24), expand_x=True, justification='center', relief=sg.RELIEF_RIDGE, size=(None, 1), pad=(0, 0), text_color=main_text, background_color=ui_overall_background)],
-        [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=("Helvetica", 10), expand_x=True, justification='center', background_color=ui_overall_background, pad=(0, 0))],
+        [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=(font, 10), expand_x=True, justification='center', background_color=ui_overall_background, pad=(0, 0))],
         [sg.Text("", font=(font, 8))],
             [
                 sg.Column(
