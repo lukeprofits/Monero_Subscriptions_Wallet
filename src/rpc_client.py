@@ -34,8 +34,8 @@ class RPCClient():
             "id": "0",
             "method": "make_integrated_address",
             "params": {
-                "standard_address": self.sellers_wallet,
-                "payment_id": self.payment_id
+                "standard_address": sellers_wallet,
+                "payment_id": payment_id
             }
         }
 

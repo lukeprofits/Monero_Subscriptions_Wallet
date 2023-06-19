@@ -42,15 +42,13 @@ except:
     pass
 
 # Start a thread to send the payments
-payments_thread = threading.Thread(target=subscriptions.send_recurring_payments)
-payments_thread.start()
+threading.Thread(target=subscriptions.send_recurring_payments).start()
 
 please_wait.close()
 
 subscription_gui = SubscriptionUI()
 window = subscription_gui.main_window()
-subscription_gui.tray()
+threading.Thread(target=subscription_gui.update_balance).start()
 subscription_gui.event_loop()
 ThreadManager.stop_flag().set()
-subscription_gui.tray().close()
 window.close()

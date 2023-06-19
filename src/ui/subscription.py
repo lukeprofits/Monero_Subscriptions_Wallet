@@ -9,6 +9,8 @@ from src.thread_manager import ThreadManager
 import qrcode
 import clipboard
 from psgtray import SystemTray
+from pystray import Menu, MenuItem
+import time
 
 class SubscriptionUI(CommonTheme):
     def __init__(self):
@@ -22,7 +24,8 @@ class SubscriptionUI(CommonTheme):
         self.unlocked_balance = None
 
     def refresh_balances(self):
-        self.xmr_balance, self.usd_balance, self.unlocked_balance = wallet.balance()
+        self.xmr_balance, self.usd_balance, self.unlocked_balance = self.wallet.balance()
+
 
     def layout(self):
         if not self._layout:
@@ -136,10 +139,6 @@ class SubscriptionUI(CommonTheme):
         while True:
             event, values = self.main_window().read()
 
-            if event == self.tray().key:
-                sg.cprint(f'System Tray Event = ', values[event], c='white on red')
-                event = values[event]
-
             if event == sg.WIN_CLOSED:
                 break
 
@@ -204,6 +203,7 @@ class SubscriptionUI(CommonTheme):
     def update_balance(self):
         while not ThreadManager.stop_flag().is_set():
             try:
+                self.refresh_balances()
                 # Update the GUI with the new balance info
                 if not self.usd_balance == '---.--':
                     self.main_window()['wallet_balance_in_usd'].update(f'        Balance:  ${self.usd_balance} USD')
@@ -215,14 +215,6 @@ class SubscriptionUI(CommonTheme):
 
             except Exception as e:
                 print(f'Exception in thread "update_gui_balance: {e}"')
-
-    def tray(self):
-        if not self._tray:
-            menu = ['', ['Show Window', 'Hide Window', '---', '!Disabled Item', 'Change Icon', ['Happy', 'Sad', 'Plain'], 'Exit']]
-            tooltip = 'Tooltip'
-            self._tray = SystemTray(menu, single_click_events=False, window=self.main_window(), tooltip=tooltip, icon=sg.DEFAULT_BASE64_ICON)
-            # self._tray.show_message('System Tray', 'System Tray Icon Started!')
-        return self._tray
 
     def refresh_gui(self):
         self.main_window().close()
