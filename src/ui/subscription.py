@@ -15,7 +15,6 @@ import time
 class SubscriptionUI(CommonTheme):
     def __init__(self):
         super().__init__()
-        self._layout = None
         self._main_window = None
         self._tray = None
         self.wallet = Wallet()
@@ -28,54 +27,52 @@ class SubscriptionUI(CommonTheme):
 
 
     def layout(self):
-        if not self._layout:
-            self._layout = [
-                [sg.Text("Monero Subscriptions Wallet", font=(self.font, 24), expand_x=True, justification='center', relief=sg.RELIEF_RIDGE, size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
-                [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=("Helvetica", 10), expand_x=True, justification='center', background_color=self.ui_overall_background, pad=(0, 0))],
-                [sg.Text("", font=(self.font, 8))],
-                    [
-                        sg.Column(
-                            [
-                                ########
-                                [sg.Text(f'        Balance:  ${self.usd_balance} USD', size=(25, 1), font=(self.font, 18), key='wallet_balance_in_usd', text_color=self.ui_sub_font, background_color=self.ui_overall_background)],
-                                [sg.Text(f'        XMR: {self.xmr_balance}', size=(25, 1), font=(self.font, 18), key='wallet_balance_in_xmr', background_color=self.ui_overall_background)],
-                                ########
+        return [
+            [sg.Text("Monero Subscriptions Wallet", font=(self.font, 24), expand_x=True, justification='center', relief=sg.RELIEF_RIDGE, size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
+            [sg.Text("Subscriptions will be paid automatically if the wallet remains open", font=("Helvetica", 10), expand_x=True, justification='center', background_color=self.ui_overall_background, pad=(0, 0))],
+            [sg.Text("", font=(self.font, 8))],
+                [
+                    sg.Column(
+                        [
+                            ########
+                            [sg.Text(f'        Balance:  ${self.usd_balance} USD', size=(25, 1), font=(self.font, 18), key='wallet_balance_in_usd', text_color=self.ui_sub_font, background_color=self.ui_overall_background)],
+                            [sg.Text(f'        XMR: {self.xmr_balance}', size=(25, 1), font=(self.font, 18), key='wallet_balance_in_xmr', background_color=self.ui_overall_background)],
+                            ########
 
-                                ########
-                                [self.frame()],
-                                ########
+                            ########
+                            [self.frame()],
+                            ########
 
-                            ], element_justification='center', expand_x=True, expand_y=True
-                        ),
-                        sg.VerticalSeparator(pad=(0, 10)),
-                        sg.Column(
-                            [
+                        ], element_justification='center', expand_x=True, expand_y=True
+                    ),
+                    sg.VerticalSeparator(pad=(0, 10)),
+                    sg.Column(
+                        [
 
-                                ########
-                                [sg.Text('Deposit XMR:', size=(20, 1), font=(self.font, 18), justification='center', text_color=self.ui_sub_font, background_color=self.ui_overall_background)],
-                                [sg.Column([
-                                    [sg.Image(self.wallet.generate_qr(), size=(147, 147), key='qr_code', pad=(10, 0))],  # Placeholder for the QR code image
-                                    [sg.Button("Copy Address", size=(16, 1), key='copy_address', pad=(10, 10))]],
-                                    element_justification='center', pad=(0, 0))],
-                                ########
+                            ########
+                            [sg.Text('Deposit XMR:', size=(20, 1), font=(self.font, 18), justification='center', text_color=self.ui_sub_font, background_color=self.ui_overall_background)],
+                            [sg.Column([
+                                [sg.Image(self.wallet.generate_qr(), size=(147, 147), key='qr_code', pad=(10, 0))],  # Placeholder for the QR code image
+                                [sg.Button("Copy Address", size=(16, 1), key='copy_address', pad=(10, 10))]],
+                                element_justification='center', pad=(0, 0))],
+                            ########
 
-                            ], expand_x=True, expand_y=True, element_justification='c'
-                        )
-                    ],
-                    [sg.Text("", font=(self.font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
+                        ], expand_x=True, expand_y=True, element_justification='c'
+                    )
+                ],
+                [sg.Text("", font=(self.font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
 
-                    ########
-                    [sg.Column([
-                        [sg.Text(f'      Send XMR:', size=(12, 1), font=(self.font, 14), pad=(10, 10), text_color=self.ui_sub_font, background_color=self.ui_overall_background),
-                        sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10), justification='center', size=(46, 1)),
-                        sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center', size=(20, 1)),
-                        sg.Button("Send", size=(8, 1), key='send', pad=(10, 10), button_color=(self.ui_button_b_font, self.ui_button_b))]], element_justification='c', justification='center'),
-                        sg.Text('', pad=(15, 15))],
-                    ########
+                ########
+                [sg.Column([
+                    [sg.Text(f'      Send XMR:', size=(12, 1), font=(self.font, 14), pad=(10, 10), text_color=self.ui_sub_font, background_color=self.ui_overall_background),
+                    sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10), justification='center', size=(46, 1)),
+                    sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center', size=(20, 1)),
+                    sg.Button("Send", size=(8, 1), key='send', pad=(10, 10), button_color=(self.ui_button_b_font, self.ui_button_b))]], element_justification='c', justification='center'),
+                    sg.Text('', pad=(15, 15))],
+                ########
 
-                    [sg.Text("", font=(self.font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
-            ]
-        return self._layout
+                [sg.Text("", font=(self.font, 8), expand_x=True, justification='center', size=(None, 1), pad=(0, 0), text_color=self.main_text, background_color=self.ui_overall_background)],
+        ]
 
     def rows(self, subscriptions):
         result = []
@@ -153,6 +150,7 @@ class SubscriptionUI(CommonTheme):
                     MerchantSubscription().main_window()
                 elif "Manually" in choice:
                     ManualSubscription().main_window()
+                self.refresh_gui()
 
             elif event == 'send':
                 try:

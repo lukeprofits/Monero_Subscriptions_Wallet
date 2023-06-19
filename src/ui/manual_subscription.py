@@ -3,6 +3,7 @@ from datetime import datetime
 import PySimpleGUI as sg
 from src.subscriptions import Subscription, Subscriptions
 import random
+from src.utils import make_payment_id
 
 class ManualSubscription(CommonTheme):
     def __init__(self):
@@ -54,23 +55,26 @@ class ManualSubscription(CommonTheme):
                 if not payment_id:
                     # '0000000000000000' is the same as no payment_id, but you want to use one.
                     # (Without one, you can't make multiple payments at the same time to the same wallet address.)
-                    payment_id = self.make_payment_id()  # generates a random payment ID.
+                    payment_id = make_payment_id()  # generates a random payment ID.
 
                 subscription = Subscription(custom_label=custom_label, amount=amount, currency=currency, billing_cycle_days=billing_cycle_days, start_date=start_date, sellers_wallet=sellers_wallet)
-                subscription_info = subscription.encode()
-                subscription_json = subscription.decode(subscription_info)
-                subscriptions = Subscriptions()
-                subscriptions.add_subscription(subscription)
-                subscriptions.write_subscriptions()
+                if subscription.valid_check():
+                    subscription_info = subscription.encode()
+                    subscription_json = subscription.decode(subscription_info)
+                    subscriptions = Subscriptions()
+                    subscriptions.add_subscription(subscription)
+                    subscriptions.write_subscriptions()
 
-                print(custom_label)
-                print(amount)
-                print(currency)
-                print(billing_cycle_days)
-                print(start_date)
-                print(sellers_wallet)
-                print(payment_id)
-                print(subscription_info)
+                    print(custom_label)
+                    print(amount)
+                    print(currency)
+                    print(billing_cycle_days)
+                    print(start_date)
+                    print(sellers_wallet)
+                    print(payment_id)
+                    print(subscription_info)
+                else:
+                    print(f'Invalid Subscription: {subscription.to_json()}')
 
                 window.close()
                 # window = create_window(subscriptions)

@@ -10,6 +10,7 @@ import requests
 from src.rpc_config import RPCConfig
 from src.ui.common import CommonTheme
 from src.rpc_client import RPCClient
+from src.utils import valid_address
 
 class Wallet():
     def __init__(self):
@@ -26,26 +27,8 @@ class Wallet():
         return path
 
     def get_current_block_height(self):
-        # Set up the JSON-RPC request
-        headers = {'content-type': 'application/json'}
-        data = {
-            "jsonrpc": "2.0",
-            "id": "0",
-            "method": "get_info"
-        }
-
         # Send the JSON-RPC request to the daemon
-        response = requests.post(self.config.daemon_url, data=json.dumps(data), headers=headers)
-
-        # Parse the response to get the block height
-        if response.status_code == 200:
-            response_data = response.json()
-            block_height = response_data["result"]["height"]
-            print(f'Block Height: {block_height}')
-            return block_height
-
-        else:
-            return None
+        return RPCClient().current_block_height()
 
     @property
     def block_height(self):
@@ -104,16 +87,7 @@ class Wallet():
 
     def address(self):
         if not self._address:
-            headers = {"content-type": "application/json"}
-            payload = {
-                "jsonrpc": "2.0",
-                "id": "0",
-                "method": "get_address"
-            }
-
-            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
-            response.raise_for_status()
-            result = response.json().get("result")
+            result = RPCClient().fetch_address()
             if result is None:
                 raise ValueError("Failed to get wallet address")
 
@@ -122,18 +96,9 @@ class Wallet():
         return self._address
 
     def balance(self):
-        headers = {"content-type": "application/json"}
-        payload = {
-            "jsonrpc": "2.0",
-            "id": "0",
-            "method": "get_balance"
-        }
-
         try:
             # get balance
-            response = requests.post(self.config.local_url, headers=headers, data=json.dumps(payload), auth=(self.config.username, self.config.password))
-            response.raise_for_status()
-            result = response.json().get("result")
+            result = RPCClient().balance()
 
             if result is None:
                 raise ValueError("Failed to get wallet balance")
@@ -183,23 +148,7 @@ class Wallet():
             print('Wallet is not a valid monero wallet address.')
 
     def valid_format(self):
-        # Check if the wallet address starts with the number 4
-
-        if self.address()[0] != "4":
-            return False
-
-        # Check if the wallet address is exactly 95 or 106 characters long
-        if len(self.address()) not in [95, 106]:
-            return False
-
-        # Check if the wallet address contains only valid characters
-        valid_chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-        for char in self.address():
-            if char not in valid_chars:
-                return False
-
-        # If it passed all these checks
-        return True
+        valid_address(self.address())
 
     def generate_qr(self):
         if self.valid_format():

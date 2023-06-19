@@ -14,6 +14,7 @@ requests = "==2.31.0"
 pillow = "==9.5.0"
 pyinstaller = "*"
 psgtray = "*"
+kivy = "*"
 
 [dev-packages]
 

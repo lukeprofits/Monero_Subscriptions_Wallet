@@ -10,6 +10,7 @@ from src.thread_manager import ThreadManager
 import gzip
 import base64
 from src.rpc_client import RPCClient
+from src.utils import valid_address
 
 class Subscriptions():
     SUBS_FILE_PATH = 'Subscriptions.json'
@@ -116,25 +117,21 @@ class Subscription():
     def __init__(self, custom_label, amount, billing_cycle_days, start_date, sellers_wallet, currency, payment_id=''):
         self.custom_label = custom_label
         self.amount = float(amount)
-        self.billing_cycle_days = int(billing_cycle_days)
+        if billing_cycle_days:
+            self.billing_cycle_days = int(billing_cycle_days)
+        else:
+            self.billing_cycle_days = None
         self.payment_id = payment_id
-        self.start_date = datetime.strptime(start_date, self.DATE_FORMAT)
+        if start_date:
+            self.start_date = datetime.strptime(start_date, self.DATE_FORMAT)
+        else:
+            self.start_date = datetime.now()
         self.currency = currency
         self.sellers_wallet = sellers_wallet
 
     def determine_if_a_payment_is_due(self):
         try:  # Get all outgoing transfers from the wallet
-            headers = {"Content-Type": "application/json"}
-            data = {
-                "jsonrpc": "2.0",
-                "id": "0",
-                "method": "get_transfers",
-                "params": {"out": True},
-            }
-
-            # Get outgoing payments
-            response = requests.post(RPCConfig().local_url, headers=headers, data=json.dumps(data))
-            transfers = response.json().get("result", {}).get("out", {})
+            transfers = RPCClient().transfers()
 
         except Exception as e:
             print(f"Error querying Monero RPC: {e}")
@@ -211,16 +208,28 @@ class Subscription():
             return False
 
     def valid_payment_id(self):
-        if len(self.payment_id) != 16:
-            return False
-
-        valid_chars = set('0123456789abcdef')
-        for char in self.payment_id:
-            if char not in valid_chars:
+        if self.payment_id:
+            if len(self.payment_id) != 16:
                 return False
 
-        # If it passed all these checks
+            valid_chars = set('0123456789abcdef')
+            for char in self.payment_id:
+                if char not in valid_chars:
+                    return False
+
+            # If it passed all these checks
+            return True
         return True
+
+    def valid_billing_cycle_days(self):
+        return type(self.billing_cycle_days) == int
+
+    def valid_wallet_format(self):
+        return valid_address(self.sellers_wallet)
+
+    def valid_check(self):
+        return self.valid_payment_id() and self.amount_format() and self.supported_currency() and \
+               self.valid_wallet_format() and self.valid_billing_cycle_days()
 
     def encode(self):
         # Convert the JSON data to a string
