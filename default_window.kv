@@ -1,0 +1,179 @@
+WindowManager:
+    NodePicker:
+    DefaultWindow:
+    SubscriptionTypeWindow:
+    ManualSubscriptionWindow:
+    MerchantSubscriptionWindow:
+
+<Balance>:
+    cols: 2
+    Label:
+        text: "Balance"
+    Label:
+        text: self.parent.dollar_balance
+    Label:
+        text: "XMR"
+    Label:
+        text: self.parent.xmr_balance
+
+<SubscriptionUI>
+    cols: 4
+    Label:
+        text: self.parent.amount
+    Label:
+        text: self.parent.custom_label
+    Label:
+        text: self.parent.renewal_date
+    Button:
+        text: "Cancel"
+
+
+<SubscriptionsUI>:
+    cols: 1
+    SubscriptionUI:
+    GridLayout:
+        cols: 1
+        Button:
+            text: "Add Subscription"
+            id: add_subscription
+            on_release: app.root.current="subscription_type"
+
+<Deposit>:
+    cols: 1
+    Label:
+        text: "Deposit XMR:"
+    Label:
+        text: "QR Filler"
+    Button:
+        text: "Copy Address"
+
+
+<Withdrawl>:
+    cols: 4
+    TextInput:
+        multiline: False
+    TextInput:
+        multiline: False
+    TextInput:
+        multiline: False
+    Button:
+        text: "Withdraw"
+
+<DefaultWindow>:
+    name: "default"
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        GridLayout:
+            cols: 1
+            Label:
+                text: "Monero Subscriptions Wallet"
+            Label:
+                text: "Subscriptions will be paid automatically if the wallet remains open."
+
+        GridLayout:
+            cols: 2
+
+            GridLayout:
+                cols: 1
+                Balance:
+                SubscriptionsUI:
+
+
+            Deposit:
+
+        Withdrawl:
+
+<SubscriptionTypeWindow>:
+    name: "subscription_type"
+    GridLayout:
+        cols: 1
+        Button:
+            text: "Manual Subscription"
+            on_release: app.root.current="manual_subscription"
+
+        Button:
+            text: "Merchant Subscription"
+            on_release: app.root.current="merchant_subscription"
+
+        Button:
+            text: "Cancel"
+            on_release: app.root.current="default"
+
+<ManualSubscriptionWindow>:
+    name: "manual_subscription"
+    GridLayout:
+        cols: 2
+        Label:
+            text: "Custom Name:"
+        TextInput:
+            multiline: False
+            id: custom_label
+        Label:
+            text: "Amount:"
+        TextInput:
+            multiline: False
+            id: amount
+        Label:
+            text: "Billing Every:"
+        TextInput:
+            multiline: False
+            id: billing_cycle_days
+        Label:
+            text: "Start Date:"
+        TextInput:
+            multiline: False
+            id: start_date
+        Label:
+            text: "Seller's Wallet:"
+        TextInput:
+            multiline: False
+            id: sellers_wallet
+        Label:
+            text: "Seller Provided Payment ID:"
+        TextInput:
+            multiline: False
+            id: payment_id
+        Label:
+            text: "Currency:"
+        TextInput:
+            multiline: False
+            id: currency
+        Button:
+            text: "Cancel"
+            on_release: app.root.current="subscription_type"
+        Button:
+            text: "Add Subscription"
+            on_release: self.parent.parent.add_subscription()
+
+<MerchantSubscriptionWindow>:
+    name: "merchant_subscription"
+    GridLayout:
+        cols: 2
+        Label:
+            text: "Subscription Code"
+        TextInput:
+            multiline: False
+            id: subscription_code
+        Button:
+            text: "Cancel"
+            on_release: app.root.current="subscription_type"
+        Button:
+            text: "Add Subscription"
+            on_release: self.parent.parent.add_subscription()
+
+<NodePicker>:
+    name: "node_picker"
+    GridLayout:
+        cols: 2
+        Label:
+            text: "Add A Monero Node:"
+        TextInput:
+            id: node
+            multiline: False
+        Button:
+            text: "Submit"
+            on_release: self.parent.parent.add_node()
+        Button:
+            text: "Add A Random Node"
+            on_release: self.parent.parent.add_random_node()

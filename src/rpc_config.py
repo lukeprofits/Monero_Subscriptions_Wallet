@@ -1,12 +1,13 @@
 import platform
+import os
 
 class RPCConfig():
     NODE_FILENAME = 'node_to_use.txt'
 
     def __init__(self):
         self._node = self.node()
-        self.host = self._node.split(':')[0]
-        self.port = self._node.split(':')[1]
+        self.host = self._node.split(':')[0] if self._node else ''
+        self.port = self._node.split(':')[1] if self._node else ''
         self.bind_port = '18088'
         self.local_url = f'http://127.0.0.1:{self.bind_port}/json_rpc'
         self.username = 'monero'
@@ -15,9 +16,15 @@ class RPCConfig():
         self._cli_path = None
 
     def node(self):
-        with open(self.NODE_FILENAME, 'r') as f:
-            node = f.readline().strip()  # read first line into 'node'
+        node = None
+        if os.path.isfile(self.NODE_FILENAME):
+            with open(self.NODE_FILENAME, 'r') as f:
+                node = f.readline().strip()  # read first line into 'node'
         return node
+
+    def set_node(self, node):
+        with open(self.NODE_FILENAME, 'w') as f:
+            f.write(node)
 
     @property
     def cli_path(self):

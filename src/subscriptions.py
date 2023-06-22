@@ -116,7 +116,9 @@ class Subscription():
     DATE_FORMAT = "%Y-%m-%d"
     def __init__(self, custom_label, amount, billing_cycle_days, start_date, sellers_wallet, currency, payment_id=''):
         self.custom_label = custom_label
-        self.amount = float(amount)
+        self.amount = None
+        if amount:
+            self.amount = float(amount)
         if billing_cycle_days:
             self.billing_cycle_days = int(billing_cycle_days)
         else:
@@ -187,14 +189,14 @@ class Subscription():
 
         return days_left
 
-    def supported_currency(self):
+    def currency_valid(self):
         # add more in the future as needed
         if self.currency == 'USD' or self.currency == 'XMR':
             return True
         else:
             return False
 
-    def amount_format(self):
+    def amount_valid(self):
         if type(self.amount) == int:
             return True
 
@@ -207,7 +209,7 @@ class Subscription():
         else:
             return False
 
-    def valid_payment_id(self):
+    def payment_id_valid(self):
         if self.payment_id:
             if len(self.payment_id) != 16:
                 return False
@@ -221,15 +223,21 @@ class Subscription():
             return True
         return True
 
-    def valid_billing_cycle_days(self):
+    def start_date_valid(self):
+        return type(self.start_date) == datetime
+
+    def billing_cycle_days_valid(self):
         return type(self.billing_cycle_days) == int
 
-    def valid_wallet_format(self):
+    def sellers_wallet_valid(self):
         return valid_address(self.sellers_wallet)
 
+    def custom_label_valid(self):
+        return True
+
     def valid_check(self):
-        return self.valid_payment_id() and self.amount_format() and self.supported_currency() and \
-               self.valid_wallet_format() and self.valid_billing_cycle_days()
+        return self.payment_id_valid() and self.amount_valid() and self.currency_valid() and \
+               self.wallet_format_valid() and self.billing_cycle_days_valid() and self.start_date_valid()
 
     def encode(self):
         # Convert the JSON data to a string
@@ -246,7 +254,8 @@ class Subscription():
 
         return monero_subscription
 
-    def decode(self, code):
+    @classmethod
+    def decode(cls, code):
         # Catches user error. Code can start with "monero_subscription:", or ""
         code_parts = code.split('-subscription:')
 
