@@ -69,6 +69,12 @@ class ManualSubscriptionWindow(Screen):
             subscriptions.add_subscription(subscription)
             subscriptions.write_subscriptions()
             self.parent.current = 'default'
+            sub_ui = None
+            for widget in self.walk():
+                if type(widget) == SubscriptionsUI:
+                    sub_ui = widget
+                    break
+            sub_ui.reload_data()
         else:
             for field, sub_attr in self.ids.items():
                 if not getattr(subscription, f'{field}_valid'):
