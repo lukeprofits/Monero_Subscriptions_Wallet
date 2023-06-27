@@ -119,15 +119,15 @@ if __name__ == '__main__':
     #     node_picker.close_window()
 
     # # # START PREREQUISITES ##################################################################################################
-    # wallet = Wallet()
-    # rpc_server = RPCServer(wallet)
-    # rpc_server.start()
-    # wallet.create()
+    wallet = Wallet()
+    rpc_server = RPCServer(wallet)
+    rpc_server.start()
+    wallet.create()
     # threading.Thread(target=subscription_gui.update_balance).start()
     # threading.Thread(target=subscriptions.send_recurring_payments).start()
 
-    # while not rpc_server.rpc_is_ready:
-    #     time.sleep(1)
+    while not rpc_server.rpc_is_ready:
+        time.sleep(1)
 
     WalletApp().run()
 
