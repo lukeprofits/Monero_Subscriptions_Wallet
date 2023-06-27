@@ -132,6 +132,23 @@ class Subscription():
         self.sellers_wallet = sellers_wallet
 
     def determine_if_a_payment_is_due(self):
+        # if today's date is before the subscription start date
+        if datetime.now() <= self.start_date:
+            return False, self.start_date
+
+        for payment_id, dest_address, transaction_date in self.loop_transactions():
+            if payment_id == self.payment_id and dest_address == self.make_integrated_address():
+                # Check the date. See if it happened this billing cycle.
+                days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
+                if days_left > 0:  # renew when subscription expires
+                    print(f'Found a payment on {transaction_date}. No payment is due.')
+                    return False, transaction_date  # It was this billing cycle. Payment is NOT due.
+
+        # If we made it here without finding a payment this month, a payment is due.
+        print('Did not find a payment. A payment is due.')
+        return True, ''
+
+    def loop_transactions(self):
         try:  # Get all outgoing transfers from the wallet
             transfers = RPCClient().transfers()
 
@@ -139,9 +156,6 @@ class Subscription():
             print(f"Error querying Monero RPC: {e}")
             return False, ''
 
-        #print(f"Transfers: {transfers}")
-
-        # Check each of them
         for t in transfers:
             if 'destinations' in t and 'payment_id' in t and 'timestamp' in t:  # if it has all the fields we are checking
                 payment_id = t['payment_id']
@@ -149,20 +163,7 @@ class Subscription():
                 transaction_date = t['timestamp']
                 transaction_date = datetime.fromtimestamp(transaction_date)
                 #print(f'\nFOUND: {payment_id}, {dest_address}, {transaction_date}\n')
-                if payment_id == self.payment_id and dest_address == self.make_integrated_address():
-                    # Check the date. See if it happened this billing cycle.
-                    days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
-                    if days_left > 0:  # renew when subscription expires
-                        print(f'Found a payment on {transaction_date}. No payment is due.')
-                        return False, transaction_date  # It was this billing cycle. Payment is NOT due.
-
-        # if today's date is before the subscription start date
-        if datetime.now() <= self.start_date:
-            return False, self.start_date
-
-        # If we made it here without finding a payment this month, a payment is due.
-        print('Did not find a payment. A payment is due.')
-        return True, ''
+                yield(payment_id, dest_address, transaction_date)
 
     def make_integrated_address(self):
         RPCClient().create_integrated_address(self.sellers_wallet, self.payment_id)
@@ -188,6 +189,12 @@ class Subscription():
         # print(f'Hours Left: {hours_left}')
 
         return days_left
+
+    def renewal_date(self):
+        for payment_id, dest_address, transaction_date in self.loop_transactions():
+            days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
+            return datetime.now() + days_left.days()
+        return datetime.now().strftime(self.DATE_FORMAT)
 
     def currency_valid(self):
         # add more in the future as needed
@@ -237,7 +244,7 @@ class Subscription():
 
     def valid_check(self):
         return self.payment_id_valid() and self.amount_valid() and self.currency_valid() and \
-               self.wallet_format_valid() and self.billing_cycle_days_valid() and self.start_date_valid()
+               self.sellers_wallet_valid() and self.billing_cycle_days_valid() and self.start_date_valid()
 
     def encode(self):
         # Convert the JSON data to a string

@@ -19,24 +19,26 @@ WindowManager:
 <SubscriptionUI>
     cols: 4
     Label:
-        text: self.parent.amount
+        text: str(root.amount)
     Label:
-        text: self.parent.custom_label
+        text: root.custom_label
     Label:
-        text: self.parent.renewal_date
+        text: root.renewal_date
     Button:
         text: "Cancel"
+        on_release: root.remove_subscription(root.custom_label, root.amount, root.billing_cycle_days)
 
 
 <SubscriptionsUI>:
-    cols: 1
-    SubscriptionUI:
-    GridLayout:
+    # cols: 1
+    viewclass: 'SubscriptionUI'
+    RecycleGridLayout:
         cols: 1
-        Button:
-            text: "Add Subscription"
-            id: add_subscription
-            on_release: app.root.current="subscription_type"
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        # orientation: 'vertical'
 
 <Deposit>:
     cols: 1
@@ -77,7 +79,16 @@ WindowManager:
             GridLayout:
                 cols: 1
                 Balance:
-                SubscriptionsUI:
+                GridLayout:
+                    cols: 1
+                    SubscriptionsUI:
+                    GridLayout:
+                        cols: 1
+                        Button:
+                            text: "Add Subscription"
+                            id: add_subscription
+                            on_release: app.root.current="subscription_type"
+
 
 
             Deposit:

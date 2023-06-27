@@ -68,6 +68,7 @@ class ManualSubscriptionWindow(Screen):
             subscriptions = Subscriptions()
             subscriptions.add_subscription(subscription)
             subscriptions.write_subscriptions()
+            self.parent.current = 'default'
         else:
             for field, sub_attr in self.ids.items():
                 if not getattr(subscription, f'{field}_valid'):
@@ -82,6 +83,7 @@ class MerchantSubscriptionWindow(Screen):
                 subscriptions = Subscriptions()
                 subscriptions.add_subscription(subscription)
                 subscriptions.write_subscriptions()
+                self.parent.current = 'default'
             else:
                 self.ids.subscription_code
         except json.decoder.JSONDecodeError:
