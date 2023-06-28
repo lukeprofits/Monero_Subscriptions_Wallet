@@ -1,4 +1,5 @@
 import threading
+from multiprocessing import Process, Pipe
 from lxml import html
 from src.subscriptions import Subscriptions, Subscription
 from src.ui.node_picker import NodePicker
@@ -15,6 +16,7 @@ from src.ui.deposit import Deposit
 from src.ui.withdrawl import Withdrawl
 from src.ui.subscription_ui import SubscriptionUI
 import kivy
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 kivy.require('2.2.1')
@@ -25,7 +27,9 @@ import time
 import requests
 import random
 from src.rpc_config import RPCConfig
+from src.rpc_client import RPCClient
 from src.ui.node_picker import NodePicker
+
 # please_wait = PleaseWait()
 # please_wait.open()
 
@@ -96,16 +100,52 @@ class MerchantSubscriptionWindow(Screen):
             self.ids.subscription_code
             #Communicate invalidity to user
 
+class Loading(Screen):
+    pass
+
 class WindowManager(ScreenManager):
     pass
 
 kv = Builder.load_file('default_window.kv')
 
 class WalletApp(App):
+    def on_start(self):
+        self.wallet = Wallet()
+        self.rpc_server = RPCServer(self.wallet)
+        kv.current = 'loading'
+        print('Scheduling RPC Start')
+        rpc_server = threading.Thread(target=Clock.schedule_once, args=[self.start_rpc_server])
+        rpc_server.run()
+        print('Scheduled RPC Start')
+        print('Scheduling RPC Start Check')
+        rpc_server_check = threading.Thread(target=self.check_if_rpc_server_ready)
+        rpc_server_check.start()
+        print('Scheduled RPC Start Check')
+
+    def set_default(self, dt):
+        kv.current = 'default'
+
+    def on_stop(self):
+        self.rpc_server.kill
+
     def build(self):
-        if RPCConfig().node():
-            kv.current='default'
         return kv
+
+    def start_rpc_server(self, dt):
+        self.rpc_server.start()
+
+    def check_if_rpc_server_ready(self):
+        rpc_client = RPCClient()
+        while not rpc_client.local_healthcheck():
+            time.sleep(1)
+            print('Checking if RPC Ready')
+        Clock.schedule_once(self.set_default)
+
+        if not self.wallet.exists():
+            self.wallet.create()
+
+        self.wallet.generate_qr()
+        return False
 
 if __name__ == '__main__':
     # Get subscriptions list
@@ -119,15 +159,21 @@ if __name__ == '__main__':
     #     node_picker.close_window()
 
     # # # START PREREQUISITES ##################################################################################################
-    wallet = Wallet()
-    rpc_server = RPCServer(wallet)
-    rpc_server.start()
-    wallet.create()
     # threading.Thread(target=subscription_gui.update_balance).start()
     # threading.Thread(target=subscriptions.send_recurring_payments).start()
 
-    while not rpc_server.rpc_is_ready:
-        time.sleep(1)
+    # wallet = Wallet()
+    # rpc_server = RPCServer(wallet)
+
+    wallet_app = WalletApp()
+
+    # wallet_app.rpc_server = rpc_server
+    # wallet_app.wallet = wallet
+
+    # wallet_app.start_rpc_server()
+
+    # rpc_server_check = threading.Thread(target=Clock.schedule_interval, args=[wallet_app.check_if_rpc_server_ready, 1])
+    # rpc_server_check.run()
 
     WalletApp().run()
 

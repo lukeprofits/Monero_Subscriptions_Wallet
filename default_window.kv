@@ -1,4 +1,5 @@
 WindowManager:
+    Loading:
     NodePicker:
     DefaultWindow:
     SubscriptionTypeWindow:
@@ -10,11 +11,11 @@ WindowManager:
     Label:
         text: "Balance"
     Label:
-        text: self.parent.dollar_balance
+        text: str(self.parent.dollar_balance)
     Label:
         text: "XMR"
     Label:
-        text: self.parent.xmr_balance
+        text: str(self.parent.xmr_balance)
 
 <SubscriptionUI>
     cols: 4
@@ -44,8 +45,8 @@ WindowManager:
     cols: 1
     Label:
         text: "Deposit XMR:"
-    Label:
-        text: "QR Filler"
+    Image:
+        source: "wallet_qr_code.png"
     Button:
         text: "Copy Address"
         on_release: self.parent.copy_address()
@@ -189,3 +190,11 @@ WindowManager:
         Button:
             text: "Add A Random Node"
             on_release: self.parent.parent.add_random_node()
+
+<Loading>:
+    name: "loading"
+    GridLayout:
+        size: root.width, root.height
+        cols: 1
+        Label:
+            text: "Loading..."

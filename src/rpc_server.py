@@ -13,6 +13,7 @@ class RPCServer():
         self.cli_path = config.cli_path
         self.rpc_is_ready = 0
         self.rpc_bind_port = config.bind_port
+        self.process = None
 
     def _start(self):
         cmd = f'monero-wallet-rpc --wallet-file {self.wallet.name} --password "" --rpc-bind-port {self.rpc_bind_port} --disable-rpc-login --confirm-external-bind --daemon-host {self.host} --daemon-port {self.port}'
@@ -35,18 +36,18 @@ class RPCServer():
                 if proc.poll() is not None:
                     break
 
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        while True:
-            output = process.stdout.readline().decode("utf-8").strip()
-            print(f'RPC STARTING:{output}')
+        # while True:
+        #     output = process.stdout.readline().decode("utf-8").strip()
+        #     print(f'RPC STARTING:{output}')
 
-            if "Starting wallet RPC server" in output:
-                self.rpc_is_ready = True
-                break
+        #     if "Starting wallet RPC server" in output:
+        #         self.rpc_is_ready = True
+        #         break
 
-            if process.poll() is not None:
-                break
+        #     if process.poll() is not None:
+        #         break
 
     def kill(self):
         # Check which platform we are on and get the process list accordingly

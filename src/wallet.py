@@ -33,7 +33,7 @@ class Wallet():
     @property
     def block_height(self):
         if not self._block_height:
-            if not os.path.isfile(f"{self.name}.keys") or not os.path.isfile(self.name):
+            if not self.exists():
                 # If either file doesn't exist
                 self.create()
             else:
@@ -42,6 +42,9 @@ class Wallet():
 
             self._block_height = self.get_current_block_height()
         return self._block_height
+
+    def exists(self):
+        return os.path.isfile(self.name) and os.path.isfile(f'{self.name}.keys')
 
     def create(self):
         # Remove existing wallet if present
@@ -148,7 +151,7 @@ class Wallet():
             print('Wallet is not a valid monero wallet address.')
 
     def valid_format(self):
-        valid_address(self.address())
+        return valid_address(self.address())
 
     def generate_qr(self):
         if self.valid_format():

@@ -8,7 +8,7 @@ class RPCClient():
         self._headers = None
 
     def current_block_height(self):
-        result = self.daemon_post(self._current_block_height())
+        result = self.daemon_post(self._get_info())
         return result['result']['height']
 
     def create_integrated_address(self, sellers_wallet, payment_id):
@@ -31,6 +31,35 @@ class RPCClient():
         result = self.post(self._transfers())
         return result.get("result", {}).get("out", {})
 
+    def remote_info(self):
+        result = self.daemon_post(self._get_info())
+        return result.get("result", {})
+
+    def get_version(self):
+        result = self.post(self._get_version())
+        return result.get("result", {}).get("version", False)
+
+    def remote_healthcheck(self):
+        try:
+            info_hash = self.remote_info()
+            return info_hash.get('synchronized', False)
+        except requests.exceptions.ConnectionError as e:
+            return False
+
+    def local_healthcheck(self):
+        try:
+            return type(self.get_version()) == int
+        except requests.exceptions.ConnectionError as e:
+            print(str(e))
+            return False
+
+    def _get_version(self):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "get_version"
+        }
+
     def _transfers(self):
         return {
             "jsonrpc": "2.0",
@@ -39,7 +68,7 @@ class RPCClient():
             "params": {"out": True}
         }
 
-    def _current_block_height(self):
+    def _get_info(self):
         return {
             "jsonrpc": "2.0",
             "id": "0",

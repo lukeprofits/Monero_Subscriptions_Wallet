@@ -8,8 +8,8 @@ class Balance(GridLayout):
 
     def update_balance(self):
         balances = Wallet().balance()
-        self.dollar_balance = balances[0]
-        self.xmr_balance = balances[1]
+        self.dollar_balance = str(balances[0])
+        self.xmr_balance = str(balances[1])
 
     def __init__(self, **kwargs):
         super(Balance, self).__init__(**kwargs)
