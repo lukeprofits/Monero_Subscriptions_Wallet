@@ -16,6 +16,8 @@ pyinstaller = "*"
 psgtray = "*"
 kivy = "*"
 kivy-examples = "*"
+PyGObject = "*"
+pystray = "*"
 
 [dev-packages]
 

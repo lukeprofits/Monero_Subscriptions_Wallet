@@ -16,7 +16,7 @@ from src.ui.deposit import Deposit
 from src.ui.withdrawl import Withdrawl
 from src.ui.subscription_ui import SubscriptionUI
 import kivy
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 kivy.require('2.2.1')
@@ -29,7 +29,8 @@ import random
 from src.rpc_config import RPCConfig
 from src.rpc_client import RPCClient
 from src.ui.node_picker import NodePicker
-
+import pystray
+from PIL import Image, ImageDraw
 # please_wait = PleaseWait()
 # please_wait.open()
 
@@ -147,6 +148,36 @@ class WalletApp(App):
         self.wallet.generate_qr()
         return False
 
+    def show_window(self, dt):
+        print('Showing Window')
+        kv.parent.show()
+
+    def restore_to_front(self):
+        print('Restoring To Front')
+        Clock.schedule_once(self.show_window)
+
+    def hide_window(self, dt):
+        print('Hiding Window')
+        kv.parent.hide()
+
+    def to_taskbar(self):
+        print('Restoring To Front')
+        Clock.schedule_once(self.hide_window)
+
+
+def create_image(width, height, color1, color2):
+    # Generate an image and draw a pattern
+    image = Image.new('RGB', (width, height), color1)
+    dc = ImageDraw.Draw(image)
+    dc.rectangle(
+        (width // 2, 0, width, height // 2),
+        fill=color2)
+    dc.rectangle(
+        (0, height // 2, width // 2, height),
+        fill=color2)
+
+    return image
+
 if __name__ == '__main__':
     # Get subscriptions list
     # subscriptions = Subscriptions()
@@ -164,8 +195,17 @@ if __name__ == '__main__':
 
     # wallet = Wallet()
     # rpc_server = RPCServer(wallet)
-
     wallet_app = WalletApp()
+
+    icon = pystray.Icon('Monero Subscription Wallet',\
+        icon=create_image(64,64, 'black', 'white'),\
+        menu=pystray.Menu(
+            pystray.MenuItem('Hide', wallet_app.to_taskbar),
+            pystray.MenuItem('Show', wallet_app.restore_to_front)
+        )
+    )
+
+    threading.Thread(target=icon.run).start()
 
     # wallet_app.rpc_server = rpc_server
     # wallet_app.wallet = wallet
@@ -175,7 +215,7 @@ if __name__ == '__main__':
     # rpc_server_check = threading.Thread(target=Clock.schedule_interval, args=[wallet_app.check_if_rpc_server_ready, 1])
     # rpc_server_check.run()
 
-    WalletApp().run()
+    wallet_app.run()
 
 # subscription_gui = SubscriptionUI()
 # window = subscription_gui.main_window()
