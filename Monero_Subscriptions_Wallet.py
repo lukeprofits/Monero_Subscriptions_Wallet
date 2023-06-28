@@ -31,6 +31,7 @@ from src.rpc_client import RPCClient
 from src.ui.node_picker import NodePicker
 import pystray
 from PIL import Image, ImageDraw
+from src.utils import walk_for_widget
 # please_wait = PleaseWait()
 # please_wait.open()
 
@@ -74,11 +75,7 @@ class ManualSubscriptionWindow(Screen):
             subscriptions.add_subscription(subscription)
             subscriptions.write_subscriptions()
             self.parent.current = 'default'
-            sub_ui = None
-            for widget in self.walk():
-                if type(widget) == SubscriptionsUI:
-                    sub_ui = widget
-                    break
+            sub_ui = walk_for_widget(self, SubscriptionsUI)
             sub_ui.reload_data()
         else:
             for field, sub_attr in self.ids.items():

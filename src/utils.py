@@ -22,3 +22,11 @@ def valid_address(address):
 
     # If it passed all these checks
     return True
+
+def walk_for_widget(walk_widget, target_widget):
+    result = None
+    for widget in walk_widget.walk():
+        if type(widget) == target_widget:
+            result = widget
+            break
+    return result

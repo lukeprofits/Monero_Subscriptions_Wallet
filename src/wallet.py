@@ -19,6 +19,7 @@ class Wallet():
         self._block_height = 0
         self._address = None
         self.config = RPCConfig()
+        self.median_usd_price = None
 
     def _get_path(self):
         path = ''
@@ -107,12 +108,13 @@ class Wallet():
                 raise ValueError("Failed to get wallet balance")
 
             xmr_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["balance"])
+            print(f'XMR Balance: {xmr_balance}')
             xmr_unlocked_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["unlocked_balance"])
 
             #print(xmr_unlocked_balance)
 
             try:
-                usd_balance = format(monero_usd_price.calculate_usd_from_monero(float(xmr_balance)), ".2f")
+                usd_balance = format(self.calculate_usd_exchange(float(xmr_balance)), ".2f")
             except:
                 usd_balance = '---.--'
 
@@ -123,6 +125,16 @@ class Wallet():
         except Exception as e:
             print(f'get_wallet_balance error: {e}')
             return '--.------------', '---.--'
+
+    def calculate_usd_exchange(self, amount):
+        print(f'Median USD Price: {self.median_usd_price}')
+        if not self.median_usd_price:
+            self.median_usd_price = monero_usd_price.median_price()
+            print(f'Median USD Price After: {self.median_usd_price}')
+
+        usd_amount = round(amount * self.median_usd_price, 2)
+
+        return usd_amount
 
     def send_subscription(self, subscription):
         self.send(address=subscription.sellers_wallet, amount=subscription.amount, payment_id=subscription.payment_id)
