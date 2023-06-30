@@ -100,12 +100,14 @@ WindowManager:
         background_color: theme.ui_barely_visible
         background_normal: ''
         color: theme.monero_orange
+        on_focus: self.background_color = theme.ui_barely_visible
     TextInput:
         id: amount
         multiline: False
         hint_text: "Enter An Amount"
         background_color: theme.ui_barely_visible
         background_normal: ''
+        on_focus: self.background_color = theme.ui_barely_visible
     Button:
         text: "Withdraw"
         background_color: theme.ui_button_b

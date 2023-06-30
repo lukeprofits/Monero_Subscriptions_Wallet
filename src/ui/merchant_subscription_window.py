@@ -18,7 +18,6 @@ class MerchantSubscriptionWindow(Screen):
                 sub_ui = walk_for_widget(self, SubscriptionsUI)
                 sub_ui.reload_data()
             else:
-                self.ids.subscription_code
+                self.ids.subscription_code.background_color = CommonTheme().monero_orange
         except (json.decoder.JSONDecodeError, Exception):
             self.ids.subscription_code.background_color = CommonTheme().monero_orange
-            #Communicate invalidity to user
