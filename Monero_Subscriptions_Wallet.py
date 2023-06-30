@@ -32,6 +32,10 @@ from src.ui.node_picker import NodePicker
 import pystray
 from PIL import Image, ImageDraw
 from src.utils import walk_for_widget
+from kivy.uix.dropdown  import DropDown
+from kivy.uix.gridlayout  import GridLayout
+from kivy.uix.button  import Button
+from src.ui.common import CommonTheme
 # please_wait = PleaseWait()
 # please_wait.open()
 
@@ -62,26 +66,7 @@ class SubscriptionTypeWindow(Screen):
     pass
 
 class ManualSubscriptionWindow(Screen):
-    def add_subscription(self):
-        sub_attrs = {}
-
-        for field, sub_attr in self.ids.items():
-            sub_attrs[field] = sub_attr.text
-
-        subscription = Subscription(**sub_attrs)
-
-        if subscription.valid_check():
-            subscriptions = Subscriptions()
-            subscriptions.add_subscription(subscription)
-            subscriptions.write_subscriptions()
-            self.parent.current = 'default'
-            sub_ui = walk_for_widget(self, SubscriptionsUI)
-            sub_ui.reload_data()
-        else:
-            for field, sub_attr in self.ids.items():
-                if not getattr(subscription, f'{field}_valid'):
-                    #Doesn't actually work to notify users, but on the right track.
-                    sub_attr.background_color = [0,0,1,1]
+    pass
 
 class MerchantSubscriptionWindow(Screen):
     def add_subscription(self):
@@ -92,10 +77,12 @@ class MerchantSubscriptionWindow(Screen):
                 subscriptions.add_subscription(subscription)
                 subscriptions.write_subscriptions()
                 self.parent.current = 'default'
+                sub_ui = walk_for_widget(self, SubscriptionsUI)
+                sub_ui.reload_data()
             else:
                 self.ids.subscription_code
-        except json.decoder.JSONDecodeError:
-            self.ids.subscription_code
+        except (json.decoder.JSONDecodeError, Exception):
+            self.ids.subscription_code.background_color = CommonTheme().monero_orange
             #Communicate invalidity to user
 
 class Loading(Screen):
@@ -103,6 +90,54 @@ class Loading(Screen):
 
 class WindowManager(ScreenManager):
     pass
+
+class CurrencyDropdown(DropDown):
+    pass
+
+class CurrencyButton(Button):
+    pass
+
+class ManualSubscriptionFormInputs(GridLayout):
+    def on_kv_post(self, idk):
+        self.currency_dropdown = CurrencyDropdown()
+        self.currency_button = CurrencyButton(text="Currency")
+        self.add_widget(self.currency_button)
+        self.ids['currency'] = self.currency_button
+        self.currency_button.bind(on_release=self.button_callback)
+
+        self.currency_dropdown.bind(on_select = lambda instance, x: setattr(self.currency_button, 'text', x))
+        self.currency_dropdown.bind(on_select = self.callback)
+
+    def button_callback(self, idk):
+        # breakpoint()
+        self.currency_dropdown.open(idk)
+        self.currency_button.background_color = CommonTheme().monero_white
+
+    def callback(self, instance, x):
+        '''x is self.mainbutton.text refreshed'''
+        print ( "The chosen mode is: {0}" . format ( x ) )
+
+
+class ManualSubscriptionForm(GridLayout):
+    def add_subscription(self):
+        sub_attrs = {}
+        inputs = walk_for_widget(self, ManualSubscriptionFormInputs)
+        for field, sub_attr in inputs.ids.items():
+            sub_attrs[field] = sub_attr.text
+
+        subscription = Subscription(**sub_attrs)
+
+        if subscription.valid_check():
+            subscriptions = Subscriptions()
+            subscriptions.add_subscription(subscription)
+            subscriptions.write_subscriptions()
+            self.parent.parent.parent.current = 'default'
+            sub_ui = walk_for_widget(self, SubscriptionsUI)
+            sub_ui.reload_data()
+        else:
+            for field, sub_attr in inputs.ids.items():
+                if not getattr(subscription, f'{field}_valid')():
+                    sub_attr.background_color = CommonTheme().monero_orange
 
 kv = Builder.load_file('default_window.kv')
 

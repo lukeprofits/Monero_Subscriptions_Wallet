@@ -172,7 +172,7 @@ class Wallet():
             qr.add_data("monero:" + self.address())
             qr.make(fit=True)
             theme = CommonTheme()
-            qr_img = qr.make_image(fill_color=theme.monero_orange, back_color=theme.ui_overall_background)
+            qr_img = qr.make_image(fill_color=theme.monero_orange_hex, back_color=theme.ui_overall_background_hex)
             # Save the image to a file
             filename = "wallet_qr_code.png"
             with open(filename, "wb") as f:

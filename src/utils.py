@@ -5,13 +5,13 @@ def make_payment_id():
 
 
 def valid_address(address):
+    # Check if the wallet address is exactly 95 or 106 characters long
+    if len(address) not in [95, 106]:
+        return False
+
     # Check if the wallet address starts with the number 4
 
     if address[0] != "4":
-        return False
-
-    # Check if the wallet address is exactly 95 or 106 characters long
-    if len(address) not in [95, 106]:
         return False
 
     # Check if the wallet address contains only valid characters
