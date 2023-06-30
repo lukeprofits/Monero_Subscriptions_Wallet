@@ -3,6 +3,7 @@ from src.rpc_config import RPCConfig
 import random
 import requests
 import json
+import html
 
 class NodePicker(Screen):
     def add_node(self):

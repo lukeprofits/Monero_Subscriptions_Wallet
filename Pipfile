@@ -18,6 +18,7 @@ kivy = "*"
 kivy-examples = "*"
 PyGObject = "*"
 pystray = "*"
+ruff = "*"
 
 [dev-packages]
 

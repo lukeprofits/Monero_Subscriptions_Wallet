@@ -30,8 +30,8 @@ class RPCConfig():
     def cli_path(self):
         if not self._cli_path:
             if platform.system() == 'Windows':
-                cli_path = "" + 'monero-wallet-cli.exe'  # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
+                cli_path = "" + 'monero-wallet-cli.exe'
             else:
-                cli_path = 'monero-wallet-cli'  # Update path to the location of the monero-wallet-cli executable if your on other platforms
+                cli_path = 'monero-wallet-cli'
             self._cli_path = cli_path
         return self._cli_path

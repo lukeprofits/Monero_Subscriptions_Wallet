@@ -1,4 +1,12 @@
 #:import CommonTheme src.ui.common.CommonTheme
+#:import NoderPicker src.ui.node_picker.NodePicker
+#:import Balance src.ui.balance.Balance
+#:import SubscriptionsUI src.ui.subscriptions.SubscriptionsUI
+#:import SubscriptionUI src.ui.subscription_ui.SubscriptionUI
+#:import Deposit src.ui.deposit.Deposit
+#:import Withdrawl src.ui.withdrawl.Withdrawl
+#:import ManualSubscriptionForm src.ui.manual_subscription_form.ManualSubscriptionForm
+#:import MerchantSubscriptionWindow src.ui.merchant_subscription_window.MerchantSubscriptionWindow
 #:set theme CommonTheme()
 WindowManager:
     canvas.before:
@@ -86,12 +94,14 @@ WindowManager:
     Label:
         text: "Send XMR:"
     TextInput:
+        id: destination_address
         multiline: False
         hint_text: "[ Enter A Wallet Address ]"
         background_color: theme.ui_barely_visible
         background_normal: ''
         color: theme.monero_orange
     TextInput:
+        id: amount
         multiline: False
         hint_text: "Enter An Amount"
         background_color: theme.ui_barely_visible
@@ -100,6 +110,7 @@ WindowManager:
         text: "Withdraw"
         background_color: theme.ui_button_b
         background_normal: ''
+        on_release: root.perform()
 
 <DefaultWindow>:
     name: "default"

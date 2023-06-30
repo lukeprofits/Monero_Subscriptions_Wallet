@@ -27,17 +27,3 @@ class CommonTheme():
 		self.main_text = self.ui_main_font  # this lets separators be orange but text stay white
 		self.subscription_text_color = self.ui_sub_font
 		self.subscription_background_color = self.ui_overall_background  # ui_title_bar
-		# self.set_colors()
-
-	def set_colors(self):
-		sg.theme('DarkGrey2')
-		sg.theme_background_color(self.ui_overall_background)  # MAIN BACKGROUND COLOR
-		sg.theme_button_color((self.ui_button_a_font, self.ui_button_a))  # whiteish, blackish
-		sg.theme_text_color(self.monero_orange)  # HEADING TEXT AND DIVIDERS
-		sg.theme_text_element_background_color(self.ui_title_bar)  # Text Heading Boxes
-		sg.theme_element_background_color(self.ui_title_bar)  # subscriptions & transactions box color
-		sg.theme_element_text_color(self.ui_sub_font)  # My Subscriptions Text Color
-		sg.theme_input_background_color(self.ui_title_bar)
-		sg.theme_input_text_color(self.monero_orange)
-		sg.theme_border_width(0)
-		sg.theme_slider_border_width(0)

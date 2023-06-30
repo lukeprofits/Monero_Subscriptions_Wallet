@@ -1,12 +1,8 @@
 import os
 import platform
-import threading
 import subprocess
-import requests
-import json
 import monero_usd_price
 import qrcode
-import requests
 from src.rpc_config import RPCConfig
 from src.ui.common import CommonTheme
 from src.rpc_client import RPCClient
@@ -51,16 +47,18 @@ class Wallet():
         # Remove existing wallet if present
         try:
             os.remove(self.name)
-        except:
+        except os.IOError:
             pass
 
         try:
             os.remove(f'{self.name}.keys')
-        except:
+        except os.IOError:
             pass
 
-        command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
-        process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)}"
+        command += " --mnemonic-language English --command exit"
+        process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Sending two newline characters, pressing 'Enter' twice
         process.stdin.write('\n')
@@ -83,7 +81,11 @@ class Wallet():
             print(f'seed: {seed}')
 
             with open(file=f'{self.name}_seed.txt', mode='a', encoding='utf-8') as f:
-                f.write(f'Wallet Address:\n{wallet_address}\nView Key:\n{view_key}\nSeed:\n{seed}\n\nThe above wallet should not be your main source of funds. This is ONLY to be a side account for paying monthly subscriptions. If anyone gets access to this seed, they can steal all your funds. Please use responsibly.\n\n\n\n')
+                message = f'Wallet Address:\n{wallet_address}\nView Key:\n{view_key}\nSeed:\n{seed}\n\n'
+                message += 'The above wallet should not be your main source of funds. '
+                message += 'This is ONLY to be a side account for paying monthly subscriptions. '
+                message += 'If anyone gets access to this seed, they can steal all your funds. Please use responsibly.'
+                f.write(message)
 
             return seed, wallet_address, view_key
         else:
@@ -109,16 +111,12 @@ class Wallet():
 
             xmr_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["balance"])
             print(f'XMR Balance: {xmr_balance}')
-            xmr_unlocked_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["unlocked_balance"])
-
-            #print(xmr_unlocked_balance)
-
+            xmr_unlocked_balance = \
+                monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["unlocked_balance"])
             try:
                 usd_balance = format(self.calculate_usd_exchange(float(xmr_balance)), ".2f")
-            except:
+            except ValueError:
                 usd_balance = '---.--'
-
-            #print(usd_balance)
 
             return xmr_balance, usd_balance, xmr_unlocked_balance
 
@@ -144,7 +142,7 @@ class Wallet():
         # this needs to measure in atomic units, not xmr, so this converts it.
         atomic_amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
 
-        if self.valid_format():
+        if valid_address(address):
             print('Address is valid. Trying to send Monero')
 
             # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
@@ -158,9 +156,12 @@ class Wallet():
 
             if result is None:
                 print('Failed to send Monero transaction')
+                return False
 
+            return True
         else:
             print('Wallet is not a valid monero wallet address.')
+            return False
 
     def valid_format(self):
         return valid_address(self.address())
