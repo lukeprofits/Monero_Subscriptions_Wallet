@@ -1,12 +1,4 @@
 #:import CommonTheme src.ui.common.CommonTheme
-#:import NoderPicker src.ui.node_picker.NodePicker
-#:import Balance src.ui.balance.Balance
-#:import SubscriptionsUI src.ui.subscriptions.SubscriptionsUI
-#:import SubscriptionUI src.ui.subscription_ui.SubscriptionUI
-#:import Deposit src.ui.deposit.Deposit
-#:import Withdrawl src.ui.withdrawl.Withdrawl
-#:import ManualSubscriptionForm src.ui.manual_subscription_form.ManualSubscriptionForm
-#:import MerchantSubscriptionWindow src.ui.merchant_subscription_window.MerchantSubscriptionWindow
 #:set theme CommonTheme()
 WindowManager:
     canvas.before:
@@ -341,18 +333,31 @@ WindowManager:
 <NodePicker>:
     name: "node_picker"
     GridLayout:
-        cols: 2
-        Label:
-            text: "Add A Monero Node:"
-        TextInput:
-            id: node
-            multiline: False
-        Button:
-            text: "Submit"
-            on_release: self.parent.parent.add_node()
-        Button:
-            text: "Add A Random Node"
-            on_release: self.parent.parent.add_random_node()
+        cols: 3
+        GridLayout:
+            cols: 1
+        GridLayout:
+            cols: 2
+            size_hint_max: (500, 300)
+            size_hint_min: (100, 200)
+            FormLabel:
+                text: "Add A Monero Node:"
+            TextInput:
+                id: node
+                size_hint: (None, None)
+                size: (200, 30)
+                multiline: False
+                on_focus: self.background_color=theme.monero_white
+            Button:
+                text: "Submit"
+                size_hint_max: (250, 50)
+                on_release: root.add_node()
+            Button:
+                text: "Add A Random Node"
+                size_hint_max: (250, 50)
+                on_release: root.add_random_node()
+        GridLayout:
+            cols: 1
 
 <Loading>:
     name: "loading"

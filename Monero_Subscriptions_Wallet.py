@@ -1,6 +1,7 @@
 import threading
 from src.wallet import Wallet
 from src.rpc_server import RPCServer
+from src.rpc_config import RPCConfig
 import kivy
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -9,7 +10,18 @@ from kivy.app import App
 import time
 from src.rpc_client import RPCClient
 import pystray
-from PIL import Image, ImageDraw
+from src.subscriptions import Subscriptions
+from src.thread_manager import ThreadManager
+from src.ui.icon import Icon
+from src.ui.node_picker import NodePicker
+from src.ui.balance import Balance
+from src.ui.subscriptions import SubscriptionsUI
+from src.ui.subscription_ui import SubscriptionUI
+from src.ui.deposit import Deposit
+from src.ui.withdrawl import Withdrawl
+from src.ui.manual_subscription_form import ManualSubscriptionForm
+from src.ui.merchant_subscription_window import MerchantSubscriptionWindow
+
 kivy.require('2.2.1')
 
 class DefaultWindow(Screen):
@@ -22,7 +34,25 @@ class ManualSubscriptionWindow(Screen):
     pass
 
 class Loading(Screen):
-    pass
+    def on_pre_enter(self):
+        if RPCConfig().host:
+            wallet = Wallet()
+            rpc_server = RPCServer(wallet)    #Have this handle waiting for the RPC server to start, perhaps even starting it
+            rpc_server.start()
+            print('In Pre-Enter')
+            rpc_server.check_if_rpc_server_ready(self)
+
+    def set_default(self, dt):
+        try:
+            self.parent.current = 'default'
+        except AttributeError as e:
+            print("Couldn't set default")
+
+    def set_node_picker(self, dt):
+        try:
+            self.parent.current = 'node_picker'
+        except AttributeError as e:
+            print("Couldn't set node_picker")
 
 class WindowManager(ScreenManager):
     pass
@@ -34,21 +64,27 @@ class WalletApp(App):
     def on_start(self):
         self.wallet = Wallet()
         self.rpc_server = RPCServer(self.wallet)
-        kv.current = 'loading'
-        print('Scheduling RPC Start')
-        rpc_server = threading.Thread(target=Clock.schedule_once, args=[self.start_rpc_server])
-        rpc_server.run()
-        print('Scheduled RPC Start')
-        print('Scheduling RPC Start Check')
-        rpc_server_check = threading.Thread(target=self.check_if_rpc_server_ready)
-        rpc_server_check.start()
-        print('Scheduled RPC Start Check')
+        self.subscriptions = Subscriptions()
+        self.rpc_config = RPCConfig()
+        self.set_node_picker()
+        if self.rpc_config.host:
+            self.set_loading()
+            subscriptions_payment = threading.Thread(target=self.pay_subscriptions)
+            subscriptions_payment.start()
 
-    def set_default(self, dt):
+    def set_default(self, _ = None):
         kv.current = 'default'
 
+    def set_node_picker(self, _ = None):
+        kv.current = 'node_picker'
+
+    def set_loading(self, _ = None):
+        kv.current = 'loading'
+
     def on_stop(self):
-        self.rpc_server.kill
+        self.rpc_server.kill()
+        self._icon.stop()
+        ThreadManager.stop_flag().set()
 
     def build(self):
         return kv
@@ -56,18 +92,9 @@ class WalletApp(App):
     def start_rpc_server(self, dt):
         self.rpc_server.start()
 
-    def check_if_rpc_server_ready(self):
-        rpc_client = RPCClient()
-        while not rpc_client.local_healthcheck():
-            time.sleep(1)
-            print('Checking if RPC Ready')
-        Clock.schedule_once(self.set_default)
-
-        if not self.wallet.exists():
-            self.wallet.create()
-
-        self.wallet.generate_qr()
-        return False
+    def pay_subscriptions(self):
+        self.subscriptions.set_subscriptions(self.subscriptions.read_subscriptions())
+        self.subscriptions.send_recurring_payments()
 
     def show_window(self, dt):
         print('Showing Window')
@@ -85,33 +112,12 @@ class WalletApp(App):
         print('Restoring To Front')
         Clock.schedule_once(self.hide_window)
 
-
-def create_image(width, height, color1, color2):
-    # Generate an image and draw a pattern
-    image = Image.new('RGB', (width, height), color1)
-    dc = ImageDraw.Draw(image)
-    dc.rectangle(
-        (width // 2, 0, width, height // 2),
-        fill=color2)
-    dc.rectangle(
-        (0, height // 2, width // 2, height),
-        fill=color2)
-
-    return image
-
 if __name__ == '__main__':
-
-    # threading.Thread(target=subscriptions.send_recurring_payments).start()
-
     wallet_app = WalletApp()
 
-    icon = pystray.Icon('Monero Subscription Wallet',\
-        icon=create_image(64,64, 'black', 'white'),\
-        menu=pystray.Menu(
-            pystray.MenuItem('Hide', wallet_app.to_taskbar),
-            pystray.MenuItem('Show', wallet_app.restore_to_front)
-        )
-    )
+    icon = Icon(wallet_app.to_taskbar, wallet_app.restore_to_front)
 
-    threading.Thread(target=icon.run).start()
+    wallet_app._icon = icon
+
+    threading.Thread(target=icon.thread_run).start()
     wallet_app.run()

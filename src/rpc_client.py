@@ -43,7 +43,8 @@ class RPCClient():
         try:
             info_hash = self.remote_info()
             return info_hash.get('synchronized', False)
-        except requests.exceptions.ConnectionError:
+        except Exception as e:
+            print(f'Exception in Healthcheck: {e}')
             return False
 
     def local_healthcheck(self):

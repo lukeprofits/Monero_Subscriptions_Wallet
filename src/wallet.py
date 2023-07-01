@@ -116,13 +116,13 @@ class Wallet():
             try:
                 usd_balance = format(self.calculate_usd_exchange(float(xmr_balance)), ".2f")
             except ValueError:
-                usd_balance = '---.--'
+                usd_balance = 0
 
             return xmr_balance, usd_balance, xmr_unlocked_balance
 
         except Exception as e:
             print(f'get_wallet_balance error: {e}')
-            return '--.------------', '---.--'
+            return 0, 0, 0
 
     def calculate_usd_exchange(self, amount):
         print(f'Median USD Price: {self.median_usd_price}')
@@ -133,6 +133,17 @@ class Wallet():
         usd_amount = round(amount * self.median_usd_price, 2)
 
         return usd_amount
+
+    def amount_available(self, amount, currency):
+        balance = self.balance()
+        if currency == 'USD':
+            available_balance = balance[1]
+        elif currency == 'XMR':
+            available_balance = balance[2]
+        if amount > float(available_balance):
+            return False
+
+        return True
 
     def send_subscription(self, subscription):
         self.send(address=subscription.sellers_wallet, amount=subscription.amount, payment_id=subscription.payment_id)

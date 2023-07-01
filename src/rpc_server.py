@@ -2,17 +2,20 @@ import os
 import threading
 import subprocess
 import platform
+import time
 from src.rpc_config import RPCConfig
+from src.rpc_client import RPCClient
+from kivy.clock import Clock
 
 class RPCServer():
     def __init__(self, wallet):
-        config = RPCConfig()
+        self.config = RPCConfig()
         self.wallet = wallet
-        self.host = config.host
-        self.port = config.port
-        self.cli_path = config.cli_path
+        self.host = self.config.host
+        self.port = self.config.port
+        self.cli_path = self.config.cli_path
         self.rpc_is_ready = 0
-        self.rpc_bind_port = config.bind_port
+        self.rpc_bind_port = self.config.bind_port
         self.process = None
 
     def _start(self):
@@ -64,6 +67,26 @@ class RPCServer():
 
             else:
                 print("monero-wallet-rpc process not found")
+
+    def rpc_server_ready(self, window):
+        rpc_client = RPCClient()
+        while not rpc_client.local_healthcheck():
+            time.sleep(1)
+            print('Checking if RPC Ready 2')
+
+        if self.host:
+            Clock.schedule_once(window.set_default)
+        else:
+            Clock.schedule_once(window.set_node_picker)
+
+        if not self.wallet.exists():
+            self.wallet.create()
+
+        self.wallet.generate_qr()
+
+    def check_if_rpc_server_ready(self, window):
+        print('Checking if RPC Ready 1')
+        threading.Thread(target=self.rpc_server_ready, args=[window]).start()
 
     def start(self):
         self.kill()

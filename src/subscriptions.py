@@ -81,20 +81,24 @@ class Subscriptions():
                         amount = sub.amount
                         payment_id = sub.payment_id
                         wallet = Wallet()
-                        if currency == 'USD':
-                            print('SENDING USD')
-                            xmr_amount = self.monero_from_usd(usd_amount=amount)
-                            print(f'Sending {xmr_amount} XMR to {sellers_wallet} with payment ID {payment_id}')
-                            wallet.send_subscription(sub)
+                        if wallet.amount_available(amount, currency):
+                            if currency == 'USD':
+                                print('SENDING USD')
+                                xmr_amount = self.monero_from_usd(usd_amount=amount)
+                                print(f'Sending {xmr_amount} XMR to {sellers_wallet} with payment ID {payment_id}')
+                                wallet.send_subscription(sub)
 
-                        elif currency == 'XMR':
-                            print('SENDING XMR')
-                            print(f'Sending {amount} XMR to {sellers_wallet} with payment ID {payment_id}')
-                            wallet.send_subscription(sub)
+                            elif currency == 'XMR':
+                                print('SENDING XMR')
+                                print(f'Sending {amount} XMR to {sellers_wallet} with payment ID {payment_id}')
+                                wallet.send_subscription(sub)
 
                 print('Checking subscriptions again in 1 min')
-
-                time.sleep(60 * 1)  # run check every 1 min
+                wait_seconds = 60
+                for i in range(wait_seconds):
+                    if ThreadManager.stop_flag().is_set():
+                        break
+                    time.sleep(wait_seconds)
 
             except Exception as e:
                 print(f'Error in send_recurring_payments: {e}')

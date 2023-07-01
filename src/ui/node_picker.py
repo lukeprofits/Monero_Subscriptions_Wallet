@@ -1,11 +1,20 @@
 from kivy.uix.screenmanager import Screen
+from src.ui.common import CommonTheme
 from src.rpc_config import RPCConfig
+from src.rpc_server import RPCServer
+from src.wallet import Wallet
 import random
 import requests
 import json
-import html
+import threading
+from lxml import html
 
 class NodePicker(Screen):
+    def __init__(self, **kwargs):
+        super(NodePicker, self).__init__(**kwargs)
+        wallet = Wallet()
+        self.rpc_server = RPCServer(wallet)
+
     def add_node(self):
         node = self.ids.node.text
         if '://' in node:
@@ -13,15 +22,15 @@ class NodePicker(Screen):
 
         if self._check_node(node):
             RPCConfig().set_node(self.ids.node.text)
-            self.parent.current = 'default'
+            self.parent.current = 'loading'
         else:
             #Something to notify the user it didn't work
-            self.ids.node
+            self.ids.node.background_color = CommonTheme().monero_orange
 
     def add_random_node(self):
         node = self._get_random_node()
         RPCConfig().set_node(node)
-        self.parent.current = 'default'
+        self.parent.current = 'loading'
 
     def _get_random_node(self):
         response = requests.get('https://monero.fail/')
