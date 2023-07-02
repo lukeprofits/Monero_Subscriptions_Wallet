@@ -26,6 +26,13 @@ A Monero wallet that automatically pays subscriptions.
 * Or if you are comfortable with the terminal, on any OS open your console and enter the command: `python Monero_Subscriptions_Wallet.py`
 * On Linux there are some required clipboard packages. For non-wayland sessions they are: xclip and xsel, for wayland sessions it is: wl-clipboard. Make sure to install them with your package manager.
 
+# Development Build (Linux):
+* Make sure you have [Python 3.8](https://www.python.org/downloads/) or newer installed
+* Install Pipenv https://pipenv.pypa.io/en/latest/installation/
+* Build pipenv environment `pipenv install`
+* Start Wallet `pipenv run python ./Monero_Subscriptions_Wallet.py`
+* To build distribution files run `pipenv run pyinstaller Monero_Subscriptions_Wallet.spec`
+* To run the build file `./dist/Monero_Subscription_Wallet`
 
 # Donate
 If you use this, send me some XMR. It took weeks to develop, and I did not ask for, or recieve any [CCS funding](https://ccs.getmonero.org/) for this project.
