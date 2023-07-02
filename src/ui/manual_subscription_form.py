@@ -22,6 +22,8 @@ class ManualSubscriptionForm(GridLayout):
             self.parent.parent.parent.current = 'default'
             sub_ui = walk_for_widget(self, SubscriptionsUI)
             sub_ui.reload_data()
+            for field, sub_attr in inputs.ids.items():
+                sub_attr.text = ''
         else:
             for field, sub_attr in inputs.ids.items():
                 if not getattr(subscription, f'{field}_valid')():

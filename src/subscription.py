@@ -184,5 +184,6 @@ class Subscription():
 
     def json_friendly(self):
         attributes = self.__dict__.copy()
+        attributes.pop('logger')
         attributes['start_date'] = attributes['start_date'].strftime(self.DATE_FORMAT)
         return attributes
