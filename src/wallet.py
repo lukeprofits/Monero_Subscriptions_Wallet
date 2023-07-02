@@ -3,6 +3,7 @@ import platform
 import subprocess
 import monero_usd_price
 import qrcode
+import logging
 from src.rpc_config import RPCConfig
 from src.ui.common import CommonTheme
 from src.rpc_client import RPCClient
@@ -16,6 +17,7 @@ class Wallet():
         self._address = None
         self.config = RPCConfig()
         self.median_usd_price = None
+        self.logger = logging.getLogger(self.__module__)
 
     def _get_path(self):
         path = ''
@@ -35,7 +37,7 @@ class Wallet():
                 self.create()
             else:
                 # If both files exist, do nothing
-                print('Wallet exists already.')
+                self.logger.info('Wallet exists already.')
 
             self._block_height = self.get_current_block_height()
         return self._block_height
@@ -67,8 +69,9 @@ class Wallet():
 
         # Getting the output and error messages
         stdout, stderr = process.communicate()
-        #print(stdout)
-        #print(stderr)
+
+        self.logger.info(stdout)
+        self.logger.error(stderr)
 
         worked_check = process.returncode
         if worked_check == 0:
@@ -76,9 +79,9 @@ class Wallet():
             wallet_address = output_text.split('Generated new wallet: ')[1].split('View key: ')[0].strip()
             view_key = output_text.split('View key: ')[1].split('*********************')[0].strip()
             seed = output_text.split(' of your immediate control.')[1].split('********')[0].strip().replace('\n', '')
-            print(f'wallet_address: {wallet_address}')
-            print(f'view_key: {view_key}')
-            print(f'seed: {seed}')
+            self.logger.info(f'wallet_address: {wallet_address}')
+            self.logger.info(f'view_key: {view_key}')
+            self.logger.info(f'seed: {seed}')
 
             with open(file=f'{self.name}_seed.txt', mode='a', encoding='utf-8') as f:
                 message = f'Wallet Address:\n{wallet_address}\nView Key:\n{view_key}\nSeed:\n{seed}\n\n'
@@ -89,7 +92,7 @@ class Wallet():
 
             return seed, wallet_address, view_key
         else:
-            print(stderr)
+            self.logger.error(stderr)
 
     def address(self):
         if not self._address:
@@ -98,7 +101,7 @@ class Wallet():
                 raise ValueError("Failed to get wallet address")
 
             self._address = result["address"]
-            print(self._address)
+            self.logger.info(self._address)
         return self._address
 
     def balance(self):
@@ -110,7 +113,7 @@ class Wallet():
                 raise ValueError("Failed to get wallet balance")
 
             xmr_balance = monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["balance"])
-            print(f'XMR Balance: {xmr_balance}')
+            self.logger.info(f'XMR Balance: {xmr_balance}')
             xmr_unlocked_balance = \
                 monero_usd_price.calculate_monero_from_atomic_units(atomic_units=result["unlocked_balance"])
             try:
@@ -121,14 +124,14 @@ class Wallet():
             return xmr_balance, usd_balance, xmr_unlocked_balance
 
         except Exception as e:
-            print(f'get_wallet_balance error: {e}')
+            self.logger.error(f'get_wallet_balance error: {e}')
             return 0, 0, 0
 
     def calculate_usd_exchange(self, amount):
-        print(f'Median USD Price: {self.median_usd_price}')
+        self.logger.info(f'Median USD Price: {self.median_usd_price}')
         if not self.median_usd_price:
             self.median_usd_price = monero_usd_price.median_price()
-            print(f'Median USD Price After: {self.median_usd_price}')
+            self.logger.info(f'Median USD Price After: {self.median_usd_price}')
 
         usd_amount = round(amount * self.median_usd_price, 2)
 
@@ -154,7 +157,7 @@ class Wallet():
         atomic_amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
 
         if valid_address(address):
-            print('Address is valid. Trying to send Monero')
+            self.logger.info('Address is valid. Trying to send Monero')
 
             # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
             if payment_id:
@@ -163,15 +166,15 @@ class Wallet():
 
             result = client.send_payment(amount=atomic_amount, address=address)
 
-            print('Sent Monero')
+            self.logger.info('Sent Monero')
 
             if result is None:
-                print('Failed to send Monero transaction')
+                self.logger.error('Failed to send Monero transaction')
                 return False
 
             return True
         else:
-            print('Wallet is not a valid monero wallet address.')
+            self.logger.info('Wallet is not a valid monero wallet address.')
             return False
 
     def valid_format(self):
@@ -192,5 +195,5 @@ class Wallet():
             return filename
 
         else:
-            print('Monero Address is not valid')
+            self.logger.info('Monero Address is not valid')
             return None

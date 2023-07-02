@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 import gzip
 import base64
+import logging
 from src.rpc_client import RPCClient
 from src.utils import valid_address
 
@@ -23,6 +24,7 @@ class Subscription():
             self.start_date = datetime.now()
         self.currency = currency
         self.sellers_wallet = sellers_wallet
+        self.logger = logging.getLogger(self.__module__)
 
     def determine_if_a_payment_is_due(self):
         # if today's date is before the subscription start date
@@ -34,11 +36,11 @@ class Subscription():
                 # Check the date. See if it happened this billing cycle.
                 days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
                 if days_left > 0:  # renew when subscription expires
-                    print(f'Found a payment on {transaction_date}. No payment is due.')
+                    self.logger.info(f'Found a payment on {transaction_date}. No payment is due.')
                     return False, transaction_date  # It was this billing cycle. Payment is NOT due.
 
         # If we made it here without finding a payment this month, a payment is due.
-        print('Did not find a payment. A payment is due.')
+        self.logger.info('Did not find a payment. A payment is due.')
         return True, ''
 
     def loop_transactions(self):
@@ -46,7 +48,7 @@ class Subscription():
             transfers = RPCClient().transfers()
 
         except Exception as e:
-            print(f"Error querying Monero RPC: {e}")
+            self.logger.error(f"Error querying Monero RPC: {e}")
             return False, ''
 
         for t in transfers:
@@ -55,7 +57,6 @@ class Subscription():
                 dest_address = t['destinations'][0]['address']  # DO NOT convert to integrated
                 transaction_date = t['timestamp']
                 transaction_date = datetime.fromtimestamp(transaction_date)
-                #print(f'\nFOUND: {payment_id}, {dest_address}, {transaction_date}\n')
                 yield(payment_id, dest_address, transaction_date)
 
     def make_integrated_address(self):
@@ -77,9 +78,6 @@ class Subscription():
 
         # Calculate the days left
         days_left = hours_left / 24
-
-        # print(f'Days Left: {days_left}')
-        # print(f'Hours Left: {hours_left}')
 
         return days_left
 

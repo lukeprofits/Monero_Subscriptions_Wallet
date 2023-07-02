@@ -1,10 +1,12 @@
 import requests
 import json
+import logging
 from src.rpc_config import RPCConfig
 
 class RPCClient():
     def __init__(self):
         self.config = RPCConfig()
+        self.logger = logging.getLogger(self.__module__)
         self._headers = None
 
     def current_block_height(self):
@@ -44,14 +46,14 @@ class RPCClient():
             info_hash = self.remote_info()
             return info_hash.get('synchronized', False)
         except Exception as e:
-            print(f'Exception in Healthcheck: {e}')
+            self.logger.debug(f'Exception in Healthcheck: {e}')
             return False
 
     def local_healthcheck(self):
         try:
             return type(self.get_version()) == int
         except requests.exceptions.ConnectionError as e:
-            print(str(e))
+            self.logger.debug(str(e))
             return False
 
     def _get_version(self):
@@ -124,12 +126,12 @@ class RPCClient():
         response = requests.post(self.config.local_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            print('Error:', result['error']['message'])
+            self.logger.error('Error:', result['error']['message'])
         return result
 
     def daemon_post(self, data):
         response = requests.post(self.config.daemon_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            print('Error:', result['error']['message'])
+            self.logger.error('Error:', result['error']['message'])
         return result

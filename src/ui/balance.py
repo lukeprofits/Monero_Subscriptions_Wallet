@@ -8,7 +8,6 @@ class Balance(GridLayout):
     xmr_balance = StringProperty('')
 
     def update_balance(self, dt=None):
-        print('Updating Balance')
         balances = self.wallet.balance()
         self.xmr_balance = str(balances[0])
         self.dollar_balance = str(balances[1])

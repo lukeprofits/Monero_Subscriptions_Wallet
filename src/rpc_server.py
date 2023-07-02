@@ -3,6 +3,7 @@ import threading
 import subprocess
 import platform
 import time
+import logging
 from src.rpc_config import RPCConfig
 from src.rpc_client import RPCClient
 from kivy.clock import Clock
@@ -17,6 +18,7 @@ class RPCServer():
         self.rpc_is_ready = 0
         self.rpc_bind_port = self.config.bind_port
         self.process = None
+        self.logger = logging.getLogger(self.__module__)
 
     def _start(self):
         cmd = f'monero-wallet-rpc --wallet-file {self.wallet.name} --password ""'
@@ -33,7 +35,7 @@ class RPCServer():
             while not blocks_synced:
                 output = proc.stdout.readline().decode("utf-8").strip()
 
-                print(f'SYNCING BLOCKS:{output}')
+                self.logger.debug(f'SYNCING BLOCKS:{output}')
 
                 if "Opened wallet:" in output:
                     blocks_synced = True
@@ -61,18 +63,18 @@ class RPCServer():
                 else:
                     pid = int(line.split()[0].decode("utf-8"))
                 os.kill(pid, 9)
-                print(f"Successfully killed monero-wallet-rpc with PID {pid}")
+                self.logger.debug(f"Successfully killed monero-wallet-rpc with PID {pid}")
                 self.rpc_is_ready = False
                 break
 
             else:
-                print("monero-wallet-rpc process not found")
+                self.logger.info("monero-wallet-rpc process not found")
 
     def rpc_server_ready(self, window):
         rpc_client = RPCClient()
         while not rpc_client.local_healthcheck():
             time.sleep(1)
-            print('Checking if RPC Ready 2')
+            self.logger.debug('Checking if RPC Ready 2')
 
         if self.host:
             Clock.schedule_once(window.set_default)
@@ -85,7 +87,7 @@ class RPCServer():
         self.wallet.generate_qr()
 
     def check_if_rpc_server_ready(self, window):
-        print('Checking if RPC Ready 1')
+        self.logger.debug('Checking if RPC Ready 1')
         threading.Thread(target=self.rpc_server_ready, args=[window]).start()
 
     def start(self):
