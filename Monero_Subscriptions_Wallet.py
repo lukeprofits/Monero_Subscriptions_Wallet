@@ -21,6 +21,7 @@ from src.ui.deposit import Deposit
 from src.ui.withdrawl import Withdrawl
 from src.ui.manual_subscription_form import ManualSubscriptionForm
 from src.ui.merchant_subscription_window import MerchantSubscriptionWindow
+from kivy.config import Config
 import logging
 
 kivy.require('2.2.1')
@@ -67,10 +68,12 @@ kv = Builder.load_file('default_window.kv')
 
 class WalletApp(App):
     def on_start(self):
+        self.title = 'Monero Subscription Wallet'
         self.wallet = Wallet()
         self.rpc_server = RPCServer(self.wallet)
         self.subscriptions = Subscriptions()
         self.rpc_config = RPCConfig()
+        self.icon = 'icon.png'
         self.set_node_picker()
         if self.rpc_config.host:
             self.set_loading()

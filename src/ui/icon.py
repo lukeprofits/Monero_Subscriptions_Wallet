@@ -1,4 +1,5 @@
 import pystray
+from pathlib import Path
 from PIL import Image, ImageDraw
 
 class Icon():
@@ -15,14 +16,7 @@ class Icon():
 
     def image(self):
         # Generate an image and draw a pattern
-        image = Image.new('RGB', (self.width, self.height), self.color1)
-        dc = ImageDraw.Draw(image)
-        dc.rectangle(
-            (self.width // 2, 0, self.width, self.height // 2),
-            fill=self.color2)
-        dc.rectangle(
-            (0, self.height // 2, self.width // 2, self.height),
-            fill=self.color2)
+        image = Image.open('icon.ico')
 
         return image
 
