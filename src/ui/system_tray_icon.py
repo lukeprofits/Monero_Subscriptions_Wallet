@@ -2,7 +2,7 @@ import pystray
 from pathlib import Path
 from PIL import Image, ImageDraw
 
-class Icon():
+class SystemTrayIcon():
     def __init__(self, hide_callback, show_callback):
         self.name = 'Monero Subscription Wallet'
         self.width = 64

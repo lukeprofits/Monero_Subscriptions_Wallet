@@ -12,15 +12,16 @@ from src.rpc_client import RPCClient
 import pystray
 from src.subscriptions import Subscriptions
 from src.thread_manager import ThreadManager
-from src.ui.icon import Icon
+from src.ui.system_tray_icon import SystemTrayIcon
 from src.ui.node_picker import NodePicker
 from src.ui.balance import Balance
 from src.ui.subscriptions import SubscriptionsUI
-from src.ui.subscription_ui import SubscriptionUI
+from src.ui.subscription import SubscriptionUI
 from src.ui.deposit import Deposit
 from src.ui.withdrawl import Withdrawl
 from src.ui.manual_subscription_form import ManualSubscriptionForm
 from src.ui.merchant_subscription_window import MerchantSubscriptionWindow
+from src.ui.loading import Loading
 from kivy.config import Config
 import logging
 
@@ -34,31 +35,6 @@ class SubscriptionTypeWindow(Screen):
 
 class ManualSubscriptionWindow(Screen):
     pass
-
-class Loading(Screen):
-    def __init__(self, **kwargs):
-        self.logger = logging.getLogger(self.__module__)
-        super(Loading, self).__init__(**kwargs)
-
-    def on_pre_enter(self):
-        if RPCConfig().host:
-            wallet = Wallet()
-            rpc_server = RPCServer(wallet)    #Have this handle waiting for the RPC server to start, perhaps even starting it
-            rpc_server.start()
-            self.logger.debug('In Pre-Enter')
-            rpc_server.check_if_rpc_server_ready(self)
-
-    def set_default(self, dt):
-        try:
-            self.parent.current = 'default'
-        except AttributeError as e:
-            self.logger.debug("Couldn't set default")
-
-    def set_node_picker(self, dt):
-        try:
-            self.parent.current = 'node_picker'
-        except AttributeError as e:
-            self.logger.debug("Couldn't set node_picker")
 
 class WindowManager(ScreenManager):
     pass
@@ -123,7 +99,7 @@ class WalletApp(App):
 if __name__ == '__main__':
     wallet_app = WalletApp()
 
-    icon = Icon(wallet_app.to_taskbar, wallet_app.restore_to_front)
+    icon = SystemTrayIcon(wallet_app.to_taskbar, wallet_app.restore_to_front)
 
     wallet_app._icon = icon
 

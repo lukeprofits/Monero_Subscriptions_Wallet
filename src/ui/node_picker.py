@@ -7,6 +7,7 @@ import random
 import requests
 import json
 import threading
+import logging
 from lxml import html
 
 class NodePicker(Screen):
@@ -14,6 +15,7 @@ class NodePicker(Screen):
         super(NodePicker, self).__init__(**kwargs)
         wallet = Wallet()
         self.rpc_server = RPCServer(wallet)
+        self.logger = logging.getLogger(self.__module__)
 
     def add_node(self):
         node = self.ids.node.text
@@ -70,5 +72,5 @@ class NodePicker(Screen):
                 return False
 
         except requests.exceptions.RequestException as e:
-            print(e)
+            self.logger.exception(e)
             return False
