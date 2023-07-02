@@ -8,7 +8,7 @@
 A Monero wallet that automatically pays subscriptions.
 
 <p align="center">
-  <br><img src="Example.jpg" alt="Description of the photo"><br>
+  <br><img src="Example.png" alt="Example Main Subscription Wallet"><br>
 </p>
 
 
