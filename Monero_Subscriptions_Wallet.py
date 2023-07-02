@@ -39,9 +39,6 @@ class ManualSubscriptionWindow(Screen):
 class WindowManager(ScreenManager):
     pass
 
-
-kv = Builder.load_file('default_window.kv')
-
 class WalletApp(App):
     def on_start(self):
         self.title = 'Monero Subscription Wallet'
@@ -57,13 +54,13 @@ class WalletApp(App):
             subscriptions_payment.start()
 
     def set_default(self, _ = None):
-        kv.current = 'default'
+        self.wm.current = 'default'
 
     def set_node_picker(self, _ = None):
-        kv.current = 'node_picker'
+        self.wm.current = 'node_picker'
 
     def set_loading(self, _ = None):
-        kv.current = 'loading'
+        self.wm.current = 'loading'
 
     def on_stop(self):
         self.rpc_server.kill()
@@ -71,7 +68,8 @@ class WalletApp(App):
         ThreadManager.stop_flag().set()
 
     def build(self):
-        return kv
+        self.wm = Builder.load_file('default_window.kv')
+        return self.wm
 
     def start_rpc_server(self, dt):
         self.rpc_server.start()
@@ -82,7 +80,7 @@ class WalletApp(App):
 
     def show_window(self, dt):
         print('Showing Window')
-        kv.parent.show()
+        self.wm.parent.show()
 
     def restore_to_front(self):
         print('Restoring To Front')
@@ -90,7 +88,7 @@ class WalletApp(App):
 
     def hide_window(self, dt):
         print('Hiding Window')
-        kv.parent.hide()
+        self.wm.parent.hide()
 
     def to_taskbar(self):
         print('Restoring To Front')
