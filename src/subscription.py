@@ -25,6 +25,7 @@ class Subscription():
         self.currency = currency
         self.sellers_wallet = sellers_wallet
         self.logger = logging.getLogger(self.__module__)
+        self.rpc_client = RPCClient()
 
     def determine_if_a_payment_is_due(self):
         # if today's date is before the subscription start date
@@ -45,7 +46,7 @@ class Subscription():
 
     def loop_transactions(self):
         try:  # Get all outgoing transfers from the wallet
-            transfers = RPCClient().transfers()
+            transfers = self.rpc_client.transfers()
 
         except Exception as e:
             self.logger.error(f"Error querying Monero RPC: {e}")
@@ -60,7 +61,7 @@ class Subscription():
                 yield(payment_id, dest_address, transaction_date)
 
     def make_integrated_address(self):
-        RPCClient().create_integrated_address(self.sellers_wallet, self.payment_id)
+        self.rpc_client.create_integrated_address(self.sellers_wallet, self.payment_id)
 
     def check_date_for_how_many_days_until_payment_needed(self, date):
         # Returns the number of days left.
@@ -79,7 +80,7 @@ class Subscription():
         # Calculate the days left
         days_left = hours_left / 24
 
-        return days_left
+        return int(round(days_left))
 
     def renewal_date(self):
         for payment_id, dest_address, transaction_date in self.loop_transactions():
@@ -185,5 +186,6 @@ class Subscription():
     def json_friendly(self):
         attributes = self.__dict__.copy()
         attributes.pop('logger')
+        attributes.pop('rpc_client')
         attributes['start_date'] = attributes['start_date'].strftime(self.DATE_FORMAT)
         return attributes

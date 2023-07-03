@@ -31,7 +31,7 @@ class RPCClient():
 
     def transfers(self):
         result = self.post(self._transfers())
-        return result.get("result", {}).get("out", {})
+        return result.get("result", {}).get("out", [])
 
     def remote_info(self):
         result = self.daemon_post(self._get_info())

@@ -1,5 +1,6 @@
 import unittest
 import datetime
+from tests.rpc_client import RPCClientMock
 from src.subscription import Subscription
 
 class SubscriptionTest(unittest.TestCase):
@@ -61,6 +62,55 @@ class SubscriptionTest(unittest.TestCase):
         self.assertEqual(sub.sellers_wallet_valid(), True)
         sub.sellers_wallet = '12345'
         self.assertEqual(sub.sellers_wallet_valid(), False)
+
+    def test_check_date_for_how_many_days_until_payment_needed(self):
+        sub = Subscription(**self._full_test_attributes())
+        days_away = 60
+        self.assertEqual(sub.check_date_for_how_many_days_until_payment_needed(datetime.datetime.now() + datetime.timedelta(days=days_away)), days_away)
+
+    def test_encode_decode(self):
+        sub = Subscription(**self._full_test_attributes())
+        encoded_sub = sub.encode()
+        decoded_sub = Subscription(**Subscription.decode(encoded_sub))
+        self.assertEqual(sub.json_friendly(), decoded_sub.json_friendly())
+
+    def test_valid_check(self):
+        sub = Subscription(**self._no_optional_attributes())
+        self.assertEqual(sub.custom_label, '')
+        self.assertEqual(sub.amount, 1.1)
+        self.assertEqual(sub.billing_cycle_days, 30)
+        self.assertEqual(sub.start_date, datetime.date.today())
+        self.assertEqual(sub.sellers_wallet, '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H')
+        self.assertEqual(sub.valid_check(), True)
+        prev_amount = sub.amount
+        sub.amount = None
+        self.assertEqual(sub.valid_check(), False)
+        sub.amount = prev_amount
+        prev_currency = sub.currency
+        sub.currency = ''
+        self.assertEqual(sub.valid_check(), False)
+        sub.currency = prev_currency
+        prev_sellers_wallet = sub.sellers_wallet
+        sub.sellers_wallet = ''
+        self.assertEqual(sub.valid_check(), False)
+        sub.sellers_wallet = prev_sellers_wallet
+        prev_billing_cycle_days = sub.billing_cycle_days
+        sub.billing_cycle_days = ''
+        self.assertEqual(sub.valid_check(), False)
+        sub.billing_cycle_days = prev_billing_cycle_days
+        prev_start_date = sub.start_date
+        sub.start_date = None
+        self.assertEqual(sub.valid_check(), False)
+        sub.start_date = prev_start_date
+        self.assertEqual(sub.valid_check(), True)
+
+    def test_loop_transactions(self):
+        sub = Subscription(**self._full_test_attributes())
+        sub.rpc_client = RPCClientMock()
+        for payment_id, dest_address, transaction_date in sub.loop_transactions():
+            self.assertEqual(payment_id, '1a2b3c4e5d6f7a8b')
+            self.assertEqual(dest_address, '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H')
+            self.assertEqual(transaction_date.date(), datetime.datetime.now().date())
 
     def _full_test_attributes(self):
         return {
