@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, date
 import gzip
 import base64
 import logging
@@ -8,7 +8,7 @@ from src.utils import valid_address
 
 class Subscription():
     DATE_FORMAT = "%Y-%m-%d"
-    def __init__(self, custom_label, amount, billing_cycle_days, start_date, sellers_wallet, currency, payment_id=''):
+    def __init__(self, amount, billing_cycle_days, sellers_wallet, currency, start_date='', custom_label='', payment_id=''):
         self.custom_label = custom_label
         self.amount = None
         if amount:
@@ -19,9 +19,9 @@ class Subscription():
             self.billing_cycle_days = None
         self.payment_id = payment_id
         if start_date:
-            self.start_date = datetime.strptime(start_date, self.DATE_FORMAT)
+            self.start_date = datetime.strptime(start_date, self.DATE_FORMAT).date()
         else:
-            self.start_date = datetime.now()
+            self.start_date = date.today()
         self.currency = currency
         self.sellers_wallet = sellers_wallet
         self.logger = logging.getLogger(self.__module__)
@@ -122,13 +122,13 @@ class Subscription():
         return True
 
     def start_date_valid(self):
-        return type(self.start_date) == datetime
+        return type(self.start_date) == date
 
     def billing_cycle_days_valid(self):
         return type(self.billing_cycle_days) == int
 
     def sellers_wallet_valid(self):
-        return valid_address(self.sellers_wallet)
+        return valid_address(self.sellers_wallet, False)
 
     def custom_label_valid(self):
         return True
