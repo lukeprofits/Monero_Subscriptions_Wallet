@@ -25,7 +25,7 @@ jobs:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        apt install libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0
+        sudo apt install libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0
         pip install pipenv
         pipenv install
     - name: Test with pytest
