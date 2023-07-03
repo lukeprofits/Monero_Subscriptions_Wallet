@@ -108,7 +108,7 @@ class SubscriptionTest(unittest.TestCase):
         sub = Subscription(**self._full_test_attributes())
         sub.rpc_client = RPCClientMock()
         for payment_id, dest_address, transaction_date in sub.loop_transactions():
-            self.assertEqual(payment_id, '1a2b3c4e5d6f7a8b')
+            self.assertEqual(payment_id, '1a2b3c4d5e6f7a8b')
             self.assertEqual(dest_address, '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H')
             self.assertEqual(transaction_date.date(), datetime.datetime.now().date())
 
@@ -116,7 +116,18 @@ class SubscriptionTest(unittest.TestCase):
         sub = Subscription(**self._full_test_attributes())
         sub.rpc_client = RPCClientMock()
         self.assertEqual(sub.determine_if_a_payment_is_due(), True)
-        #TODO: Add case for no payment due.
+        sub = Subscription(**self._full_test_attributes())
+        sub.rpc_client = RPCClientMock()
+        sub.rpc_client.transfers([{
+            'payment_id': '1a2b3c4d5e6f7a8b',
+            'destinations': [
+                {
+                    'address': '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H'
+                }
+            ],
+            'timestamp': datetime.datetime.timestamp(datetime.datetime.now() - datetime.timedelta(seconds=60))
+        }])
+        self.assertEqual(sub.determine_if_a_payment_is_due(), False)
 
     def _full_test_attributes(self):
         return {

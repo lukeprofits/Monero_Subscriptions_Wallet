@@ -61,7 +61,7 @@ class Subscription():
                 yield(payment_id, dest_address, transaction_date)
 
     def make_integrated_address(self):
-        self.rpc_client.create_integrated_address(self.sellers_wallet, self.payment_id)
+        return self.rpc_client.create_integrated_address(self.sellers_wallet, self.payment_id)
 
     def check_date_for_how_many_days_until_payment_needed(self, date):
         # Returns the number of days left.
