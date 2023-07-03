@@ -28,6 +28,6 @@ jobs:
         sudo apt install libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0
         pip install pipenv
         pipenv install
-    - name: Test with pytest
+    - name: Running Unit Tests
       run: |
-        pipenv run python -m unittest discover test
+        pipenv run python -m unittest discover tests
