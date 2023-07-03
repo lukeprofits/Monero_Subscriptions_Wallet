@@ -129,6 +129,21 @@ class SubscriptionTest(unittest.TestCase):
         }])
         self.assertEqual(sub.determine_if_a_payment_is_due(), False)
 
+    def test_renewal_date(self):
+        sub = Subscription(**self._full_test_attributes())
+        sub.rpc_client = RPCClientMock()
+        self.assertEqual(sub.renewal_date(), datetime.date.today().strftime(Subscription.DATE_FORMAT))
+        sub.rpc_client.transfers([{
+            'payment_id': '1a2b3c4d5e6f7a8b',
+            'destinations': [
+                {
+                    'address': '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H'
+                }
+            ],
+            'timestamp': datetime.datetime.timestamp(datetime.datetime.now() - datetime.timedelta(seconds=60))
+        }])
+        self.assertEqual(sub.renewal_date(), (datetime.date.today() + datetime.timedelta(days=sub.billing_cycle_days)).strftime(Subscription.DATE_FORMAT))
+
     def _full_test_attributes(self):
         return {
             'custom_label': 'Test',

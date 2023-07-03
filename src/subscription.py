@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import gzip
 import base64
 import logging
@@ -85,7 +85,7 @@ class Subscription():
     def renewal_date(self):
         for payment_id, dest_address, transaction_date in self.loop_transactions():
             days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
-            return datetime.now() + days_left.days()
+            return (datetime.now() + timedelta(days=days_left)).strftime(self.DATE_FORMAT)
         return datetime.now().strftime(self.DATE_FORMAT)
 
     def currency_valid(self):
