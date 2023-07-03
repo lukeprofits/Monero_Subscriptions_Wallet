@@ -29,7 +29,7 @@ class Subscription():
 
     def determine_if_a_payment_is_due(self):
         # if today's date is before the subscription start date
-        if datetime.now() <= self.start_date:
+        if datetime.now().date() <= self.start_date:
             return False, self.start_date
 
         for payment_id, dest_address, transaction_date in self.loop_transactions():
@@ -38,11 +38,11 @@ class Subscription():
                 days_left = self.check_date_for_how_many_days_until_payment_needed(transaction_date)
                 if days_left > 0:  # renew when subscription expires
                     self.logger.info(f'Found a payment on {transaction_date}. No payment is due.')
-                    return False, transaction_date  # It was this billing cycle. Payment is NOT due.
+                    return False  # It was this billing cycle. Payment is NOT due.
 
         # If we made it here without finding a payment this month, a payment is due.
         self.logger.info('Did not find a payment. A payment is due.')
-        return True, ''
+        return True
 
     def loop_transactions(self):
         try:  # Get all outgoing transfers from the wallet

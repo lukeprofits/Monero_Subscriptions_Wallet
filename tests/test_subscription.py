@@ -112,6 +112,12 @@ class SubscriptionTest(unittest.TestCase):
             self.assertEqual(dest_address, '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H')
             self.assertEqual(transaction_date.date(), datetime.datetime.now().date())
 
+    def test_determine_if_a_payment_is_due(self):
+        sub = Subscription(**self._full_test_attributes())
+        sub.rpc_client = RPCClientMock()
+        self.assertEqual(sub.determine_if_a_payment_is_due(), True)
+        #TODO: Add case for no payment due.
+
     def _full_test_attributes(self):
         return {
             'custom_label': 'Test',

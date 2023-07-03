@@ -75,7 +75,7 @@ class Subscriptions():
                 self.logger.info('Checking if subscriptions need to be paid.')
 
                 for sub in subscriptions:
-                    payment_is_due, payment_date = sub.determine_if_a_payment_is_due()
+                    payment_is_due = sub.determine_if_a_payment_is_due()
 
                     if payment_is_due:
                         sellers_wallet = sub.sellers_wallet
