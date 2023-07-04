@@ -48,15 +48,9 @@ class Wallet():
 
     def create(self):
         # Remove existing wallet if present
-        try:
+        if self.exists():
             os.remove(self.name)
-        except os.IOError:
-            pass
-
-        try:
             os.remove(f'{self.name}.keys')
-        except os.IOError:
-            pass
 
         command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)}"
         command += " --mnemonic-language English --command exit"

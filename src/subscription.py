@@ -142,7 +142,7 @@ class Subscription():
 
     def make_payment(self):
         if self.payment_is_due():
-            if self.wallet.amount_available(self.amount, self.currency):
+            if self.rpc_client.local_healthcheck() and self.wallet.amount_available(self.amount, self.currency):
                 self.logger.info(f'SENDING {self.currency}')
 
                 amount = self.amount

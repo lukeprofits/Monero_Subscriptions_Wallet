@@ -8,9 +8,10 @@ class Balance(GridLayout):
     xmr_balance = StringProperty('')
 
     def update_balance(self, dt=None):
-        balances = self.wallet.balance()
-        self.xmr_balance = str(balances[0])
-        self.dollar_balance = str(balances[1])
+        if self.wallet.rpc_client.local_healthcheck():
+            balances = self.wallet.balance()
+            self.xmr_balance = str(balances[0])
+            self.dollar_balance = str(balances[1])
 
     def __init__(self, **kwargs):
         super(Balance, self).__init__(**kwargs)
