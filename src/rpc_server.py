@@ -77,14 +77,13 @@ class RPCServer():
             self.logger.debug('Checking if RPC Ready 2')
 
         if self.host:
+            self.wallet.generate_qr()
             Clock.schedule_once(window.set_default)
         else:
             Clock.schedule_once(window.set_node_picker)
 
         if not self.wallet.exists():
             self.wallet.create()
-
-        self.wallet.generate_qr()
 
     def check_if_rpc_server_ready(self, window):
         self.logger.debug('Checking if RPC Ready 1')

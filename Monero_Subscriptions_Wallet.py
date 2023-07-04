@@ -22,13 +22,17 @@ from src.ui.withdrawl import Withdrawl
 from src.ui.manual_subscription_form import ManualSubscriptionForm
 from src.ui.merchant_subscription_window import MerchantSubscriptionWindow
 from src.ui.loading import Loading
+from src.utils import walk_for_widget
 from kivy.config import Config
+from kivy.uix.image import Image
 import logging
 
 kivy.require('2.2.1')
 
 class DefaultWindow(Screen):
-    pass
+    def on_pre_enter(self):
+        image = walk_for_widget(self, Image)
+        image.reload()
 
 class SubscriptionTypeWindow(Screen):
     pass

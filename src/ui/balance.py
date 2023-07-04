@@ -18,6 +18,3 @@ class Balance(GridLayout):
         self.wallet = Wallet()
         self.update_balance()
         Clock.schedule_interval(self.update_balance, 5)
-
-    def on_dollar_balance(self, instance, text):
-        print(f'{instance}:{text}')
