@@ -60,12 +60,12 @@ class RPCClientMock():
             self._get_version = override
         return self._get_version
 
-    def remote_healthcheck(self, override):
+    def remote_healthcheck(self, override = None):
         if override:
             self._remote_healthcheck = override
         return self._remote_healthcheck
 
-    def local_healthcheck(self, override):
+    def local_healthcheck(self, override = None):
         if override:
             self._local_healthcheck = override
         return self._local_healthcheck
