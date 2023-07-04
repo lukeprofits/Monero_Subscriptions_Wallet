@@ -1,7 +1,9 @@
 import unittest
 import datetime
 from tests.rpc_client import RPCClientMock
+from tests.factories.subscription import SubscriptionFactory
 from src.subscription import Subscription
+from src.wallet import Wallet
 
 class SubscriptionTest(unittest.TestCase):
     def test_full_creation(self):
@@ -112,10 +114,10 @@ class SubscriptionTest(unittest.TestCase):
             self.assertEqual(dest_address, '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H')
             self.assertEqual(transaction_date.date(), datetime.datetime.now().date())
 
-    def test_determine_if_a_payment_is_due(self):
+    def test_payment_is_due(self):
         sub = Subscription(**self._full_test_attributes())
         sub.rpc_client = RPCClientMock()
-        self.assertEqual(sub.determine_if_a_payment_is_due(), True)
+        self.assertEqual(sub.payment_is_due(), True)
         sub = Subscription(**self._full_test_attributes())
         sub.rpc_client = RPCClientMock()
         sub.rpc_client.transfers([{
@@ -127,7 +129,7 @@ class SubscriptionTest(unittest.TestCase):
             ],
             'timestamp': datetime.datetime.timestamp(datetime.datetime.now() - datetime.timedelta(seconds=60))
         }])
-        self.assertEqual(sub.determine_if_a_payment_is_due(), False)
+        self.assertEqual(sub.payment_is_due(), False)
 
     def test_renewal_date(self):
         sub = Subscription(**self._full_test_attributes())
@@ -143,6 +145,27 @@ class SubscriptionTest(unittest.TestCase):
             'timestamp': datetime.datetime.timestamp(datetime.datetime.now() - datetime.timedelta(seconds=60))
         }])
         self.assertEqual(sub.renewal_date(), (datetime.date.today() + datetime.timedelta(days=sub.billing_cycle_days)).strftime(Subscription.DATE_FORMAT))
+
+    def test_make_payment(self):
+        sub = SubscriptionFactory()
+        sub.rpc_client = RPCClientMock()
+        wallet = Wallet()
+        wallet.median_usd_price = 150.0
+        wallet.rpc_client = RPCClientMock()
+        sub.wallet = wallet
+        self.assertEqual(sub.make_payment(), True)
+
+        sub.rpc_client.transfers([{
+            'payment_id': '1a2b3c4d5e6f7a8b',
+            'destinations': [
+                {
+                    'address': '888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H'
+                }
+            ],
+            'timestamp': datetime.datetime.timestamp(datetime.datetime.now() - datetime.timedelta(seconds=60))
+        }])
+
+        self.assertEqual(sub.make_payment(), False)
 
     def _full_test_attributes(self):
         return {

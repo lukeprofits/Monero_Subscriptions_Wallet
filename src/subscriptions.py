@@ -3,7 +3,6 @@ import json
 import monero_usd_price
 import time
 import logging
-from src.wallet import Wallet
 from src.thread_manager import ThreadManager
 from src.subscription import Subscription
 
@@ -70,44 +69,23 @@ class Subscriptions():
     def send_recurring_payments(self):
         while not ThreadManager.stop_flag().is_set():
             try:
-                subscriptions = self.all()
-
-                self.logger.info('Checking if subscriptions need to be paid.')
-
-                for sub in subscriptions:
-                    payment_is_due = sub.determine_if_a_payment_is_due()
-
-                    if payment_is_due:
-                        sellers_wallet = sub.sellers_wallet
-                        currency = sub.currency
-                        amount = sub.amount
-                        payment_id = sub.payment_id
-                        wallet = Wallet()
-                        if wallet.amount_available(amount, currency):
-                            if currency == 'USD':
-                                self.logger.info('SENDING USD')
-                                xmr_amount = self.monero_from_usd(usd_amount=amount)
-                                self.logger.info(f'Sending {xmr_amount} XMR to {sellers_wallet} with payment ID {payment_id}')
-                                wallet.send_subscription(sub)
-
-                            elif currency == 'XMR':
-                                self.logger.info('SENDING XMR')
-                                self.logger.info(f'Sending {amount} XMR to {sellers_wallet} with payment ID {payment_id}')
-                                wallet.send_subscription(sub)
-
-                self.logger.info('Checking subscriptions again in 1 min')
                 wait_seconds = 60
                 for i in range(wait_seconds):
+
+                    self.send_subscriptions()
+
+                    self.logger.info('Checking subscriptions again in 1 min')
                     if ThreadManager.stop_flag().is_set():
                         break
                     time.sleep(wait_seconds)
 
             except Exception as e:
-                self.logger.error(f'Error in send_recurring_payments: {e}')
+                self.logger.exception(e)
 
-    def monero_from_usd(self, usd_amount, print_price_to_console=False):
-        monero_price = monero_usd_price.median_price_not_threaded(print_price_to_console=print_price_to_console)
-        monero_amount = round(usd_amount / monero_price, 12)
-        if print_price_to_console:
-            self.logger.info(monero_amount)
-        return monero_amount
+    def send_subscriptions(self):
+        subscriptions = self.all()
+
+        self.logger.info('Checking if subscriptions need to be paid.')
+
+        for sub in subscriptions:
+            sub.make_payment()

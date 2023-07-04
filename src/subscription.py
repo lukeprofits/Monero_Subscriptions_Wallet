@@ -4,7 +4,8 @@ import gzip
 import base64
 import logging
 from src.rpc_client import RPCClient
-from src.utils import valid_address
+from src.utils import valid_address, monero_from_usd
+from src.wallet import Wallet
 
 class Subscription():
     DATE_FORMAT = "%Y-%m-%d"
@@ -26,11 +27,12 @@ class Subscription():
         self.sellers_wallet = sellers_wallet
         self.logger = logging.getLogger(self.__module__)
         self.rpc_client = RPCClient()
+        self.wallet = Wallet()
 
-    def determine_if_a_payment_is_due(self):
+    def payment_is_due(self):
         # if today's date is before the subscription start date
         if datetime.now().date() <= self.start_date:
-            return False, self.start_date
+            return False
 
         for payment_id, dest_address, transaction_date in self.loop_transactions():
             if payment_id == self.payment_id and dest_address == self.make_integrated_address():
@@ -138,6 +140,21 @@ class Subscription():
         return self.payment_id_valid() and self.amount_valid() and self.currency_valid() and \
                self.sellers_wallet_valid() and self.billing_cycle_days_valid() and self.start_date_valid()
 
+    def make_payment(self):
+        if self.payment_is_due():
+            if self.wallet.amount_available(self.amount, self.currency):
+                self.logger.info(f'SENDING {self.currency}')
+
+                amount = self.amount
+
+                if self.currency == 'USD':
+                    amount = monero_from_usd(usd_amount=amount)
+
+                self.logger.info(f'Sending {amount} XMR to {self.sellers_wallet} with payment ID {self.payment_id}')
+                return self.wallet.send(address=self.sellers_wallet, amount=amount, payment_id=self.payment_id)
+
+        return False
+
     def encode(self):
         # Convert the JSON data to a string
         json_str = self.to_json()
@@ -187,5 +204,6 @@ class Subscription():
         attributes = self.__dict__.copy()
         attributes.pop('logger')
         attributes.pop('rpc_client')
+        attributes.pop('wallet')
         attributes['start_date'] = attributes['start_date'].strftime(self.DATE_FORMAT)
         return attributes

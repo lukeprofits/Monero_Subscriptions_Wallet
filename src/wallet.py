@@ -18,6 +18,7 @@ class Wallet():
         self.config = RPCConfig()
         self.median_usd_price = None
         self.logger = logging.getLogger(self.__module__)
+        self.rpc_client = RPCClient()
 
     def _get_path(self):
         path = ''
@@ -27,7 +28,7 @@ class Wallet():
 
     def get_current_block_height(self):
         # Send the JSON-RPC request to the daemon
-        return RPCClient().current_block_height()
+        return self.rpc_client.current_block_height()
 
     @property
     def block_height(self):
@@ -96,7 +97,7 @@ class Wallet():
 
     def address(self):
         if not self._address:
-            result = RPCClient().fetch_address()
+            result = self.rpc_client.fetch_address()
             if result is None:
                 raise ValueError("Failed to get wallet address")
 
@@ -107,7 +108,7 @@ class Wallet():
     def balance(self):
         try:
             # get balance
-            result = RPCClient().balance()
+            result = self.rpc_client.balance()
 
             if result is None:
                 raise ValueError("Failed to get wallet balance")
@@ -124,7 +125,7 @@ class Wallet():
             return xmr_balance, usd_balance, xmr_unlocked_balance
 
         except Exception as e:
-            self.logger.error(f'get_wallet_balance error: {e}')
+            self.logger.exception(e)
             return 0, 0, 0
 
     def calculate_usd_exchange(self, amount):
@@ -148,23 +149,19 @@ class Wallet():
 
         return True
 
-    def send_subscription(self, subscription):
-        self.send(address=subscription.sellers_wallet, amount=subscription.amount, payment_id=subscription.payment_id)
-
     def send(self, address, amount, payment_id=None):
-        client = RPCClient()
         # this needs to measure in atomic units, not xmr, so this converts it.
         atomic_amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
 
-        if valid_address(address):
+        if valid_address(address, False):
             self.logger.info('Address is valid. Trying to send Monero')
 
             # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
             if payment_id:
                 # generate the integrated address to pay (an address with the payment ID baked into it)
-                address = client.create_integrated_address(sellers_wallet=address, payment_id=payment_id)
+                address = self.rpc_client.create_integrated_address(sellers_wallet=address, payment_id=payment_id)
 
-            result = client.send_payment(amount=atomic_amount, address=address)
+            result = self.rpc_client.send_payment(amount=atomic_amount, address=address)
 
             self.logger.info('Sent Monero')
 
