@@ -81,7 +81,8 @@ $25/mo XMR donation: `monero-subscription:H4sIAB8cZGQC/12Oy07DMBBFfyXymiI3qYPKLm
 
 ## Discussion 
 * [Monero Topia - Odysee](https://Odysee.com/@MoneroTalk:8/monero-subscription-wallets-goes-live:6) 
-* [Monero Topia - YouTube](https://youtu.be/ZUNQ-FaI638) 
+* [Monero Topia - YouTube](https://youtu.be/ZUNQ-FaI638)
+* [Monero Talk - YouTube](https://www.youtube.com/live/tkGwtsMi_1c?feature=share) 
 
 ## License
 [MIT](https://github.com/Equim-chan/vanity-monero/blob/master/LICENSE)
