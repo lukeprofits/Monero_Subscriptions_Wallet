@@ -8,6 +8,7 @@ from src.rpc_config import RPCConfig
 from src.ui.common import CommonTheme
 from src.rpc_client import RPCClient
 from src.utils import valid_address
+from src.environment import STAGENET
 
 class Wallet():
     def __init__(self):
@@ -53,6 +54,8 @@ class Wallet():
             os.remove(f'{self.name}.keys')
 
         command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)}"
+        if STAGENET:
+            command += ' --stagenet'
         command += " --mnemonic-language English --command exit"
         process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE,
                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)

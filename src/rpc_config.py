@@ -1,5 +1,6 @@
 import platform
 import os
+from src.environment import STAGENET
 
 class RPCConfig():
     NODE_FILENAME = 'node_to_use.txt'
@@ -12,7 +13,7 @@ class RPCConfig():
         self.local_url = f'http://127.0.0.1:{self.bind_port}/json_rpc'
         self.username = 'monero'
         self.password = 'monero'
-        self.daemon_url = f'http://{self.host}:{self.port}/json_rpc'
+        self._daemon_url = f'http://{self.host}:{self.port}/json_rpc'
         self._cli_path = None
 
     def node(self):
@@ -35,3 +36,9 @@ class RPCConfig():
                 cli_path = 'monero-wallet-cli'
             self._cli_path = cli_path
         return self._cli_path
+
+    @property
+    def daemon_url(self):
+        if STAGENET:
+            self._daemon_url = 'https://testnet.xmr.ditatompel.com/json_rpc'
+        return self._daemon_url
