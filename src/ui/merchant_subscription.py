@@ -1,6 +1,8 @@
 from src.ui.common import CommonTheme
-from src.subscriptions import Subscription, Subscriptions
+from src.subscriptions import Subscriptions
+from src.subscription import Subscription
 import PySimpleGUI as sg
+
 class MerchantSubscription(CommonTheme):
     def __init__(self):
         super().__init__()

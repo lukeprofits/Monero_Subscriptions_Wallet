@@ -24,7 +24,8 @@ please_wait.open()
 wallet = Wallet()
 rpc_server = RPCServer(wallet)
 rpc_server.start()
-wallet.create()
+if not wallet.exists:
+    wallet.create()
 
 while not rpc_server.rpc_is_ready:
     # Check for window events
