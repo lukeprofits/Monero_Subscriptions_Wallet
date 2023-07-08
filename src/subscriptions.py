@@ -93,8 +93,10 @@ class Subscriptions():
                             wallet.send_subscription(sub)
 
                 print('Checking subscriptions again in 1 min')
-
-                time.sleep(60 * 1)  # run check every 1 min
+                for i in range(60):
+                    if ThreadManager.stop_flag().is_set():
+                        break
+                    time.sleep(1)
 
             except Exception as e:
                 print(f'Error in send_recurring_payments: {e}')
