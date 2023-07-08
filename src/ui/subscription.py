@@ -177,10 +177,6 @@ class SubscriptionUI(CommonTheme):
                     print('failed to send')
                     self.main_window()['withdraw_to_wallet'].update('Error: Enter a valid wallet address and XMR amount.')
 
-            if event in ('Show Window', sg.EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED):
-                self.main_window().un_hide()
-                self.main_window().bring_to_front()
-
             subscriptions = Subscriptions()
 
             for i, sub in enumerate(subscriptions.all()):
