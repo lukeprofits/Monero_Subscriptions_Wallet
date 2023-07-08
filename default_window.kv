@@ -1,0 +1,369 @@
+#:import CommonTheme src.ui.common.CommonTheme
+#:set theme CommonTheme()
+WindowManager:
+    canvas.before:
+        Color:
+            rgba: theme.ui_overall_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Loading:
+    NodePicker:
+    DefaultWindow:
+    SubscriptionTypeWindow:
+    ManualSubscriptionWindow:
+    MerchantSubscriptionWindow:
+
+<Balance>:
+    cols: 2
+    Label:
+        color: theme.ui_sub_font
+        text: "Balance"
+    Label:
+        color: theme.ui_sub_font
+        text: str(self.parent.dollar_balance)
+    Label:
+        text: 'XMR'
+        color: theme.monero_orange
+    Label:
+        text: str(self.parent.xmr_balance)
+        color: theme.monero_orange
+
+<SubscriptionUI>
+    cols: 4
+    Label:
+        text: str(root.amount)
+        color: theme.ui_sub_font
+    Label:
+        text: root.custom_label
+        color: theme.ui_sub_font
+    Label:
+        text: root.renewal_date
+        color: theme.ui_sub_font
+    Button:
+        text: "Cancel"
+        color: theme.ui_button_b_font
+        on_release: root.remove_subscription(root.custom_label, root.amount, root.billing_cycle_days)
+
+
+<SubscriptionsUI>:
+    # cols: 1
+    viewclass: 'SubscriptionUI'
+    RecycleGridLayout:
+        cols: 1
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        # orientation: 'vertical'
+
+<OrangeButton@Button>
+    canvas.before:
+        Color:
+            rgba: theme.ui_button_a
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color: theme.ui_button_a
+    background_normal: ''
+
+<Deposit>:
+    cols: 1
+    Label:
+        text: "Deposit XMR:"
+        color: theme.ui_sub_font
+        size_hint: (1, .3)
+        size_hint_max: (200, None)
+    Image:
+        source: "wallet_qr_code.png"
+    OrangeButton:
+        text: "Copy Address"
+        on_release: self.parent.copy_address()
+        size_hint: (.5, None)
+        height: 40
+
+
+<Withdrawl>:
+    cols: 4
+    Label:
+        text: "Send XMR:"
+    TextInput:
+        id: destination_address
+        multiline: False
+        hint_text: "[ Enter A Wallet Address ]"
+        background_color: theme.ui_barely_visible
+        background_normal: ''
+        color: theme.monero_orange
+        on_focus: self.background_color = theme.ui_barely_visible
+    TextInput:
+        id: amount
+        multiline: False
+        hint_text: "Enter An Amount"
+        background_color: theme.ui_barely_visible
+        background_normal: ''
+        on_focus: self.background_color = theme.ui_barely_visible
+    Button:
+        text: "Withdraw"
+        background_color: theme.ui_button_b
+        background_normal: ''
+        on_release: root.perform()
+
+<DefaultWindow>:
+    name: "default"
+    padding: (15, 15)
+    GridLayout:
+        cols: 3
+        size: root.width, root.height
+        GridLayout:
+            cols: 1
+            size_hint: (1, 1)
+        GridLayout:
+            padding: (0, 15)
+            cols: 1
+            size_hint_max: (2000, 1000)
+            size_hint_min: (700, 500)
+            GridLayout:
+                size_hint: (1, .5)
+                size_hint_max: (None, 100)
+                cols: 1
+                Label:
+                    text: "Monero Subscriptions Wallet"
+                    color: theme.ui_main_font
+                    font_size: 32
+                    size_hint: (.5, .5)
+                Label:
+                    text: "Subscriptions will be paid automatically if the wallet remains open."
+                    color: theme.monero_orange
+
+            GridLayout:
+                cols: 2
+                padding: (15, 15)
+                spacing: (15, 15)
+                size_hint: (1, 1)
+                size_hint_max: (800, None)
+                GridLayout:
+                    cols: 1
+                    size_hint: (1, 1)
+                    Balance:
+                        size_hint: (1, .4)
+                        size_hint_max: (600, 600)
+                    GridLayout:
+                        cols: 1
+                        # size_hint: (None, None)
+                        # size: (400, 1000)
+                        SubscriptionsUI:
+                        GridLayout:
+                            cols: 1
+                            size_hint_max: (None, 50)
+                            OrangeButton:
+                                text: "Add Subscription"
+                                id: add_subscription
+                                on_release: app.root.current="subscription_type"
+                                size_hint: (.8, None)
+                                height: 40
+
+                Deposit:
+                    size_hint_max: (600, None)
+
+            Withdrawl:
+                size_hint_x: 1
+                size_hint_y: None
+                size_hint_max: (None, 100)
+                height: 60
+                padding: (15, 15)
+                spacing: (15, 15)
+        GridLayout:
+            cols: 1
+            size_hint: (1, 1)
+
+<SubscriptionTypeWindow>:
+    name: "subscription_type"
+    GridLayout:
+        cols: 3
+        GridLayout:
+        GridLayout:
+            cols: 1
+            size_hint_max: (400, 400)
+            padding: (15, 15)
+            spacing: (15, 15)
+            Button:
+                text: "Manual Subscription"
+                on_release: app.root.current="manual_subscription"
+            Button:
+                text: "Merchant Subscription"
+                on_release: app.root.current="merchant_subscription"
+            Button:
+                text: "Cancel"
+                on_release: app.root.current="default"
+        GridLayout:
+
+<FormLabel@Label>:
+    size_hint: (None, None)
+    size: (200, 30)
+
+<FormTextInput@TextInput>:
+    multiline: False
+    size_hint: (None, None)
+    size: (300, 30)
+    on_focus: self.background_color=theme.monero_white
+
+<CurrencyButton>:
+    size_hint:(None, None)
+    size: (300, 30)
+
+<CurrencyDropdown>:
+    id: currency
+    Button:
+        text: "XMR"
+        on_release: root.select('XMR')
+        size_hint_y: None
+        height: 20
+    Button:
+        text: "USD"
+        on_release: root.select('USD')
+        size_hint_y: None
+        height: 20
+
+<ManualSubscriptionFormInputs>:
+    FormLabel:
+        text: "Custom Name:"
+    FormTextInput:
+        multiline: False
+        id: custom_label
+    FormLabel:
+        text: "Amount:"
+    FormTextInput:
+        multiline: False
+        id: amount
+    FormLabel:
+        text: "Billing Every:"
+    FormTextInput:
+        multiline: False
+        id: billing_cycle_days
+        hint_text: "Days"
+    FormLabel:
+        text: "Start Date:"
+    FormTextInput:
+        multiline: False
+        hint_text: "YYYY-MM-DD"
+        id: start_date
+    FormLabel:
+        text: "Seller's Wallet:"
+    FormTextInput:
+        multiline: False
+        id: sellers_wallet
+    FormLabel:
+        text: "Seller Provided Payment ID:"
+    FormTextInput:
+        multiline: False
+        id: payment_id
+    FormLabel:
+        text: "Currency:"
+
+<ManualSubscriptionForm>:
+    Label:
+        size_hint_max: (None, 100)
+        font_size: 32
+        text: "Create Subscription"
+    ManualSubscriptionFormInputs:
+        spacing: (0, 10)
+        cols: 2
+    GridLayout:
+        cols: 2
+        size_hint_max: (None, 100)
+        Button:
+            text: "Cancel"
+            on_release: app.root.current="subscription_type"
+            size_hint: (None, None)
+            size: (200, 50)
+        Button:
+            text: "Add Subscription"
+            on_release: root.add_subscription()
+            size_hint: (None, None)
+            size: (300, 50)
+
+<ManualSubscriptionWindow>:
+    name: "manual_subscription"
+    GridLayout:
+        cols: 3
+        GridLayout:
+            cols: 1
+        ManualSubscriptionForm:
+            size_hint_max: (800, 700)
+            size_hint_min: (600, 500)
+            cols: 1
+            padding: (0, 15)
+            spacing: (0, 15)
+        GridLayout:
+            cols: 1
+
+<MerchantSubscriptionWindow>:
+    name: "merchant_subscription"
+    GridLayout:
+        cols: 1
+        Label:
+            text: "Create Subscription"
+            font_size: 32
+        GridLayout:
+            cols: 3
+            GridLayout:
+                cols: 1
+            GridLayout:
+                size_hint_max: (500, 300)
+                size_hint_min: (100, 200)
+                cols: 2
+                FormLabel:
+                    text: "Subscription Code"
+                TextInput:
+                    multiline: False
+                    size_hint: (None, None)
+                    size: (200, 30)
+                    on_focus: self.background_color=theme.monero_white
+                    multiline: False
+                    id: subscription_code
+                Button:
+                    text: "Cancel"
+                    size_hint_max: (250, 50)
+                    on_release: app.root.current="subscription_type"
+                Button:
+                    text: "Add Subscription"
+                    size_hint_max: (250, 50)
+                    on_release: root.add_subscription()
+            GridLayout:
+                cols: 1
+
+<NodePicker>:
+    name: "node_picker"
+    GridLayout:
+        cols: 3
+        GridLayout:
+            cols: 1
+        GridLayout:
+            cols: 2
+            size_hint_max: (500, 300)
+            size_hint_min: (100, 200)
+            FormLabel:
+                text: "Add A Monero Node:"
+            TextInput:
+                id: node
+                size_hint: (None, None)
+                size: (200, 30)
+                multiline: False
+                on_focus: self.background_color=theme.monero_white
+            Button:
+                text: "Submit"
+                size_hint_max: (250, 50)
+                on_release: root.add_node()
+            Button:
+                text: "Add A Random Node"
+                size_hint_max: (250, 50)
+                on_release: root.add_random_node()
+        GridLayout:
+            cols: 1
+
+<Loading>:
+    name: "loading"
+    GridLayout:
+        size: root.width, root.height
+        cols: 1
+        Label:
+            text: "Loading..."
+            color: theme.ui_main_font

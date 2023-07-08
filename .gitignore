@@ -10,3 +10,5 @@ subscriptions_wallet_seed.txt
 Subscriptions.json
 wallet_qr_code.png
 .DS_Store
+build
+dist

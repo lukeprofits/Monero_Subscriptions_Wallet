@@ -1,11 +1,1 @@
-[
-  {
-    "custom_label": "Wallet Developer Donation",
-    "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
-    "currency": "USD",
-    "amount": 10.00,
-    "payment_id": "0000000000000000",
-    "start_date": "2023-05-16",
-    "billing_cycle_days": 30
-  }
-]
+[{"custom_label": "Wallet Developer Donation", "amount": 10.0, "billing_cycle_days": 30, "payment_id": "0000000000000000", "start_date": "2023-05-16", "currency": "USD", "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S"}]
