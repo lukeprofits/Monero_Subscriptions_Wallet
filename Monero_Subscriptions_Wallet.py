@@ -17,14 +17,14 @@ if not node_picker.node_picked():
     node_picker.pick_node()
     node_picker.close_window()
 
+please_wait = PleaseWait()
+please_wait.open()
+
 # START PREREQUISITES ##################################################################################################
 wallet = Wallet()
 rpc_server = RPCServer(wallet)
 rpc_server.start()
 wallet.create()
-
-please_wait = PleaseWait()
-please_wait.open()
 
 while not rpc_server.rpc_is_ready:
     # Check for window events
