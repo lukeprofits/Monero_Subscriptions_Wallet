@@ -49,7 +49,7 @@ class MerchantSubscription(CommonTheme):
 
                     else:  # Assume that the user submitted a monero-subscription code
                         try:
-                            subscription_json = Subscription().decode(subscription_info)
+                            subscription_json = Subscription.decode(subscription_info)
                             self.show_subscription_model(subscription_json)
                         except:
                             print('Monero subscription code is not valid. Not adding.')
@@ -70,6 +70,8 @@ class MerchantSubscription(CommonTheme):
                 window.close()
                 break
             elif event == "yes":
-                Subscriptions().add_subscription(Subscription(**subscription_json))
+                subs = Subscriptions()
+                subs.add_subscription(Subscription(**subscription_json))
+                subs.write_subscriptions()
                 window.close()
                 break

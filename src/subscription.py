@@ -139,7 +139,8 @@ class Subscription():
 
         return monero_subscription
 
-    def decode(self, code):
+    @classmethod
+    def decode(cls, code):
         # Catches user error. Code can start with "monero_subscription:", or ""
         code_parts = code.split('-subscription:')
 
