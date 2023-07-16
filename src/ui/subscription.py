@@ -192,6 +192,7 @@ class SubscriptionUI(CommonTheme):
                     if subscription is not None:
                         subscriptions.remove_subscription(subscription)
                         subscriptions.write_subscriptions()
+                        ThreadManager.update_subscriptions().set()
                         self.refresh_gui() # recreate the window to refresh the GUI
 
     def update_balance(self):

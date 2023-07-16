@@ -4,6 +4,7 @@ import PySimpleGUI as sg
 from src.subscriptions import Subscription, Subscriptions
 import random
 from src.utils import make_payment_id
+from src.thread_manager import ThreadManager
 
 class ManualSubscription(CommonTheme):
     def __init__(self):
@@ -64,7 +65,7 @@ class ManualSubscription(CommonTheme):
                     subscriptions = Subscriptions()
                     subscriptions.add_subscription(subscription)
                     subscriptions.write_subscriptions()
-
+                    ThreadManager.update_subscriptions().set()
                     print(custom_label)
                     print(amount)
                     print(currency)

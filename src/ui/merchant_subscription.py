@@ -1,6 +1,7 @@
 from src.ui.common import CommonTheme
 from src.subscriptions import Subscriptions
 from src.subscription import Subscription
+from src.thread_manager import ThreadManager
 import PySimpleGUI as sg
 
 class MerchantSubscription(CommonTheme):
@@ -73,5 +74,6 @@ class MerchantSubscription(CommonTheme):
                 subs = Subscriptions()
                 subs.add_subscription(Subscription(**subscription_json))
                 subs.write_subscriptions()
+                ThreadManager.update_subscriptions().set()
                 window.close()
                 break

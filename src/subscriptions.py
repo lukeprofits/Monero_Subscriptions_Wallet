@@ -14,6 +14,8 @@ class Subscriptions():
     def all(self):
         return self._subscriptions
 
+    def update(self):
+        self._subscriptions = self.read_subscriptions()
 
     def read_subscriptions(self):
         if not path.exists(self.SUBS_FILE_PATH):
@@ -68,6 +70,9 @@ class Subscriptions():
     def send_recurring_payments(self):
         while not ThreadManager.stop_flag().is_set():
             try:
+                if ThreadManager.update_subscriptions().is_set():
+                    self.update()
+                    ThreadManager.update_subscriptions().clear()
                 subscriptions = self.all()
 
                 print('Checking if subscriptions need to be paid.')
