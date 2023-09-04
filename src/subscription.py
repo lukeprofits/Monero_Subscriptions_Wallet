@@ -56,7 +56,7 @@ class Subscription():
         return True, ''
 
     def make_integrated_address(self):
-        RPCClient().create_integrated_address(self.sellers_wallet, self.payment_id)
+        return RPCClient().create_integrated_address(self.sellers_wallet, self.payment_id)
 
     def check_date_for_how_many_days_until_payment_needed(self, date):
         # Returns the number of days left.
