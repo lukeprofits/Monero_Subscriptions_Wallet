@@ -86,7 +86,7 @@ class SubscriptionUI(CommonTheme):
             payment_is_due, payment_date = sub.determine_if_a_payment_is_due()  # hopefully this does not make booting slow
 
             if not payment_is_due and payment_date:
-                days = seuf.check_date_for_how_many_days_until_payment_needed(date=payment_date, number_of_days=renews_in)
+                days = sub.check_date_for_how_many_days_until_payment_needed(payment_date)
                 renews_in = round(days)
 
             if currency == 'USD':

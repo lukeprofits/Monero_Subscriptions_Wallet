@@ -142,10 +142,10 @@ class Wallet():
 
             result = client.send_payment(amount=atomic_amount, address=address)
 
-            print('Sent Monero')
-
             if result is None:
                 print('Failed to send Monero transaction')
+            else:
+                print('Sent Monero')
 
         else:
             print('Wallet is not a valid monero wallet address.')

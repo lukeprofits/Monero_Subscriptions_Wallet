@@ -58,7 +58,7 @@ class ManualSubscription(CommonTheme):
                     # (Without one, you can't make multiple payments at the same time to the same wallet address.)
                     payment_id = make_payment_id()  # generates a random payment ID.
 
-                subscription = Subscription(custom_label=custom_label, amount=amount, currency=currency, billing_cycle_days=billing_cycle_days, start_date=start_date, sellers_wallet=sellers_wallet)
+                subscription = Subscription(custom_label=custom_label, amount=amount, currency=currency, billing_cycle_days=billing_cycle_days, start_date=start_date, sellers_wallet=sellers_wallet, payment_id=payment_id)
                 if subscription.valid_check():
                     subscription_info = subscription.encode()
                     subscription_json = subscription.decode(subscription_info)
