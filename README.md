@@ -35,7 +35,7 @@ If you use this, send me some XMR. It took weeks to develop, and I did not ask f
 - Cash App: `$LukeProfits`
 <a href="https://www.buymeacoffee.com/lukeprofits" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;">
-</a>
+</a><br>
 
 
 $1/mo XMR donation: `monero-subscription:H4sIAJEcZGQC/12Oy07DMBBFfyXymqI8mqCyS5oECQQSbaGlm8h2po2FH5HtFGzEvxN3yaxm7j3SmR9EJ2OV6DgmwNF9hPaYc7BRDRfgagQd1Upiy5RENxEyMJfadF9XKODL0maHXF/e3bhTp7OY4GVlVq9W+34DeTVBq81neWTJXaU+yOCdUd6r57Yq/F7unvqHdVF+NyVpmpz6dpMN8/ZIjFgOazik2yClk9YgqQu6t20dIizUJIM/uY3nc8ROgLQd6wMT/5vr4xZr2/XYQiDSOM0Wcb5IitARxjmT5446ymFmnJmZLP79A+WbtpUcAQAA`
