@@ -1,21 +1,8 @@
-import os
-import csv
-import time
 import json
-import gzip
-import psutil
-import base64
 import qrcode
-import random
-import requests
-import threading
-import subprocess
-from lxml import html
-import monero_usd_price
 import PySimpleGUI as sg
-from datetime import datetime, timezone
+from datetime import datetime
 import platform
-import clipboard
 
 import wallet_functions as wallet
 import config as cfg
@@ -65,17 +52,47 @@ def balance_section():
     layout = [
         [sg.Text(f'        Balance:  ${cfg.wallet_balance_usd} USD', size=(25, 1), font=(cfg.font, 18), key='wallet_balance_in_usd', text_color=cfg.ui_sub_font, background_color=cfg.ui_overall_background)],
         [sg.Text(f'        XMR: {cfg.wallet_balance_xmr}', size=(25, 1), font=(cfg.font, 18), key='wallet_balance_in_xmr', background_color=cfg.ui_overall_background)],
-        #[sg.Text('')],
     ]
     return layout
 
 
 def subscriptions_section(subscriptions):
-    subscription_layout = create_subscription_layout(subscriptions)
-    subscriptions_column = sg.Column(subscription_layout, key='subscriptions_column', pad=(10, 10))
+    rows = []
+    for i, sub in enumerate(subscriptions):
+        amount, custom_label, renews_in, currency = sub["amount"], sub['custom_label'], sub["billing_cycle_days"], sub[
+            "currency"]
+
+        payment_is_due, payment_date = wallet.determine_if_a_payment_is_due(sub)
+
+        if not payment_is_due and payment_date:
+            days = wallet.check_date_for_how_many_days_until_payment_needed(date=payment_date, number_of_days=renews_in)
+            renews_in = round(days)
+
+        currency_indicator_left, currency_indicator_right = ('$', ' USD') if currency == 'USD' else ('', f' {currency}')
+
+        row = [
+            sg.Text(f'    {currency_indicator_left}{amount}{currency_indicator_right}', justification='left',
+                    size=(12, 1), text_color=cfg.subscription_text_color,
+                    background_color=cfg.subscription_background_color),
+            sg.Column([[sg.Text(custom_label, justification='center', size=(None, 1),
+                                text_color=cfg.subscription_text_color,
+                                background_color=cfg.subscription_background_color)]], expand_x=True),
+            sg.Text(f'Renews in {renews_in} day(s)', justification='right', size=(16, 1),
+                    text_color=cfg.subscription_text_color, background_color=cfg.subscription_background_color),
+            sg.Button("Cancel", size=(7, 1), key=f'cancel_subscription_{i}',
+                      button_color=(cfg.ui_regular, cfg.ui_barely_visible)),
+        ]
+        rows.append(row)
+
+    add_button_layout = [[sg.Button("Add New Subscription", size=(40, 1), key='add_subscription', pad=(10, 10))]]
+    add_button_column = sg.Column(add_button_layout, expand_x=True, element_justification='center')
+    rows.append([add_button_column])
+
+    subscriptions_column = sg.Column(rows, key='subscriptions_column', pad=(10, 10))
     frame = sg.Frame('My Subscriptions', layout=[[subscriptions_column]], key='subscriptions_frame',
-                      element_justification='center', pad=(10, 10), background_color=cfg.subscription_background_color)
-    return [frame]
+                     element_justification='center', pad=(10, 10), background_color=cfg.subscription_background_color)
+
+    return [[frame]]
 
 
 def deposit_section():
@@ -94,10 +111,9 @@ def deposit_section():
 
 def send_section():
     layout = [
-        [sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10),
-                      justification='center', size=(46, 1)),
-         sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center',
-                      size=(20, 1)),
+        [sg.Text(f'      Send XMR:', size=(12, 1), font=(cfg.font, 14), pad=(10, 10), text_color=cfg.ui_sub_font, background_color=cfg.ui_overall_background),
+         sg.InputText(default_text='[ Enter a wallet address ]', key='withdraw_to_wallet', pad=(10, 10), justification='center', size=(46, 1)),
+         sg.InputText(default_text=' [ Enter an amount ]', key='withdraw_amount', pad=(10, 10), justification='center', size=(20, 1)),
          sg.Button("Send", size=(8, 1), key='send', pad=(10, 10), button_color=(cfg.ui_button_b_font, cfg.ui_button_b))
          ],
     ]
@@ -161,52 +177,7 @@ def create_main_window(subscriptions): # Creates the main window and returns it
         return sg.Window(cfg.title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=cfg.ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=cfg.icon, finalize=True)
 
 
-def create_subscription_rows(subscriptions):
-    result = []
-
-    for i, sub in enumerate(subscriptions):
-        amount = sub["amount"]
-        custom_label = sub['custom_label']
-        renews_in = sub["billing_cycle_days"]
-        currency = sub["currency"]
-
-        payment_is_due, payment_date = wallet.determine_if_a_payment_is_due(sub)  # hopefully this does not make booting slow
-
-        if not payment_is_due and payment_date:
-            days = wallet.check_date_for_how_many_days_until_payment_needed(date=payment_date, number_of_days=renews_in)
-            renews_in = round(days)
-
-        if currency == 'USD':
-            currency_indicator_left = '$'
-            currency_indicator_right = ' USD'
-
-        elif currency == 'XMR':
-            currency_indicator_left = ''
-            currency_indicator_right = ' XMR'
-
-        else:
-            currency_indicator_left = ''
-            currency_indicator_right = currency
-
-        row = [
-            sg.Text(f'    {currency_indicator_left}{amount}{currency_indicator_right}', justification='left', size=(12, 1), text_color=cfg.subscription_text_color, background_color=cfg.subscription_background_color),
-            sg.Column([[sg.Text((custom_label + ''), justification='center', size=(None, 1), text_color=cfg.subscription_text_color, background_color=cfg.subscription_background_color)]], expand_x=True),
-            sg.Text(f'Renews in {renews_in} day(s)', justification='right', size=(16, 1), text_color=cfg.subscription_text_color, background_color=cfg.subscription_background_color),
-            sg.Button("Cancel", size=(7, 1), key=f'cancel_subscription_{i}', button_color=(cfg.ui_regular, cfg.ui_barely_visible)),
-        ]
-        result.append(row)
-
-    return result
-
-
-def create_subscription_layout(subscriptions):
-    subscription_rows = create_subscription_rows(subscriptions)
-    return [*subscription_rows, [sg.Column([[sg.Button("Add New Subscription", size=(40, 1), key='add_subscription', pad=(10, 10))]], expand_x=True, element_justification='center')]]
-
-
 def add_subscription_from_merchant():
-    global subscriptions, subscription_rows
-
     # dev_sub_code = 'monero-subscription:H4sIACsJZGQC/12OXU+DMBSG/wrh2pkCAzPvYICJRhO36eZuSFvOBrEfpC3T1vjfbXfpuTrnfZ/kOT8xnbWRvGOYAIvvo3iPGQMT1XABJidQUS0FNqMU8U0Ua/Cl0t3XFQr4sjTZIVeXdzvt5OnMZ3hZ6dWrUa7fQF7N0Cr9WR7H5K6SH2RwVkvn5HNbFW4vdk/9w7oov5uSNE1OXbvJBr89Es2XwxoO6TZI6awUCGqD7m1bhwhzOYvgT9At8veELQdhurEPEPo3188NVqbrsYFApCjNFihfJEXoyMjYKM4dtZSBZ6z2TIZ+/wAVPrHVHQEAAA=='
     dev_sub_code = ''
 

@@ -1,20 +1,9 @@
 import os
-import time
 import json
-import gzip
-import psutil
-import base64
-import qrcode
-import random
 import requests
-import threading
 import subprocess
-from lxml import html
 import monero_usd_price
-import PySimpleGUI as sg
 from datetime import datetime
-import platform
-import clipboard
 
 import config as cfg
 
