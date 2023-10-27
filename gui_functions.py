@@ -178,7 +178,7 @@ def create_main_window(subscriptions):  # Creates the main window and returns it
         return sg.Window(cfg.title_bar_text, layout, margins=(20, 20), titlebar_icon='', titlebar_background_color=cfg.ui_overall_background, use_custom_titlebar=True, grab_anywhere=True, icon=cfg.icon, finalize=True)
 
 
-def add_subscription_from_merchant():
+def merchant_subscription_layout():
     dev_sub_code = ''
 
     layout = [
@@ -187,24 +187,29 @@ def add_subscription_from_merchant():
         ], justification='center', background_color=cfg.ui_title_bar)],
         [sg.Column([
             [sg.Text("")],
-            [sg.Multiline(size=(60, 8), key="subscription_info", do_not_clear=False, autoscroll=False,
-                          default_text=dev_sub_code)],
+            [sg.Multiline(size=(60, 8), key="subscription_info", do_not_clear=False, autoscroll=False, default_text=dev_sub_code)],
             [sg.Button("    Add Subscription    ", key="add_merchant_subscription"),
              sg.Button("    Cancel    ", key="cancel_merchant_subscription",
                        button_color=(cfg.ui_regular, cfg.ui_barely_visible))]
         ], element_justification='c', justification='center')]
     ]
 
-    window = sg.Window(cfg.title_bar_text, layout=layout, modal=True, margins=(20, 20),
+    return layout
+
+
+def add_subscription_from_merchant():
+    window = sg.Window(cfg.title_bar_text, layout=merchant_subscription_layout(), modal=True, margins=(20, 20),
                        background_color=cfg.ui_title_bar, titlebar_icon='', no_titlebar=True, use_custom_titlebar=True,
                        grab_anywhere=True, icon=cfg.icon)
 
     while True:
         event, values = window.read()
 
+        # CLOSE BUTTON PRESSED
         if event == sg.WIN_CLOSED or event == "cancel_merchant_subscription":
             break
 
+        # ADD MERCHANT SUBSCRIPTION BUTTON PRESSED
         elif event == "add_merchant_subscription":
             subscription_info = values["subscription_info"]
             subscription_info = subscription_info.strip()  # in case user added any spaces or new lines
@@ -213,18 +218,18 @@ def add_subscription_from_merchant():
                 print("Merchant code cannot be empty! Not adding.")
 
             else:
-                # Check if the user submitted a dictionary rather than a monero-subscription code
+                # Check if the user submitted a JSON dictionary rather than a Monero Payment Request
                 if '{' in subscription_info[0] and '}' in subscription_info[len(subscription_info) - 1]:
                     try:
                         subscription_json = json.loads(subscription_info)
-                        show_subscription_model(subscription_json)
+                        review_payment_popup(subscription_json)
                     except:
                         print('JSON for subscription is not valid. Not adding.')
 
-                else:  # Assume that the user submitted a monero-subscription code
+                else:  # Assume that the user submitted a Monero Payment Request
                     try:
                         subscription_json = monerorequest.decode_monero_payment_request(subscription_info)
-                        show_subscription_model(subscription_json)
+                        review_payment_popup(subscription_json)
                     except:
                         print('Monero subscription code is not valid. Not adding.')
                 break
@@ -232,22 +237,40 @@ def add_subscription_from_merchant():
     window.close()
 
 
-def show_subscription_model(subscription_json):
-    layout = [[sg.Text("     Are You Sure You Want To Add This Subscription?", font=(cfg.font, 18),
-                       text_color=cfg.ui_sub_font)],
-              [sg.Text(str(subscription_json['custom_label']))],
-              [sg.Text("Every " + str(subscription_json['days_per_billing_cycle']) + " days")],
-              [sg.Text(str(subscription_json['amount']) + " " + str(
-                  subscription_json['currency']) + " will be sent to the merchant")],
-              # str(subscription_json['sellers_wallet'])
-              [sg.Button("     Yes     ", key="yes"), sg.Button("     No     ", key="no")]]
+def review_payment_popup(subscription_json):
+    layout = [
+        [sg.Column([
+            [sg.Text("     Add This Payment Request?     ", font=(cfg.font, 18), text_color=cfg.ui_sub_font)],
+        ], justification='center', background_color=cfg.ui_title_bar)],
+
+        [sg.Column([
+            [sg.Text("")],
+            [sg.Text(f"     {str(subscription_json['custom_label'])}:     ", font=(cfg.font, 16), background_color=cfg.ui_overall_background)],
+            [sg.Text("")],
+            [sg.Text(f"     {str(subscription_json['amount'])} {str(subscription_json['currency'])} worth of Monero will be sent to the merchant every {str(subscription_json['days_per_billing_cycle'])} days     ", font=(cfg.font, 14), background_color=cfg.ui_overall_background)],
+            [sg.Text("")],
+            [sg.Text(f"     You will be billed {'until canceled.     ' if subscription_json['number_of_payments'] == 0 else str(subscription_json['number_of_payments']) + ' time(s) in total.     '}", font=(cfg.font, 14), background_color=cfg.ui_overall_background)],
+            [sg.Text("")],
+            [
+                sg.Button("     Confirm     ", key="yes"),
+                sg.Button("     Cancel     ", key="no", button_color=(cfg.ui_regular, cfg.ui_barely_visible))
+            ],
+            [sg.Text("")]
+        ], element_justification='c', justification='center')]
+    ]
+
     window = sg.Window("Are you sure?", layout=layout, modal=True, margins=(20, 20), background_color=cfg.ui_title_bar,
                        titlebar_icon='', no_titlebar=True, use_custom_titlebar=True, grab_anywhere=True, icon=cfg.icon)
+
     while True:
         event, values = window.read()
+
+        # NO BUTTON PRESSED (OR CLOSE BUTTON)
         if event == sg.WIN_CLOSED or event == "no":
             window.close()
             break
+
+        # YES BUTTON PRESSED
         elif event == "yes":
             sub.add_subscription(subscription_json)
             window.close()
