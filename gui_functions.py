@@ -254,54 +254,88 @@ def show_subscription_model(subscription_json):
             break
 
 
-def add_subscription_manually():
-    today = datetime.today().strftime("%Y-%m-%d")
+def manual_subscription_layout():
+    today = datetime.today().strftime("%Y-%m-%d")  # Placeholder to display as a suggested start date
+
     layout = [
+
+        # Headline
         [sg.Column([
-            [sg.Text("Enter Subscription Details", font=(cfg.font, 18), text_color=cfg.ui_sub_font)],
-        ], justification='center', background_color=cfg.ui_title_bar)],
+            [sg.Text("Enter Monero Payment Details", font=(cfg.font, 18), text_color=cfg.ui_sub_font)],
+        ], justification='center', background_color=cfg.ui_title_bar)
+        ],
+
+        # Fields
         [sg.Column([
             [sg.Text("")],
+
             [sg.Text("Custom Name:", background_color=cfg.ui_overall_background),
              sg.Input(size=(35, 1), key="custom_label")],
+
             [sg.Text("Amount:", background_color=cfg.ui_overall_background),
              sg.Input(size=(15, 1), key="amount", default_text='0.00'),
-             sg.Combo(["USD", "XMR"], default_value="USD", key="currency")],
+             sg.Combo(cfg.supported_currencies, default_value=cfg.supported_currencies[0], key="currency")],
+
             [sg.Text("Billing Every:", background_color=cfg.ui_overall_background),
              sg.Input(size=(3, 1), key="days_per_billing_cycle"),
              sg.Text("Day(s)", background_color=cfg.ui_overall_background)],
+
             [sg.Text("Start Date (YYYY-MM-DD):", background_color=cfg.ui_overall_background),
              sg.Input(default_text=today, size=(10, 1), key="start_date")],
+
+            [sg.Text("Total Number of Payments:", background_color=cfg.ui_overall_background),
+             sg.Input(size=(3, 1), key="number_of_payments"),
+             sg.Text("(For recurring until canceled, use 0)", background_color=cfg.ui_overall_background)],
+
             [sg.Text("Seller's Wallet:", background_color=cfg.ui_overall_background),
              sg.Input(size=(102, 1), key="sellers_wallet")],
+
+            [sg.Text("Optional Change Indicator URL:", background_color=cfg.ui_overall_background),
+             sg.Input(size=(60, 1), key="change_indicator_url"),
+             sg.Text("(For advanced sellers)", background_color=cfg.ui_overall_background)],
+
             [sg.Text("Optional Payment ID From Seller:", background_color=cfg.ui_overall_background),
-             sg.Input(size=(20, 1), key="payment_id")],
+             sg.Input(size=(20, 1), key="payment_id"),
+             sg.Text("(A random payment_id will be generated if left blank)", background_color=cfg.ui_overall_background)],
+
             [sg.Text("")],
+
+            # Buttons
             [sg.Column([
-                [sg.Button("    Add Subscription    ", key="add_manual_subscription"),
-                 sg.Button("    Cancel    ", key="cancel_manual_subscription",
-                           button_color=(cfg.ui_regular, cfg.ui_barely_visible))]
-            ], justification='center', element_justification='c')]
+                [
+                    sg.Button("    Add Payment    ", key="add_manual_subscription"),
+                    sg.Button("    Cancel    ", key="cancel_manual_subscription",
+                              button_color=(cfg.ui_regular, cfg.ui_barely_visible))
+                ]], justification='center', element_justification='c')]
         ], element_justification='l')]
     ]
 
-    window = sg.Window(cfg.title_bar_text, layout=layout, modal=True, margins=(20, 20), titlebar_icon='',
-                       no_titlebar=True, background_color=cfg.ui_title_bar, use_custom_titlebar=True,
-                       grab_anywhere=True, icon=cfg.icon)
+    return layout
 
+
+def add_subscription_manually():
+    window = sg.Window(cfg.title_bar_text, layout=manual_subscription_layout(), modal=True, margins=(20, 20),
+                       titlebar_icon='', no_titlebar=True, background_color=cfg.ui_title_bar, use_custom_titlebar=True,
+                       grab_anywhere=True, icon=cfg.icon)
+    # Event Loop
     while True:
         event, values = window.read()
 
+        # CLOSE BUTTON PRESSED
         if event == sg.WIN_CLOSED or event == "cancel_manual_subscription":
             break
 
+        # ADD MANUAL SUBSCRIPTION BUTTON PRESSED
         elif event == "add_manual_subscription":
             custom_label = values["custom_label"]
-            amount = float(values["amount"])
-            currency = values["currency"]
-            days_per_billing_cycle = int(values["days_per_billing_cycle"])
-            start_date = values["start_date"]
             sellers_wallet = values["sellers_wallet"]
+            currency = values["currency"]
+            amount = values["amount"]
+            start_date = monerorequest.convert_datetime_object_to_truncated_RFC3339_timestamp_format(
+                datetime_object=datetime.strptime(values["start_date"], "%Y-%m-%d"))
+            days_per_billing_cycle = int(values["days_per_billing_cycle"])
+            number_of_payments = int(values["number_of_payments"])
+            change_indicator_url = values["change_indicator_url"]
 
             try:
                 payment_id = values["payment_id"]
@@ -309,31 +343,32 @@ def add_subscription_manually():
                 payment_id = None
 
             if not payment_id:
-                # '0000000000000000' is the same as no payment_id, but you want to use one.
-                # (Without one, you can't make multiple payments at the same time to the same wallet address.)
                 payment_id = monerorequest.make_random_payment_id()  # generates a random payment ID.
 
             subscription_info = monerorequest.make_monero_payment_request(
                 custom_label=custom_label,
                 sellers_wallet=sellers_wallet,
                 currency=currency,
-                amount=amount,  # MAKE SURE THIS IS A STRING!!!
+                amount=amount,
                 payment_id=payment_id,
                 start_date=start_date,
                 days_per_billing_cycle=days_per_billing_cycle,
-                number_of_payments=1,
-                change_indicator_url='')
+                number_of_payments=number_of_payments,
+                change_indicator_url=change_indicator_url)
 
             subscription_json = monerorequest.decode_monero_payment_request(subscription_info)
             sub.add_subscription(subscription_json)
 
             print(custom_label)
-            print(amount)
-            print(currency)
-            print(days_per_billing_cycle)
-            print(start_date)
             print(sellers_wallet)
+            print(currency)
+            print(amount)
             print(payment_id)
+            print(start_date)
+            print(days_per_billing_cycle)
+            print(number_of_payments)
+            print(change_indicator_url)
+
             print(subscription_info)
 
             window.close()

@@ -33,6 +33,7 @@ wallet_address = ''
 subscriptions = ''
 window = ''
 start_block_height = None
+supported_currencies = ["USD", "XMR"]
 
 # =====================
 # Amounts
