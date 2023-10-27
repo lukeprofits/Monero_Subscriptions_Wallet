@@ -31,6 +31,7 @@ wallet_balance_usd = '---.--'
 current_monero_price = 150.00
 wallet_address = ''
 subscriptions = ''
+window = ''
 start_block_height = None
 
 # =====================
@@ -68,7 +69,6 @@ monero_grayscale_bottom = '#505050'
 main_text = ui_main_font  # this lets separators be orange but text stay white
 subscription_text_color = ui_sub_font
 subscription_background_color = ui_overall_background  # cfg.ui_title_bar
-
 
 # Set Theme
 icon = 'icon.ico'

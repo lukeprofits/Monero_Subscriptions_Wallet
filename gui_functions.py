@@ -3,8 +3,10 @@ import qrcode
 import PySimpleGUI as sg
 from datetime import datetime
 import platform
+import monerorequest
 
 import wallet_functions as wallet
+import subscription_functions as sub
 import config as cfg
 
 
@@ -59,8 +61,7 @@ def balance_section():
 def subscriptions_section(subscriptions):
     rows = []
     for i, sub in enumerate(subscriptions):
-        amount, custom_label, renews_in, currency = sub["amount"], sub['custom_label'], sub["billing_cycle_days"], sub[
-            "currency"]
+        amount, custom_label, renews_in, currency = sub["amount"], sub['custom_label'], sub["days_per_billing_cycle"], sub["currency"]
 
         payment_is_due, payment_date = wallet.determine_if_a_payment_is_due(sub)
 
@@ -120,7 +121,7 @@ def send_section():
     return layout
 
 
-def create_main_window(subscriptions): # Creates the main window and returns it
+def create_main_window(subscriptions):  # Creates the main window and returns it
     # Define the window layout
     layout = [
         ######## TOP SIDE
@@ -178,7 +179,6 @@ def create_main_window(subscriptions): # Creates the main window and returns it
 
 
 def add_subscription_from_merchant():
-    # dev_sub_code = 'monero-subscription:H4sIACsJZGQC/12OXU+DMBSG/wrh2pkCAzPvYICJRhO36eZuSFvOBrEfpC3T1vjfbXfpuTrnfZ/kOT8xnbWRvGOYAIvvo3iPGQMT1XABJidQUS0FNqMU8U0Ua/Cl0t3XFQr4sjTZIVeXdzvt5OnMZ3hZ6dWrUa7fQF7N0Cr9WR7H5K6SH2RwVkvn5HNbFW4vdk/9w7oov5uSNE1OXbvJBr89Es2XwxoO6TZI6awUCGqD7m1bhwhzOYvgT9At8veELQdhurEPEPo3188NVqbrsYFApCjNFihfJEXoyMjYKM4dtZSBZ6z2TIZ+/wAVPrHVHQEAAA=='
     dev_sub_code = ''
 
     layout = [
@@ -223,7 +223,7 @@ def add_subscription_from_merchant():
 
                 else:  # Assume that the user submitted a monero-subscription code
                     try:
-                        subscription_json = decode_monero_subscription_code(subscription_info)
+                        subscription_json = monerorequest.decode_monero_payment_request(subscription_info)
                         show_subscription_model(subscription_json)
                     except:
                         print('Monero subscription code is not valid. Not adding.')
@@ -236,7 +236,7 @@ def show_subscription_model(subscription_json):
     layout = [[sg.Text("     Are You Sure You Want To Add This Subscription?", font=(cfg.font, 18),
                        text_color=cfg.ui_sub_font)],
               [sg.Text(str(subscription_json['custom_label']))],
-              [sg.Text("Every " + str(subscription_json['billing_cycle_days']) + " days")],
+              [sg.Text("Every " + str(subscription_json['days_per_billing_cycle']) + " days")],
               [sg.Text(str(subscription_json['amount']) + " " + str(
                   subscription_json['currency']) + " will be sent to the merchant")],
               # str(subscription_json['sellers_wallet'])
@@ -249,7 +249,7 @@ def show_subscription_model(subscription_json):
             window.close()
             break
         elif event == "yes":
-            add_subscription(subscription_json)
+            sub.add_subscription(subscription_json)
             window.close()
             break
 
@@ -268,7 +268,7 @@ def add_subscription_manually():
              sg.Input(size=(15, 1), key="amount", default_text='0.00'),
              sg.Combo(["USD", "XMR"], default_value="USD", key="currency")],
             [sg.Text("Billing Every:", background_color=cfg.ui_overall_background),
-             sg.Input(size=(3, 1), key="billing_cycle_days"),
+             sg.Input(size=(3, 1), key="days_per_billing_cycle"),
              sg.Text("Day(s)", background_color=cfg.ui_overall_background)],
             [sg.Text("Start Date (YYYY-MM-DD):", background_color=cfg.ui_overall_background),
              sg.Input(default_text=today, size=(10, 1), key="start_date")],
@@ -299,7 +299,7 @@ def add_subscription_manually():
             custom_label = values["custom_label"]
             amount = float(values["amount"])
             currency = values["currency"]
-            billing_cycle_days = int(values["billing_cycle_days"])
+            days_per_billing_cycle = int(values["days_per_billing_cycle"])
             start_date = values["start_date"]
             sellers_wallet = values["sellers_wallet"]
 
@@ -311,26 +311,33 @@ def add_subscription_manually():
             if not payment_id:
                 # '0000000000000000' is the same as no payment_id, but you want to use one.
                 # (Without one, you can't make multiple payments at the same time to the same wallet address.)
-                payment_id = make_payment_id()  # generates a random payment ID.
+                payment_id = monerorequest.make_random_payment_id()  # generates a random payment ID.
 
-            subscription_info = make_subscription_code(
-                create_subscription(custom_label=custom_label, amount=amount, currency=currency,
-                                    billing_cycle_days=billing_cycle_days, start_date=start_date,
-                                    sellers_wallet=sellers_wallet, payment_id=payment_id))
-            subscription_json = decode_monero_subscription_code(subscription_info)
-            add_subscription(subscription_json)
+            subscription_info = monerorequest.make_monero_payment_request(
+                custom_label=custom_label,
+                sellers_wallet=sellers_wallet,
+                currency=currency,
+                amount=amount,  # MAKE SURE THIS IS A STRING!!!
+                payment_id=payment_id,
+                start_date=start_date,
+                days_per_billing_cycle=days_per_billing_cycle,
+                number_of_payments=1,
+                change_indicator_url='')
+
+            subscription_json = monerorequest.decode_monero_payment_request(subscription_info)
+            sub.add_subscription(subscription_json)
 
             print(custom_label)
             print(amount)
             print(currency)
-            print(billing_cycle_days)
+            print(days_per_billing_cycle)
             print(start_date)
             print(sellers_wallet)
             print(payment_id)
             print(subscription_info)
 
             window.close()
-            window = create_window(subscriptions)
+            cfg.window = create_main_window(cfg.subscriptions)
             break
 
     window.close()
@@ -338,7 +345,7 @@ def add_subscription_manually():
 
 # OTHER VISUALS ########################################################################################################
 def generate_monero_qr(wallet_address=cfg.wallet_address):
-    if wallet.check_if_monero_wallet_address_is_valid_format(wallet_address):
+    if monerorequest.Check.wallet(wallet_address=wallet_address, allow_standard=True, allow_integrated_address=False, allow_subaddress=False):
         # Generate the QR code
         qr = qrcode.QRCode(version=1, box_size=3, border=4)
         qr.add_data("monero:" + wallet_address)
@@ -353,3 +360,19 @@ def generate_monero_qr(wallet_address=cfg.wallet_address):
     else:
         print('Monero Address is not valid')
         return None
+
+
+def refresh_gui():
+    cfg.window.close()
+    cfg.subscriptions = sub.read_subscriptions()
+    cfg.window = create_main_window(cfg.subscriptions)  # recreate the window to refresh the GUI
+
+
+def make_transparent():
+    # Make the main window transparent
+    cfg.window.TKroot.attributes('-alpha', 0.00)
+
+
+def make_visible():
+    # Make the main window transparent
+    cfg.window.TKroot.attributes('-alpha', 1.00)

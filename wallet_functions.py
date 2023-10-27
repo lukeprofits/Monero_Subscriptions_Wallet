@@ -3,31 +3,13 @@ import json
 import requests
 import subprocess
 import monero_usd_price
+import monerorequest
 from datetime import datetime
 
 import config as cfg
 
 
 # CHECK FUNCTIONS ######################################################################################################
-def check_if_monero_wallet_address_is_valid_format(wallet_address):
-    # Check if the wallet address starts with the number 4
-    if wallet_address[0] != "4":
-        return False
-
-    # Check if the wallet address is exactly 95 or 106 characters long
-    if len(wallet_address) not in [95, 106]:
-        return False
-
-    # Check if the wallet address contains only valid characters
-    valid_chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    for char in wallet_address:
-        if char not in valid_chars:
-            return False
-
-    # If it passed all these checks
-    return True
-
-
 def check_if_wallet_exists(daemon_rpc_url):
     if not os.path.isfile(f"{cfg.wallet_name}.keys") or not os.path.isfile(cfg.wallet_name):
         # If either file doesn't exist
@@ -71,7 +53,7 @@ def send_monero(destination_address, amount, payment_id=None):
     # this needs to measure in atomic units, not xmr, so this converts it.
     amount = monero_usd_price.calculate_atomic_units_from_monero(monero_amount=amount)
 
-    if check_if_monero_wallet_address_is_valid_format(wallet_address=destination_address):
+    if monerorequest.Check.wallet(wallet_address=destination_address,  allow_standard=True, allow_integrated_address=True, allow_subaddress=True):
         print('Address is valid. Trying to send Monero')
 
         # Changes the wallet address to use an integrated wallet address ONLY if a payment id was specified.
@@ -279,7 +261,7 @@ def determine_if_a_payment_is_due(subscription):
             #print(f'\nFOUND: {payment_id}, {dest_address}, {transaction_date}\n')
             if payment_id == subscription["payment_id"] and dest_address == make_integrated_address(payment_id=payment_id, merchant_public_wallet_address=subscription["sellers_wallet"]):
                 # Check the date. See if it happened this billing cycle.
-                days_left = check_date_for_how_many_days_until_payment_needed(transaction_date, subscription["billing_cycle_days"])
+                days_left = check_date_for_how_many_days_until_payment_needed(transaction_date, subscription["days_per_billing_cycle"])
                 if days_left > 0:  # renew when subscription expires
                     print(f'Found a payment on {transaction_date}. No payment is due.')
                     return False, transaction_date  # It was this billing cycle. Payment is NOT due.
@@ -314,4 +296,3 @@ def check_date_for_how_many_days_until_payment_needed(date, number_of_days):
     # print(f'Hours Left: {hours_left}')
 
     return days_left
-
