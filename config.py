@@ -74,7 +74,8 @@ subscription_background_color = ui_overall_background  # cfg.ui_title_bar
 # Set Theme
 icon = 'icon.ico'
 font = 'Nunito Sans'
-title_bar_text = ''
+title_bar_text = 'Monero Subscriptions Wallet'
+icon_png_path = "./icon.png"
 
 # =====================
 # Longform Text
