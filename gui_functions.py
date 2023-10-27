@@ -247,7 +247,7 @@ def review_payment_popup(subscription_json):
             [sg.Text("")],
             [sg.Text(f"     {str(subscription_json['custom_label'])}:     ", font=(cfg.font, 16), background_color=cfg.ui_overall_background)],
             [sg.Text("")],
-            [sg.Text(f"     {str(subscription_json['amount'])} {str(subscription_json['currency'])} worth of Monero will be sent to the merchant every {str(subscription_json['days_per_billing_cycle'])} days     ", font=(cfg.font, 14), background_color=cfg.ui_overall_background)],
+            [sg.Text(f"     {str(subscription_json['amount'])} {str(subscription_json['currency'])} worth of Monero will be sent to the merchant{' every ' + str(subscription_json['days_per_billing_cycle']) + ' days.     ' if subscription_json['number_of_payments'] > 1 or subscription_json['number_of_payments'] == 0 else '.     '}", font=(cfg.font, 14), background_color=cfg.ui_overall_background)],
             [sg.Text("")],
             [sg.Text(f"     You will be billed {'until canceled.     ' if subscription_json['number_of_payments'] == 0 else str(subscription_json['number_of_payments']) + ' time(s) in total.     '}", font=(cfg.font, 14), background_color=cfg.ui_overall_background)],
             [sg.Text("")],
