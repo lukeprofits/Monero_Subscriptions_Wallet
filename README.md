@@ -51,21 +51,22 @@ monero-request:1:H4sIAAAAAAAC/y1QbU+DMBD+K6afN9PxMoRvbICJRhM31LkvTaEHNJaWtGUKxv9
 
 
 # Tools For Merchants
-* Recommended: [Monero Subscription Code Creator Website](https://monerosub.tux.pizza/)
-* [MoneroSub Subscription Code Creator Pip Package](https://github.com/lukeprofits/monerosub)
-* [Monero Subscription Code Creator CLI Tool](https://github.com/lukeprofits/Monero_Subscription_Code_Creator)
-* More monero-subscription integration tools coming soon...
+* Recommended: [Monero Payment Request Creator Website](https://monerosub.tux.pizza/)
+* [Monero Payment Request Creator Website Source Code - HOST IT YOURSELF!](https://github.com/lukeprofits/Monero_Subscription_Code_Creator_Website)
+* [Monero Payment Request Creator Pip Package](https://github.com/lukeprofits/monerorequest)
+* More monero-request integration tools coming soon...
 
 
 # Documentation For Merchants
-* [How To Create `monero-subscription` codes](https://github.com/lukeprofits/Monero_Subscriptions_Standard)
+* [How To Create `monero-request` codes](https://github.com/lukeprofits/Monero_Payment_Request_Standard)
 
 
 ## Features
 * Automatically send recurring payments without a middleman
-* Add subscriptions from merchants, or create them manaually
+* Add payment requests from merchants, or create them manaually
 * Send donations to your favorite content creators (or developers) on a set schedule
 * Supports Subscriptions Billing: Daily, Weekly, Monthly, Yearly, or anything in between!
+* Supports one-time, recurring, and fixed-number-of payments 
 
 
 ## Works On
@@ -77,14 +78,14 @@ monero-request:1:H4sIAAAAAAAC/y1QbU+DMBD+K6afN9PxMoRvbICJRhM31LkvTaEHNJaWtGUKxv9
 ## Requirements
 * [Python 3.8](https://www.python.org/downloads/) or above
 * [Monero CLI Wallet](https://www.getmonero.org/downloads/#cli)
-* [monero_usd_price](https://github.com/lukeprofits/Monero-USD-Price)
 * [psutil](https://github.com/giampaolo/psutil)
-* [qrcode](https://github.com/lincolnloop/python-qrcode)
 * [requests](https://github.com/psf/requests)
-* [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
-* [lxml](https://github.com/lxml/lxml)
 * [clipboard](https://pypi.org/project/clipboard)
-* [Pillow](https://pypi.org/project/Pillow/) 
+* [lxml](https://github.com/lxml/lxml)
+* [monero_usd_price](https://github.com/lukeprofits/Monero-USD-Price)
+* [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI)
+* [qrcode](https://github.com/lincolnloop/python-qrcode)
+* [monerorequest](https://github.com/lukeprofits/monerorequest)
 
 
 ## Discussion 
