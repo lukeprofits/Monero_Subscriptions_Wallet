@@ -35,7 +35,7 @@ If you use this, send me some XMR. It took weeks to develop, and I did not ask f
 - Cash App: `$LukeProfits`
 <a href="https://www.buymeacoffee.com/lukeprofits" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;">
-</a><br>
+</a><br><br>
 
 
 $10/mo XMR donation: 
