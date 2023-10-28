@@ -272,8 +272,16 @@ except:
 cfg.subscriptions = sub.read_subscriptions()
 
 # CREATE THE MAIN WINDOW ###############################################################################################
-cfg.window.close()
-cfg.window = gui.create_main_window(cfg.subscriptions)
+old_window = cfg.window
+
+# Calculate location to be in the center of cfg.window position
+location = gui.calculate_window_position(main_window=old_window, layout_creation_func=lambda: gui.main_window_layout())
+
+# Create the main window
+cfg.window = gui.create_main_window(cfg.subscriptions, location=location)
+
+# Close the old window
+old_window.close()
 # gui.bind_checkboxes(window=cfg.window)  # add this later if using. Just putting here as a reminder.
 
 

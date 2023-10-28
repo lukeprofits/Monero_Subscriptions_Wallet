@@ -516,9 +516,6 @@ def add_subscription_manually(location=(None, None)):
             print(subscription_info)
 
             window.close()
-
-            #location = cfg.window.CurrentLocation()
-            #cfg.window = create_main_window(subscriptions=cfg.subscriptions, location=location)
             break
 
     window.close()
