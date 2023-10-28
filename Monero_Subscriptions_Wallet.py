@@ -1,25 +1,20 @@
 import os
 import time
-import json
-import gzip
 import psutil
-import base64
 import random
 import requests
+import platform
+import clipboard
 import threading
 import subprocess
 from lxml import html
-import monerorequest
 import monero_usd_price
 import PySimpleGUI as sg
-from datetime import datetime
-import platform
-import clipboard
 
+import config as cfg
+import gui_functions as gui
 import wallet_functions as wallet
 import subscription_functions as sub
-import gui_functions as gui
-import config as cfg
 
 
 # OPEN STUFF FUNCTIONS #################################################################################################

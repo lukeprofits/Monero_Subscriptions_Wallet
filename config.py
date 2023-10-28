@@ -37,11 +37,6 @@ supported_currencies = ["USD", "XMR"]
 withdraw_to_wallet = ''
 
 # =====================
-# Amounts
-# =====================
-#usd_amount_to_leave_in_wallet_for_tx_fees = 1
-
-# =====================
 # Flags and Booleans
 # =====================
 rpc_is_ready = False

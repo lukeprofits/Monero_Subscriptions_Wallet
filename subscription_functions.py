@@ -1,14 +1,8 @@
-import json
 import os
-import qrcode
-import PySimpleGUI as sg
-from datetime import datetime
-import platform
-import monerorequest
+import json
 
-import wallet_functions as wallet
-import gui_functions as gui
 import config as cfg
+import gui_functions as gui
 
 
 def add_subscription(subscription):

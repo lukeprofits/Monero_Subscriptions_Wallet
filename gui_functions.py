@@ -1,16 +1,13 @@
 import json
-import time
-
 import qrcode
-import PySimpleGUI as sg
-from datetime import datetime
 import platform
 import monerorequest
-from functools import partial
+import PySimpleGUI as sg
+from datetime import datetime
 
+import config as cfg
 import wallet_functions as wallet
 import subscription_functions as sub
-import config as cfg
 
 
 # MAIN WINDOW & SECTIONS ###############################################################################################
