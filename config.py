@@ -34,6 +34,7 @@ subscriptions = ''
 window = ''
 start_block_height = None
 supported_currencies = ["USD", "XMR"]
+withdraw_to_wallet = ''
 
 # =====================
 # Amounts

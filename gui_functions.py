@@ -6,6 +6,7 @@ import PySimpleGUI as sg
 from datetime import datetime
 import platform
 import monerorequest
+from functools import partial
 
 import wallet_functions as wallet
 import subscription_functions as sub
@@ -85,14 +86,14 @@ def subscriptions_section(subscriptions):
 
         rows.append(layout)
 
-    add_button_layout = [[sg.Button("Add New Subscription", size=(40, 1), key='add_subscription', font=(cfg.font, 12), pad=(10, 10))]]
+    add_button_layout = [[sg.Button("Add Monero Payment Request", size=(40, 1), key='add_subscription', font=(cfg.font, 12), pad=(10, 10))]]
     add_button_column = sg.Column(add_button_layout, expand_x=True, element_justification='center')
 
     rows.append([add_button_column])
 
     subscriptions_column = sg.Column(rows, key='subscriptions_column', pad=(10, 10))
 
-    frame = sg.Frame('My Subscriptions', layout=[[subscriptions_column]], key='subscriptions_frame', element_justification='center', pad=(10, 10), background_color=cfg.subscription_background_color)
+    frame = sg.Frame('Upcoming Payments', layout=[[subscriptions_column]], key='subscriptions_frame', element_justification='center', pad=(10, 10), background_color=cfg.subscription_background_color)
 
     return [[frame]]
 
@@ -229,7 +230,7 @@ def merchant_subscription_layout():
             [sg.Multiline(size=(80, 8), key="subscription_info", do_not_clear=False, autoscroll=False, default_text=dev_sub_code)],
             [sg.Text("")],
             [
-                sg.Button("    Add Subscription    ", key="add_merchant_subscription", font=(cfg.font, 12)),
+                sg.Button("    Add Payment Request    ", key="add_merchant_subscription", font=(cfg.font, 12)),
                 sg.Button("    Cancel    ", key="cancel_merchant_subscription", font=(cfg.font, 12), button_color=(cfg.ui_regular, cfg.ui_barely_visible))
             ],
             [sg.Text("")]
@@ -287,8 +288,8 @@ def manual_subscription_layout():
             # Buttons
             [sg.Column([
                 [
-                    sg.Button("    Add Payment    ", key="add_manual_subscription"),
-                    sg.Button("    Cancel    ", key="cancel_manual_subscription", button_color=(cfg.ui_regular, cfg.ui_barely_visible))
+                    sg.Button("    Add Payment    ", key="add_manual_subscription", font=(cfg.font, 12)),
+                    sg.Button("    Cancel    ", key="cancel_manual_subscription", font=(cfg.font, 12), button_color=(cfg.ui_regular, cfg.ui_barely_visible))
                 ]], justification='center', element_justification='c')]
         ], element_justification='l')]
     ]
@@ -312,11 +313,11 @@ def create_main_window(subscriptions, location=(None, None)):  # Creates the mai
                          grab_anywhere=True, icon=cfg.icon, finalize=True, location=location)
 
 
-def review_payment_popup(subscription_json):
+def review_payment_popup(subscription_json, location=(None, None)):
 
     window = sg.Window("Are you sure?", layout=review_payment_layout(subscription_json), modal=True, margins=(20, 20),
                        background_color=cfg.ui_title_bar, titlebar_icon='', no_titlebar=True, use_custom_titlebar=True,
-                       grab_anywhere=True, icon=cfg.icon)
+                       grab_anywhere=True, icon=cfg.icon, location=location)
 
     while True:
         event, values = window.read()
@@ -333,10 +334,10 @@ def review_payment_popup(subscription_json):
             break
 
 
-def add_subscription_from_merchant():
+def add_subscription_from_merchant(location=(None, None)):
     window = sg.Window(cfg.title_bar_text, layout=merchant_subscription_layout(), modal=True, margins=(20, 20),
                        background_color=cfg.ui_title_bar, titlebar_icon='', no_titlebar=True, use_custom_titlebar=True,
-                       grab_anywhere=True, icon=cfg.icon)
+                       grab_anywhere=True, icon=cfg.icon, location=location)
 
     while True:
         event, values = window.read()
@@ -358,14 +359,22 @@ def add_subscription_from_merchant():
                 if '{' in subscription_info[0] and '}' in subscription_info[len(subscription_info) - 1]:
                     try:
                         subscription_json = json.loads(subscription_info)
-                        review_payment_popup(subscription_json)
+
+                        # Calculate location to be in the center of cfg.window position
+                        location = calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: review_payment_layout(subscription_json))
+
+                        review_payment_popup(subscription_json, location=location)
                     except:
                         print('JSON for subscription is not valid. Not adding.')
 
                 else:  # Assume that the user submitted a Monero Payment Request
                     try:
                         subscription_json = monerorequest.decode_monero_payment_request(subscription_info)
-                        review_payment_popup(subscription_json)
+
+                        # Calculate location to be in the center of cfg.window position
+                        location = calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: review_payment_layout(subscription_json))
+
+                        review_payment_popup(subscription_json, location=location)
                     except:
                         print('Monero subscription code is not valid. Not adding.')
                 break
@@ -373,10 +382,85 @@ def add_subscription_from_merchant():
     window.close()
 
 
-def add_subscription_manually():
+def confirm_send_layout():
+    layout = [
+        [sg.Column([
+            [sg.Text(f"Are you sure you want to send all your XMR to this address?\n", font=(cfg.font, 18), text_color=cfg.ui_sub_font)]
+        ], justification='center', background_color=cfg.ui_title_bar)],
+
+        [sg.Column([
+            [
+                sg.Button("     Confirm     ", key="confirm", font=(cfg.font, 12)),
+                sg.Button("     Cancel     ", key="cancel", font=(cfg.font, 12), button_color=(cfg.ui_regular, cfg.ui_barely_visible)),
+            ],
+        ], element_justification='c', justification='center', expand_x=True, background_color=cfg.ui_title_bar)]
+    ]
+
+    return layout
+
+
+def confirm_send(location=(None, None)):
+    window = sg.Window('', layout=confirm_send_layout(), no_titlebar=True, background_color=cfg.ui_title_bar, modal=True, grab_anywhere=True, icon=cfg.icon, location=location)
+
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED or event == 'cancel':
+            print("Cancelled wallet sweep!")
+            break
+        elif event == 'confirm':
+            wallet.send_monero(destination_address=cfg.withdraw_to_wallet, amount=cfg.xmr_unlocked_balance)
+            print("The wallet has been swept!")
+            break
+
+    window.close()
+
+
+def manual_or_from_code_layout():
+    layout = [
+        [sg.Column([
+            [sg.Text("     Add Payment Request:     ", font=(cfg.font, 18), text_color=cfg.ui_sub_font)],
+        ], justification='center', background_color=cfg.ui_title_bar)],
+
+        [sg.Column([
+            [
+                sg.Button("    From Merchant    ", key="merchant", font=(cfg.font, 12)),
+                sg.Button("    Manually    ", key="manually", font=(cfg.font, 12), button_color=(cfg.ui_regular, cfg.ui_barely_visible)),
+            ],
+        ], element_justification='c', justification='center', expand_x=True, background_color=cfg.ui_title_bar)]
+    ]
+
+    return layout
+
+
+def manual_or_from_code(location=(None, None)):
+    window = sg.Window('', layout=manual_or_from_code_layout(), no_titlebar=True, background_color=cfg.ui_title_bar, modal=True, grab_anywhere=True, icon=cfg.icon, location=location)
+
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED:
+            break
+
+        elif event == 'manually':
+            # Calculate location to be in the center of cfg.window position
+            location = calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: manual_subscription_layout())
+
+            add_subscription_manually(location=location)
+            break
+
+        elif event == 'merchant':
+            # Calculate location to be in the center of cfg.window position
+            location = calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: merchant_subscription_layout())
+
+            add_subscription_from_merchant(location=location)
+            break
+
+    window.close()
+
+
+def add_subscription_manually(location=(None, None)):
     window = sg.Window(cfg.title_bar_text, layout=manual_subscription_layout(), modal=True, margins=(20, 20),
                        titlebar_icon='', no_titlebar=True, background_color=cfg.ui_title_bar, use_custom_titlebar=True,
-                       grab_anywhere=True, icon=cfg.icon)
+                       grab_anywhere=True, icon=cfg.icon, location=location)
     # Event Loop
     while True:
         event, values = window.read()
@@ -432,7 +516,9 @@ def add_subscription_manually():
             print(subscription_info)
 
             window.close()
-            cfg.window = create_main_window(subscriptions=cfg.subscriptions)
+
+            #location = cfg.window.CurrentLocation()
+            #cfg.window = create_main_window(subscriptions=cfg.subscriptions, location=location)
             break
 
     window.close()
@@ -455,6 +541,29 @@ def make_transparent():
 def make_visible():
     # Make the main window transparent
     cfg.window.TKroot.attributes('-alpha', 1.00)
+
+
+def calculate_window_position(main_window, layout_creation_func):
+    # Create a layout using the provided function
+    temp_layout = layout_creation_func()
+
+    # Create an off-screen popup to measure its size
+    offscreen_popup = sg.Window('Temp', temp_layout, location=(2000, 2000))
+    offscreen_popup.read(timeout=1)
+    offscreen_popup.hide()
+
+    # Fetch location and sizes
+    x, y = main_window.CurrentLocation()
+    w_main, h_main = main_window.size
+    w_popup, h_popup = offscreen_popup.size
+
+    # Calculate the centered position
+    new_x = int(x + w_main // 2 - w_popup // 2)
+    new_y = int(y + h_main // 2 - h_popup // 2)
+    offscreen_popup.close()
+
+    location = (new_x, new_y)
+    return location
 
 
 # OTHER VISUALS ########################################################################################################

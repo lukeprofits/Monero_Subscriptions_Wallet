@@ -301,33 +301,30 @@ while True:
 
     # ADD SUBSCRIPTION BUTTON PRESSED
     elif event == 'add_subscription':
+        # Calculate location to be in the center of cfg.window position
+        location = gui.calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: gui.manual_or_from_code_layout())
+
         # Display the "How would you like to add this subscription?" popup
-        choice = sg.popup("        How would you like to add this subscription?\n", text_color=cfg.ui_sub_font, title='', custom_text=("    Manually    ", "    Paste From Merchant    "), no_titlebar=True, background_color=cfg.ui_title_bar, modal=True, grab_anywhere=True, icon=cfg.icon)
-        if "From Merchant" in choice:
-            gui.add_subscription_from_merchant()
-        elif "Manually" in choice:
-            gui.add_subscription_manually()
+        gui.manual_or_from_code(location=location)
 
     # SEND BUTTON PRESSED
     elif event == 'send':
         try:
-            withdraw_to_wallet = values['withdraw_to_wallet']
+            cfg.withdraw_to_wallet = values['withdraw_to_wallet']
             if values['withdraw_amount'] == '':
                 withdraw_amount = None
             else:
                 withdraw_amount = float(values['withdraw_amount'])
-            print(withdraw_to_wallet)
+            print(cfg.withdraw_to_wallet)
             print(withdraw_amount)
             if withdraw_amount == None:
-                choice = sg.popup(f"Are you sure you want to send all your XMR to this address?\n", text_color=cfg.ui_sub_font, title='', custom_text=("    Yes, I am sure!    ", "    No, CANCEL!    "), no_titlebar=True, background_color=cfg.ui_title_bar, modal=True, grab_anywhere=True, icon=cfg.icon)
-                if "No, CANCEL!" in choice:
-                    print("Cancelled wallet sweep!")
-                    pass
-                elif "Yes, I am sure!" in choice:
-                    wallet.send_monero(destination_address=withdraw_to_wallet, amount=cfg.xmr_unlocked_balance)
-                    print("The wallet has been swept!")
+                # Calculate location to be in the center of cfg.window position
+                location = gui.calculate_window_position(main_window=cfg.window, layout_creation_func=lambda: gui.confirm_send_layout())
+
+                gui.confirm_send(location=location)
+
             else:
-                wallet.send_monero(destination_address=withdraw_to_wallet, amount=withdraw_amount)
+                wallet.send_monero(destination_address=cfg.withdraw_to_wallet, amount=withdraw_amount)
 
         except Exception as e:
             print(e)
