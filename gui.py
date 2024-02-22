@@ -8,8 +8,8 @@ class App(customtkinter.CTk):
         super().__init__(*args, **kwargs)
         self.geometry("300x800")
 
-        self.deposit_button = customtkinter.CTkButton(self, text="Deposit", command=self.open_deposit)
-        self.deposit_button.pack(side="top", padx=20, pady=20)
+        self.recieve_button = customtkinter.CTkButton(self, text="Recieve", command=self.open_recieve)
+        self.recieve_button.pack(side="top", padx=20, pady=20)
 
         self.send_button = customtkinter.CTkButton(self, text="Send", command=self.open_send)
         self.send_button.pack(side="top", padx=20, pady=20)
@@ -34,9 +34,9 @@ class App(customtkinter.CTk):
 
         self.toplevel_window = None
 
-    def open_deposit(self):
+    def open_recieve(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = Deposit(self)  # create window if its None or destroyed
+            self.toplevel_window = Recieve(self)  # create window if its None or destroyed
         else:
             self.toplevel_window.focus()  # if window exists focus it
 
@@ -83,12 +83,12 @@ class App(customtkinter.CTk):
             self.toplevel_window.focus()  # if window exists focus it
 
 
-class Deposit(customtkinter.CTkToplevel):
+class Recieve(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.geometry("400x300")
 
-        self.label = customtkinter.CTkLabel(self, text="Deposit Window")
+        self.label = customtkinter.CTkLabel(self, text="Recieve Window")
         self.label.pack(padx=20, pady=20)
 
 
