@@ -1,10 +1,12 @@
 import customtkinter
 
+customtkinter.set_default_color_theme("monero_theme.json")
+
 
 class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("300x1000")
+        self.geometry("300x800")
 
         self.deposit_button = customtkinter.CTkButton(self, text="Deposit", command=self.open_deposit)
         self.deposit_button.pack(side="top", padx=20, pady=20)
