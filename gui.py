@@ -1,4 +1,6 @@
 import customtkinter
+from src.wallet import Wallet
+from src.rpc_server import RPCServer
 
 customtkinter.set_default_color_theme("monero_theme.json")
 
@@ -28,7 +30,10 @@ class App(customtkinter.CTk):
         self.subscriptions_button = customtkinter.CTkButton(self, text="                    Manage Subscriptions                    ", command=self.open_subscriptions)
         self.subscriptions_button.place(relx=0.5, rely=0.875, anchor="center") #.pack(side="top", padx=20, pady=20)
 
-
+        wallet = Wallet()
+        rpc_server = RPCServer(wallet)
+        rpc_server.start()
+        rpc_server.check_if_rpc_server_ready(self.sync_status)
 
         self.node_selection_button = customtkinter.CTkButton(self, text="Node Selection", command=self.open_node_selection)
         #self.node_selection_button.pack(side="top", padx=20, pady=20)
