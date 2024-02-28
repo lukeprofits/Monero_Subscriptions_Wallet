@@ -12,11 +12,6 @@ class App(ctk.CTk):
         self.geometry("500x260")
         # 3 columns 2 rows
 
-        def currency_selector_callback(choice):
-            SELECTED_CURRENCY = choice
-            print("User chose:", choice)
-            print(SELECTED_CURRENCY)
-
         # Configure the main window grid for spacing and alignment
         self.columnconfigure([0, 1, 2], weight=1)
 
@@ -31,12 +26,6 @@ class App(ctk.CTk):
         # Amount
         self.amount = ctk.CTkLabel(self, text="$150.00 USD", font=("Helvetica", 48))
         self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
-
-        # TODO: Finish properly aligning this in the window
-        # Selected Currency
-        self.selected_currencey = ctk.StringVar(value=SELECTED_CURRENCY)
-        self.currency_selector = ctk.CTkOptionMenu(self, width=25, values=CURRENCY_OPTIONS, command=currency_selector_callback, variable=self.selected_currencey)
-        self.currency_selector.grid(row=2, column=1)
 
         # Frame to hold buttons
         center_frame = ctk.CTkFrame(self,)
@@ -108,7 +97,7 @@ class Pay(ctk.CTkToplevel):
 class Settings(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("400x300")
+        self.geometry("400x600")
 
         self.label = ctk.CTkLabel(self, text="Settings Window")
         self.label.pack(padx=20, pady=20)
@@ -124,6 +113,9 @@ class Settings(ctk.CTkToplevel):
 
         self.manually_create_payment_request_button = ctk.CTkButton(self, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request)
         self.manually_create_payment_request_button.pack(side="top", padx=20, pady=20)
+
+        self.set_currency_button = ctk.CTkButton(self, text="Set Currency", command=self.open_set_currency)
+        self.set_currency_button.pack(side="top", padx=20, pady=20)
 
         self.toplevel_window = None
 
@@ -148,6 +140,12 @@ class Settings(ctk.CTkToplevel):
     def open_manually_create_payment_request(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
             self.toplevel_window = ManuallyCreatePaymentRequest(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
+
+    def open_set_currency(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = SetCurrency(self)  # create window if its None or destroyed
         else:
             self.toplevel_window.focus()  # if window exists focus it
 
@@ -199,6 +197,37 @@ class ManuallyCreatePaymentRequest(ctk.CTkToplevel):
 
         self.label = ctk.CTkLabel(self, text="Manually Create Payment Request")
         self.label.pack(padx=20, pady=20)
+
+
+class SetCurrency(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("600x300")
+
+        def currency_selector_callback(choice):
+            SELECTED_CURRENCY = choice
+            print("User chose:", choice)
+            print(SELECTED_CURRENCY)
+
+        set_currency_window_text = """
+        Set Default Currency:
+        
+        The currency that you select will be shown by default. 
+        
+        To toggle to the the Monero amount in the main window, simply click it."""
+
+        self.label = ctk.CTkLabel(self, text=set_currency_window_text)
+        self.label.pack(padx=20, pady=20)
+
+        # Selected Currency
+        self.selected_currency = ctk.StringVar(value=SELECTED_CURRENCY)
+        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=currency_selector_callback, variable=self.selected_currency)
+        self.currency_selector.pack(padx=20, pady=20)
+
+        # TODO: Add a "Default" and an "Secondary" so that users can toggle between two. USD by default, and click to toggle to XMR.
+
+
+
 
 
 app = App()
