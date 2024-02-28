@@ -5,11 +5,11 @@ import platform
 import time
 import logging
 import logging.config
-import sys
 from src.rpc_config import RPCConfig
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
+
 class RPCServer():
     def __init__(self, wallet):
         self.config = RPCConfig()
@@ -22,8 +22,9 @@ class RPCServer():
         self.process = None
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
+        self.failed_to_start = False
 
-    def _start(self):
+    def _start(self, label):
         self.logger.debug(f'Block Height: {self.wallet.block_height}')
 
         if self.wallet.block_height:
@@ -38,10 +39,15 @@ class RPCServer():
 
             while not blocks_synced:
                 self.logger.debug(f'SYNCING BLOCKS:{stdout}')
-                self.logger.error(stderr)
-                if "Opened wallet:" in stdout:
+                self.logger.error(("Opened wallet:" in stdout))
+
+                if "Opened wallet:" in stdout and "Error" not in stdout:
                     blocks_synced = True
                     break
+
+                if "Error" in stdout:
+                    label.configure(text=stderr)
+                    self.failed_to_start = True
 
                 if proc.poll() is not None:
                     break
@@ -83,7 +89,9 @@ class RPCServer():
     def rpc_server_ready(self, label):
         rpc_client = RPCClient()
         while True:
-            while not rpc_client.local_healthcheck():
+            while not rpc_client.local_healthcheck() and not self.failed_to_start:
+                self.logger.debug(self.failed_to_start)
+                self.logger.debug('Running HealthCheck...')
                 output = self.process.stdout.readline()
                 if self.process.poll() is not None:
                     break
@@ -94,15 +102,19 @@ class RPCServer():
             if not self.wallet.exists():
                 self.wallet.create()
 
-            label.configure(text="Ready")
+            if not self.failed_to_start:
+                label.configure(text="Ready")
+
+            if self.failed_to_start:
+                label.configure(text='Failed To Start RPC Server - Check Logs')
+
             break
 
 
     def check_if_rpc_server_ready(self, rpc_status_label):
         self.logger.debug('Checking if RPC Ready')
-        print('checking server readiness')
         threading.Thread(target=self.rpc_server_ready, args=[rpc_status_label]).start()
 
-    def start(self):
+    def start(self, label):
         self.kill()
-        self._start()
+        self._start(label)

@@ -47,7 +47,7 @@ class App(ctk.CTk):
 
         wallet = Wallet()
         rpc_server = RPCServer(wallet)
-        rpc_server.start()
+        rpc_server.start(self.sync_status)
         rpc_server.check_if_rpc_server_ready(self.sync_status)
         # Receive Button
         self.receive_button = ctk.CTkButton(center_frame, text="Receive", command=self.open_recieve)

@@ -2,7 +2,7 @@ config = {
     'version': 1,
     'formatters': {
         'default': {
-            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            'format': '%(asctime)s - %(name)s:%(lineno)s - %(levelname)s - %(message)s'
         }
     },
     'handlers': {
