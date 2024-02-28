@@ -3,13 +3,17 @@ import customtkinter as ctk
 ctk.set_default_color_theme("monero_theme.json")
 
 # VARIABLES TO MOVE TO CONFIG
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?
-SELECTED_CURRENCY = CURRENCY_OPTIONS[0]
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
+
+# TODO: Get this from the config file first. If not present, use what is currently set below.
+DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
+SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
+
 
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("500x260")
+        self.geometry("500x195")
         # 3 columns 2 rows
 
         # Configure the main window grid for spacing and alignment
@@ -17,36 +21,32 @@ class App(ctk.CTk):
 
         # Sync Status
         self.sync_status = ctk.CTkLabel(self, text="( Sync Status )")
-        self.sync_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+        self.sync_status.grid(row=0, column=0, columnspan=3, padx=0, pady=10, sticky="ew")
 
         # Settings Button
         self.settings_button = ctk.CTkButton(self, text="⚙", font=("Helvetica", 24), width=35, height=30, command=self.open_settings)
-        self.settings_button.grid(row=0, column=2, padx=20, pady=10, sticky="e")
+        self.settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
         self.amount = ctk.CTkLabel(self, text="$150.00 USD", font=("Helvetica", 48))
-        self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
+        self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Frame to hold buttons
         center_frame = ctk.CTkFrame(self,)
-        center_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
-        center_frame.columnconfigure([0, 1, 2], weight=1)
+        center_frame.grid(row=3, column=0, columnspan=3, padx=0, pady=10, sticky="nsew")
+        center_frame.columnconfigure([0, 1], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
         # Receive Button
         self.receive_button = ctk.CTkButton(center_frame, text="Receive", command=self.open_recieve)
-        self.receive_button.grid(row=0, column=0, padx=10, pady=5, sticky="ew")
-
-        # Selector Button
-        #self.receive_button = ctk.CTkButton(center_frame, text="XMR", width=10, command=self.open_recieve)
-        #self.receive_button.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
+        self.receive_button.grid(row=0, column=0, padx=(10, 5), pady=(0, 10), sticky="ew")
 
         # Pay Button
         self.pay_button = ctk.CTkButton(center_frame, text="Pay", command=self.open_pay)
-        self.pay_button.grid(row=0, column=2, padx=10, pady=5, sticky="ew")
+        self.pay_button.grid(row=0, column=1, padx=(5, 10), pady=(0, 10), sticky="ew")
 
         # Manage Subscriptions Button
         self.subscriptions_button = ctk.CTkButton(center_frame, text="Manage Subscriptions", command=self.open_subscriptions)
-        self.subscriptions_button.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        self.subscriptions_button.grid(row=1, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
 
         self.toplevel_window = None
@@ -204,10 +204,19 @@ class SetCurrency(ctk.CTkToplevel):
         super().__init__(*args, **kwargs)
         self.geometry("600x300")
 
-        def currency_selector_callback(choice):
-            SELECTED_CURRENCY = choice
+        def default_currency_selector_callback(choice):
+            global DEFAULT_CURRENCY
+            print(DEFAULT_CURRENCY)
+            DEFAULT_CURRENCY = choice
             print("User chose:", choice)
-            print(SELECTED_CURRENCY)
+            print("Now set to:", DEFAULT_CURRENCY)
+
+        def secondary_currency_selector_callback(choice):
+            global SECONDARY_CURRENCY
+            print(SECONDARY_CURRENCY)
+            print("User chose:", choice)
+            SECONDARY_CURRENCY = choice
+            print("Now set to:", SECONDARY_CURRENCY)
 
         set_currency_window_text = """
         Set Default Currency:
@@ -219,13 +228,15 @@ class SetCurrency(ctk.CTkToplevel):
         self.label = ctk.CTkLabel(self, text=set_currency_window_text)
         self.label.pack(padx=20, pady=20)
 
-        # Selected Currency
-        self.selected_currency = ctk.StringVar(value=SELECTED_CURRENCY)
-        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=currency_selector_callback, variable=self.selected_currency)
+        # Default Currency
+        self.selected_currency = ctk.StringVar(value=DEFAULT_CURRENCY)
+        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=default_currency_selector_callback, variable=self.selected_currency)
         self.currency_selector.pack(padx=20, pady=20)
 
-        # TODO: Add a "Default" and an "Secondary" so that users can toggle between two. USD by default, and click to toggle to XMR.
-
+        # Secondary Currency
+        self.selected_currency = ctk.StringVar(value=SECONDARY_CURRENCY)
+        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=secondary_currency_selector_callback, variable=self.selected_currency)
+        self.currency_selector.pack(padx=20, pady=20)
 
 
 
