@@ -4,10 +4,12 @@ import subprocess
 import platform
 import time
 import logging
+import logging.config
+import sys
 from src.rpc_config import RPCConfig
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
-
+from src.logging import config as logging_config
 class RPCServer():
     def __init__(self, wallet):
         self.config = RPCConfig()
@@ -18,6 +20,7 @@ class RPCServer():
         self.rpc_is_ready = 0
         self.rpc_bind_port = self.config.bind_port
         self.process = None
+        logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
 
     def _start(self):
@@ -79,20 +82,13 @@ class RPCServer():
 
     def rpc_server_ready(self, label):
         rpc_client = RPCClient()
-        print('checking readiness')
         while True:
             while not rpc_client.local_healthcheck():
-                self.logger.debug('test')
-                print('healthcheck')
                 output = self.process.stdout.readline()
                 if self.process.poll() is not None:
                     break
                 if output:
                     label.configure(text=output.strip())
-                # print(self.process.stdout.readline())
-                # print(self.process.stderr.readline())
-                # print(err)
-                # label.configure(text = 'Loading')
                 time.sleep(1)
 
             if not self.wallet.exists():
