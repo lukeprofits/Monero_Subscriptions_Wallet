@@ -34,7 +34,6 @@ class RPCServer():
             self.logger.debug(command)
             proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             self.wallet_process = proc
-            # stderr = proc.stderr.readline()
 
             blocks_synced = False
 

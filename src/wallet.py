@@ -65,8 +65,6 @@ class Wallet():
 
         # Getting the output and error messages
         stdout, stderr = process.communicate()
-        #print(stdout)
-        #print(stderr)
 
         worked_check = process.returncode
         if worked_check == 0:
