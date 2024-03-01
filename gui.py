@@ -1,4 +1,6 @@
 import customtkinter as ctk
+from src.wallet import Wallet
+from src.rpc_server import RPCServer
 
 ctk.set_default_color_theme("monero_theme.json")
 
@@ -36,6 +38,10 @@ class App(ctk.CTk):
         center_frame.grid(row=3, column=0, columnspan=3, padx=0, pady=10, sticky="nsew")
         center_frame.columnconfigure([0, 1], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
+        wallet = Wallet()
+        self.rpc_server = RPCServer(wallet)
+        self.rpc_server.start(self.sync_status)
+        self.rpc_server.check_if_rpc_server_ready(self.sync_status)
         # Receive Button
         self.receive_button = ctk.CTkButton(center_frame, text="Receive", command=self.open_recieve)
         self.receive_button.grid(row=0, column=0, padx=(10, 5), pady=(0, 10), sticky="ew")
@@ -75,6 +81,9 @@ class App(ctk.CTk):
         else:
             self.toplevel_window.focus()  # if window exists focus it
 
+    def shutdown_steps(self):
+        self.rpc_server.kill()
+        self.destroy()
 
 class Recieve(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -169,7 +178,7 @@ class NodeSelection(ctk.CTkToplevel):
 
 
 
-        
+
         self.toplevel_window = None
 
 class WelcomeMessage(ctk.CTkToplevel):
@@ -242,4 +251,5 @@ class SetCurrency(ctk.CTkToplevel):
 
 
 app = App()
+app.protocol("WM_DELETE_WINDOW", app.shutdown_steps)
 app.mainloop()
