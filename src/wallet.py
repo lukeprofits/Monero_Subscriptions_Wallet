@@ -1,8 +1,11 @@
 import os
 import platform
 import subprocess
+import logging
+import logging.config
 from src.rpc_config import RPCConfig
 from src.rpc_client import RPCClient
+from src.logging import config as logging_config
 
 class Wallet():
     def __init__(self):
@@ -11,6 +14,8 @@ class Wallet():
         self._block_height = 0
         self._address = None
         self.config = RPCConfig()
+        logging.config.dictConfig(logging_config)
+        self.logger = logging.getLogger(self.__module__)
 
     def _get_path(self):
         path = ''
@@ -30,7 +35,7 @@ class Wallet():
                 self.create()
             else:
                 # If both files exist, do nothing
-                print('Wallet exists already.')
+                self.logger.info('Wallet exists already.')
 
             self._block_height = self.get_current_block_height()
         return self._block_height
@@ -69,13 +74,13 @@ class Wallet():
             wallet_address = output_text.split('Generated new wallet: ')[1].split('View key: ')[0].strip()
             view_key = output_text.split('View key: ')[1].split('*********************')[0].strip()
             seed = output_text.split(' of your immediate control.')[1].split('********')[0].strip().replace('\n', '')
-            print(f'wallet_address: {wallet_address}')
-            print(f'view_key: {view_key}')
-            print(f'seed: {seed}')
+            self.logger.info(f'wallet_address: {wallet_address}')
+            self.logger.info(f'view_key: {view_key}')
+            self.logger.info(f'seed: {seed}')
 
             with open(file=f'{self.name}_seed.txt', mode='a', encoding='utf-8') as f:
                 f.write(f'Wallet Address:\n{wallet_address}\nView Key:\n{view_key}\nSeed:\n{seed}\n\nThe above wallet should not be your main source of funds. This is ONLY to be a side account for paying monthly subscriptions. If anyone gets access to this seed, they can steal all your funds. Please use responsibly.\n\n\n\n')
 
             return seed, wallet_address, view_key
         else:
-            print(stderr)
+            self.logger.info(stderr)

@@ -8,6 +8,7 @@ from src.rpc_config import RPCConfig
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
+
 class RPCServer():
     def __init__(self, wallet):
         self.config = RPCConfig()
