@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from src.wallet import Wallet
 from src.rpc_server import RPCServer
-
+from src.observers.rpc_server_status_observer import RPCServerStatusObserver
 ctk.set_default_color_theme("monero_theme.json")
 
 # VARIABLES TO MOVE TO CONFIG
@@ -47,8 +47,11 @@ class App(ctk.CTk):
 
         wallet = Wallet()
         self.rpc_server = RPCServer(wallet)
-        self.rpc_server.start(self.sync_status)
-        self.rpc_server.check_if_rpc_server_ready(self.sync_status)
+        observer = RPCServerStatusObserver(self.sync_status)
+        self.rpc_server.attach(observer)
+        self.rpc_server.start()
+        self.rpc_server.check_if_rpc_server_ready()
+
         # Receive Button
         self.receive_button = ctk.CTkButton(center_frame, text="Receive", command=self.open_recieve)
         self.receive_button.grid(row=0, column=0, padx=10, pady=5, sticky="ew")

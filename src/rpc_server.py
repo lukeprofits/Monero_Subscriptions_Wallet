@@ -4,12 +4,17 @@ import subprocess
 import time
 import logging
 import logging.config
+from typing import List
 from src.rpc_config import RPCConfig
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
+from src.interfaces.notifier import Notifier
+from src.interfaces.observer import Observer
 
-class RPCServer():
+class RPCServer(Notifier):
+    _observers: List[Observer] = []
+
     def __init__(self, wallet):
         self.config = RPCConfig()
         self.wallet = wallet
@@ -23,8 +28,19 @@ class RPCServer():
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
         self.failed_to_start = False
+        self.status_message = ''
 
-    def _start(self, label):
+    def attach(self, observer: Observer):
+        self._observers.append(observer)
+
+    def detach(self, observer: Observer):
+        self._observers.remove(observer)
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self)
+
+    def _start(self):
         self.logger.debug(f'Block Height: {self.wallet.block_height}')
 
         if self.wallet.block_height:
@@ -46,7 +62,7 @@ class RPCServer():
                     break
 
                 if "Error" in stdout:
-                    label.configure(text=stdout)
+                    # label.configure(text=stdout)
                     self.failed_to_start = True
 
                 if proc.poll() is not None:
@@ -69,7 +85,7 @@ class RPCServer():
         self.logger.debug('Killing Wallet CLI Process')
         self.wallet_process.kill()
 
-    def rpc_server_ready(self, label):
+    def rpc_server_ready(self):
         rpc_client = RPCClient()
         while True:
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
@@ -80,7 +96,8 @@ class RPCServer():
                     break
 
                 if output:
-                    label.configure(text=output.strip())
+                    self.status_message = output.strip()
+                    self.notify()
 
                 time.sleep(0.1)
 
@@ -88,17 +105,19 @@ class RPCServer():
                 self.wallet.create()
 
             if not self.failed_to_start:
-                label.configure(text="Ready")
+                self.status_message = "Ready"
+                self.notify()
 
             if self.failed_to_start:
-                label.configure(text='Failed To Start RPC Server - Check Logs')
+                self.status_message = 'Failed To Start RPC Server - Check Logs'
+                self.notify()
 
             break
 
 
-    def check_if_rpc_server_ready(self, rpc_status_label):
+    def check_if_rpc_server_ready(self):
         self.logger.debug('Checking if RPC Ready')
-        threading.Thread(target=self.rpc_server_ready, args=[rpc_status_label]).start()
+        threading.Thread(target=self.rpc_server_ready).start()
 
-    def start(self, label):
-        self._start(label)
+    def start(self):
+        self._start()

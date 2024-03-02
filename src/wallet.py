@@ -8,8 +8,8 @@ from src.rpc_client import RPCClient
 from src.logging import config as logging_config
 
 class Wallet():
-    def __init__(self):
-        self.name = "subscriptions_wallet"
+    def __init__(self, filename='subscriptions_wallet'):
+        self.name = filename
         self.path = self._get_path()
         self._block_height = 0
         self._address = None
