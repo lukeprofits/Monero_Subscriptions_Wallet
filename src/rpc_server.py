@@ -40,44 +40,53 @@ class RPCServer(Notifier):
         for observer in self._observers:
             observer.update(self)
 
-    def _start(self):
-        self.logger.debug(f'Block Height: {self.wallet.block_height}')
+    def _start_wallet(self):
+        command = f'{self.wallet_cli_path} --wallet-file {os.path.join(self.wallet.path, self.wallet.name)}'
+        command += f' --password "" --restore-height {self.wallet.block_height} --daemon-address {self.host}:{self.port}'
+        command += ' --command refresh'
+        self.logger.debug(command)
+        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.wallet_process = proc
 
-        if self.wallet.block_height:
-            command = f'{self.wallet_cli_path} --wallet-file {os.path.join(self.wallet.path, self.wallet.name)}'
-            command += f' --password "" --restore-height {self.wallet.block_height} --daemon-address {self.host}'
-            command += f' --daemon-port {self.port} --command refresh'
-            self.logger.debug(command)
-            proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            self.wallet_process = proc
-
-            blocks_synced = False
-
-            while not blocks_synced:
-                stdout = proc.stdout.readline()
-                self.logger.debug(stdout)
-
-                if "Opened wallet:" in stdout and "Error" not in stdout:
-                    blocks_synced = True
-                    break
-
-                if "Error" in stdout:
-                    # label.configure(text=stdout)
-                    self.failed_to_start = True
-
-                if proc.poll() is not None:
-                    break
-
-        self.logger.debug(f'{self.host}:{self.port}')
+    def _start_rpc(self):
         cmd = f'stdbuf -oL monero-wallet-rpc --wallet-file {self.wallet.name} --password ""'
         cmd += f' --rpc-bind-port {self.rpc_bind_port} --disable-rpc-login --confirm-external-bind'
-        cmd += f' --daemon-host {self.host} --daemon-port {self.port}'
+        cmd += f' --daemon-address {self.host}:{self.port}'
         if STAGENET:
             cmd += ' --stagenet'
 
         self.logger.debug(cmd)
 
         self.process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    def wallet_started(self):
+        blocks_synced = False
+
+        while not blocks_synced:
+            stdout = self.wallet_process.stdout.readline()
+            self.logger.debug(stdout)
+
+            if "Refresh done" in stdout and "Error" not in stdout:
+                blocks_synced = True
+                break
+
+            if "Error" in stdout:
+                self.failed_to_start = True
+
+            if self.wallet_process.poll() is not None:
+                break
+
+        return not self.failed_to_start
+
+    def _start(self):
+        self.logger.debug(f'Block Height: {self.wallet.block_height}')
+
+        if self.wallet.block_height:
+            self._start_wallet()
+            self.wallet_started()
+
+        self.logger.debug(f'{self.host}:{self.port}')
+        self._start_rpc()
 
     def kill(self):
         self.logger.debug('Killing RPC Server Process')
@@ -89,8 +98,6 @@ class RPCServer(Notifier):
         rpc_client = RPCClient()
         while True:
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
-                self.logger.debug(self.failed_to_start)
-                self.logger.debug('Running HealthCheck...')
                 output = self.process.stdout.readline()
                 if self.process.poll() is not None:
                     break

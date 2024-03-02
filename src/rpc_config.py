@@ -1,21 +1,27 @@
 import platform
 import os
 import random
+import logging
+from src.logging import config as logging_config
 from src.environment import STAGENET
 
 class RPCConfig():
     NODE_FILENAME = 'node_to_use.txt'
 
     def __init__(self):
+        logging.config.dictConfig(logging_config)
+        self.logger = logging.getLogger(self.__module__)
         self._node = self.node()
         self.host = self._node.split(':')[0] if self._node else ''
         self.port = self._node.split(':')[1] if self._node else ''
+        self.logger.info(f'{self.host}:{self.port}')
         self.bind_port = '18088'
         self.local_url = f'http://127.0.0.1:{self.bind_port}/json_rpc'
         self.username = 'monero'
         self.password = 'monero'
         self._daemon_url = f'http://{self.host}:{self.port}/json_rpc'
         self._cli_path = None
+
 
     def node(self):
         node = None
