@@ -11,3 +11,7 @@ requests = "*"
 
 [requires]
 python_version = "3.11"
+
+[scripts]
+tests = 'python -m unittest'
+gui = 'python gui.py'

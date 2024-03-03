@@ -2,11 +2,13 @@ import requests
 import json
 import logging
 from src.rpc_config import RPCConfig
+from src.logging import config as logging_config
 
 class RPCClient():
     def __init__(self):
         self.config = RPCConfig()
         self._headers = None
+        logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
 
     def current_block_height(self):
@@ -48,12 +50,12 @@ class RPCClient():
         response = requests.post(self.config.local_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            print('Error:', result['error']['message'])
+            self.logger.error('Error:', result['error']['message'])
         return result
 
     def daemon_post(self, data):
         response = requests.post(self.config.daemon_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            print('Error:', result['error']['message'])
+            self.logger.error('Error:', result['error']['message'])
         return result
