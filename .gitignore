@@ -1,3 +1,4 @@
 *.log
 node_to_use.txt
 subscriptions_wallet*
+test_wallet*
