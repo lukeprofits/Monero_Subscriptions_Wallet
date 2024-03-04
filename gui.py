@@ -1,3 +1,5 @@
+import random
+
 import customtkinter as ctk
 from src.wallet import Wallet
 from src.rpc_server import RPCServer
@@ -38,12 +40,14 @@ class App(ctk.CTk):
         center_frame.grid(row=3, column=0, columnspan=3, padx=0, pady=10, sticky="nsew")
         center_frame.columnconfigure([0, 1], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
+        '''  # Commented out while designing GUI
         wallet = Wallet()
         self.rpc_server = RPCServer(wallet)
         observer = RPCServerStatusObserver(self.sync_status)
         self.rpc_server.attach(observer)
         self.rpc_server.start()
         self.rpc_server.check_if_rpc_server_ready()
+        #'''
 
         # Receive Button
         self.receive_button = ctk.CTkButton(center_frame, text="Receive", command=self.open_recieve)
@@ -85,8 +89,9 @@ class App(ctk.CTk):
             self.toplevel_window.focus()  # if window exists focus it
 
     def shutdown_steps(self):
-        self.rpc_server.kill()
         self.destroy()
+        self.rpc_server.kill()
+
 
 class Recieve(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -165,10 +170,51 @@ class Settings(ctk.CTkToplevel):
 class Subscriptions(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("400x300")
+        self.geometry("400x600")
 
-        self.label = ctk.CTkLabel(self, text="My Subscriptions")
-        self.label.pack(padx=20, pady=20)
+        #'''  # Comment out to make NOT fullscreen.
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        # '''
+
+        self.my_frame = SubscriptionsScrollableFrame(master=self, width=300, height=200, corner_radius=0,
+                                                     fg_color="transparent")
+        self.my_frame.grid(row=0, column=0, sticky="nsew")
+
+
+class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        # add widgets onto the frame...
+        self.title = ctk.CTkLabel(self, text=" My Subscriptions:", font=("Helvetica", 20))
+        self.title.pack(padx=10, pady=(20, 0))
+
+        self.separator = ctk.CTkFrame(self, height=2)
+        self.separator.pack(fill='x', padx=10, pady=20)
+
+        for subscription in range(1, 15):
+            self.subscription_name = ctk.CTkLabel(self, text=f"Subscription Name #{str(subscription)}")
+            self.subscription_name.pack()
+
+            self.subscription_price = ctk.CTkLabel(self, text=f"${str(random.randint(1, 150)) + ".00"} USD")
+            self.subscription_price.pack()
+
+            self.subscription_renews_in = ctk.CTkLabel(self, text=f"Renews In {(random.randint(1, 30))} Days")
+            self.subscription_renews_in.pack()
+
+            self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
+            self.subscription_cancel_button.pack(pady=10)
+
+            # Separator
+            separator = ctk.CTkFrame(self, height=2)  # bg_color="#ffffff" if needed
+            separator.pack(fill='x', padx=10, pady=20)
+
+    # TODO: Make this do something.
+    def cancel_subscription(self):
+            pass
+
+
 
 
 class NodeSelection(ctk.CTkToplevel):

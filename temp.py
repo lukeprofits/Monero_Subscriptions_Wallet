@@ -1,29 +1,29 @@
-import customtkinter
+import customtkinter as ctk
 
-def button_callback():
-    print("button clicked")
+class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
 
-app = customtkinter.CTk()
-app.geometry("400x150")
-
-
-
-
+        # add widgets onto the frame...
+        self.label = ctk.CTkLabel(self)
+        self.label.pack()
 
 
 
 
 
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-def segmented_button_callback(value):
-    print("segmented button clicked:", value)
+        #'''  # Comment out to make NOT fullscreen.
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        #'''
 
-segemented_button = customtkinter.CTkSegmentedButton(app, values=["Value 1", "Value 2", "Value 3"],
-                                                     command=segmented_button_callback)
-segemented_button.set("Value 1")
-segemented_button.pack(padx=20, pady=20)
+        self.my_frame = SubscriptionsScrollableFrame(master=self, width=300, height=200, corner_radius=0, fg_color="transparent")
+        self.my_frame.grid(row=0, column=0, sticky="nsew")
 
-button = customtkinter.CTkButton(app, text="my button", command=button_callback)
-button.pack(padx=20, pady=20)
 
+app = App()
 app.mainloop()
