@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Uses](https://img.shields.io/badge/Uses-Monero%20RPC-orange.svg)
 
-> :warning: The open source GUI library that we use now requires a license. We are working on creating a replacement GUI that uses a different library.
+> :warning: The GUI library that we use now requires a license. We are working on creating a replacement GUI that uses a different library.
 
 A Monero wallet that automatically pays subscriptions.
 
