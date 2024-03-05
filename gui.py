@@ -1,4 +1,8 @@
 import customtkinter as ctk
+
+import subscription_functions
+import config as cfg
+
 from src.rpc_server import RPCServer
 from src.views.main import MainView
 from src.views.recieve import RecieveView
@@ -9,13 +13,17 @@ from src.views.settings import SettingsView
 ctk.set_default_color_theme("monero_theme.json")
 
 # VARIABLES TO MOVE TO CONFIG
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?
-SELECTED_CURRENCY = CURRENCY_OPTIONS[0]
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
+
+# TODO: Get this from the config file first. If not present, use what is currently set below.
+DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
+SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
+
 
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("500x260")
+        self.geometry("500x195")
         # 3 columns 2 rows
 
         # Configure the main window grid for spacing and alignment
@@ -31,14 +39,6 @@ class App(ctk.CTk):
 
         self.current_view = self.views['main'].build()
         self.rpc_server = RPCServer.get()
-        self.rpc_server.start()
-        self.rpc_server.check_if_rpc_server_ready()
-
-        # Selector Button
-        #self.receive_button = ctk.CTkButton(center_frame, text="XMR", width=10, command=self.open_recieve)
-        #self.receive_button.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
-
-        self.toplevel_window = None
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()
@@ -46,8 +46,138 @@ class App(ctk.CTk):
         self.current_view = view.build()
 
     def shutdown_steps(self):
-        self.rpc_server.kill()
         self.destroy()
+        self.rpc_server.kill()
+
+class Recieve(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x300")
+
+        self.label = ctk.CTkLabel(self, text="Recieve Window")
+        self.label.pack(padx=20, pady=20)
+
+
+class Pay(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x300")
+
+        self.label = ctk.CTkLabel(self, text="Pay Window")
+        self.label.pack(padx=20, pady=20)
+
+
+class Settings(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x600")
+
+        self.label = ctk.CTkLabel(self, text="Settings Window")
+        self.label.pack(padx=20, pady=20)
+
+        self.node_selection_button = ctk.CTkButton(self, text="Node Selection", command=self.open_node_selection)
+        self.node_selection_button.pack(side="top", padx=20, pady=20)
+
+        self.welcome_message_button = ctk.CTkButton(self, text="Welcome Message", command=self.open_welcome_message)
+        self.welcome_message_button.pack(side="top", padx=20, pady=20)
+
+        self.manually_create_payment_request_button = ctk.CTkButton(self, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request)
+        self.manually_create_payment_request_button.pack(side="top", padx=20, pady=20)
+
+        self.set_currency_button = ctk.CTkButton(self, text="Set Currency", command=self.open_set_currency)
+        self.set_currency_button.pack(side="top", padx=20, pady=20)
+
+        self.toplevel_window = None
+
+    def open_node_selection(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = NodeSelection(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
+
+    def open_welcome_message(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = WelcomeMessage(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
+
+    def open_manually_create_payment_request(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = ManuallyCreatePaymentRequest(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
+
+    def open_set_currency(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = SetCurrency(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
+
+
+class Subscriptions(ctk.CTkToplevel):
+
+    # Update subscriptions in config
+    subscription_functions.get_subscriptions_from_file()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x600")
+
+        #'''  # Comment out to make NOT fullscreen.
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        # '''
+
+        self.my_frame = SubscriptionsScrollableFrame(master=self, width=300, height=200, corner_radius=0, fg_color="transparent")
+        self.my_frame.grid(row=0, column=0, sticky="nsew")
+
+
+class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title = ctk.CTkLabel(self, text=" My Subscriptions:", font=("Helvetica", 20))
+        self.title.pack(padx=10, pady=(20, 0))
+
+        # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
+        # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
+
+        self.separator = ctk.CTkFrame(self, height=2)
+        self.separator.pack(fill='x', padx=10, pady=20)
+
+        if cfg.subscriptions:
+            for sub in cfg.subscriptions:
+                self.subscription_name = ctk.CTkLabel(self, text=f'{sub["custom_label"]}')
+                self.subscription_name.pack()
+
+                self.subscription_price = ctk.CTkLabel(self, text=f'{sub["amount"]} {sub["currency"]}')
+                self.subscription_price.pack()
+
+                # TODO: Make this accurate. Right now it just shows billing cycle
+                self.subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub["days_per_billing_cycle"]} Days')
+                self.subscription_renews_in.pack()
+
+                self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
+                self.subscription_cancel_button.pack(pady=10)
+
+                # Separator
+                separator = ctk.CTkFrame(self, height=2)  # bg_color="#ffffff" if needed
+                separator.pack(fill='x', padx=10, pady=20)
+        else:
+            self.no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
+            self.no_subs_text.pack(padx=10, pady=(20, 0))
+
+            # TODO: Have this close the window, open "Pay".
+            self.subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", command=self.cancel_subscription)
+            self.subscription_cancel_button.pack(pady=10)
+
+            self.separator = ctk.CTkFrame(self, height=2)
+            self.separator.pack(fill='x', padx=10, pady=20)
+
+
+    # TODO: Make this do something.
+    def cancel_subscription(self):
+            pass
 
 class NodeSelection(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -69,15 +199,6 @@ class WelcomeMessage(ctk.CTkToplevel):
         self.label.pack(padx=20, pady=20)
 
 
-class AddPaymentRequest(ctk.CTkToplevel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.geometry("400x300")
-
-        self.label = ctk.CTkLabel(self, text="Add Payment Request")
-        self.label.pack(padx=20, pady=20)
-
-
 class ManuallyCreatePaymentRequest(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -85,6 +206,48 @@ class ManuallyCreatePaymentRequest(ctk.CTkToplevel):
 
         self.label = ctk.CTkLabel(self, text="Manually Create Payment Request")
         self.label.pack(padx=20, pady=20)
+
+
+class SetCurrency(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("600x300")
+
+        def default_currency_selector_callback(choice):
+            global DEFAULT_CURRENCY
+            print(DEFAULT_CURRENCY)
+            DEFAULT_CURRENCY = choice
+            print("User chose:", choice)
+            print("Now set to:", DEFAULT_CURRENCY)
+
+        def secondary_currency_selector_callback(choice):
+            global SECONDARY_CURRENCY
+            print(SECONDARY_CURRENCY)
+            print("User chose:", choice)
+            SECONDARY_CURRENCY = choice
+            print("Now set to:", SECONDARY_CURRENCY)
+
+        set_currency_window_text = """
+        Set Default Currency:
+
+        The currency that you select will be shown by default.
+
+        To toggle to the the Monero amount in the main window, simply click it."""
+
+        self.label = ctk.CTkLabel(self, text=set_currency_window_text)
+        self.label.pack(padx=20, pady=20)
+
+        # Default Currency
+        self.selected_currency = ctk.StringVar(value=DEFAULT_CURRENCY)
+        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=default_currency_selector_callback, variable=self.selected_currency)
+        self.currency_selector.pack(padx=20, pady=20)
+
+        # Secondary Currency
+        self.selected_currency = ctk.StringVar(value=SECONDARY_CURRENCY)
+        self.currency_selector = ctk.CTkOptionMenu(self, values=CURRENCY_OPTIONS, command=secondary_currency_selector_callback, variable=self.selected_currency)
+        self.currency_selector.pack(padx=20, pady=20)
+
+
 
 
 app = App()
