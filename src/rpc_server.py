@@ -4,18 +4,24 @@ import subprocess
 import time
 import logging
 import logging.config
-from typing import List
 from src.rpc_config import RPCConfig
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
 from src.interfaces.notifier import Notifier
 from src.interfaces.observer import Observer
+from src.wallet import Wallet
 
 class RPCServer(Notifier):
-    _observers: List[Observer] = []
+    _wallet_servers = {}
 
-    def __init__(self, wallet):
+    @classmethod
+    def get(cls, wallet=Wallet()):
+        if not cls._wallet_servers.get(wallet.name):
+            cls._wallet_servers[wallet.name] = cls(wallet)
+        return cls._wallet_servers[wallet.name]
+
+    def __init__(self, wallet=Wallet()):
         self.config = RPCConfig()
         self.wallet = wallet
         self.host = self.config.host
@@ -29,6 +35,7 @@ class RPCServer(Notifier):
         self.logger = logging.getLogger(self.__module__)
         self.failed_to_start = False
         self.status_message = ''
+        self._observers = []
 
     def attach(self, observer: Observer):
         self._observers.append(observer)
