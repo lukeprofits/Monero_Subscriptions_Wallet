@@ -129,9 +129,6 @@ class Settings(ctk.CTkToplevel):
         self.welcome_message_button = ctk.CTkButton(self, text="Welcome Message", command=self.open_welcome_message)
         self.welcome_message_button.pack(side="top", padx=20, pady=20)
 
-        self.add_payment_request_button = ctk.CTkButton(self, text="Add Monero Payment Request", command=self.open_add_payment_request)
-        self.add_payment_request_button.pack(side="top", padx=20, pady=20)
-
         self.manually_create_payment_request_button = ctk.CTkButton(self, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request)
         self.manually_create_payment_request_button.pack(side="top", padx=20, pady=20)
 
@@ -149,12 +146,6 @@ class Settings(ctk.CTkToplevel):
     def open_welcome_message(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
             self.toplevel_window = WelcomeMessage(self)  # create window if its None or destroyed
-        else:
-            self.toplevel_window.focus()  # if window exists focus it
-
-    def open_add_payment_request(self):
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = AddPaymentRequest(self)  # create window if its None or destroyed
         else:
             self.toplevel_window.focus()  # if window exists focus it
 
@@ -195,6 +186,9 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
         self.title = ctk.CTkLabel(self, text=" My Subscriptions:", font=("Helvetica", 20))
         self.title.pack(padx=10, pady=(20, 0))
+
+        # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
+        # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
 
         self.separator = ctk.CTkFrame(self, height=2)
         self.separator.pack(fill='x', padx=10, pady=20)
@@ -255,15 +249,6 @@ class WelcomeMessage(ctk.CTkToplevel):
         self.geometry("400x300")
 
         self.label = ctk.CTkLabel(self, text="Welcome Message")
-        self.label.pack(padx=20, pady=20)
-
-
-class AddPaymentRequest(ctk.CTkToplevel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.geometry("400x300")
-
-        self.label = ctk.CTkLabel(self, text="Add Payment Request")
         self.label.pack(padx=20, pady=20)
 
 

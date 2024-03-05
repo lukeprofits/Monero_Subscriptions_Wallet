@@ -1,3 +1,16 @@
+
+text = "abcd"
+
+text = text.replace("bd", "").replace("d",'efg')
+
+
+
+
+
+
+
+
+'''
 import customtkinter as ctk
 
 class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
