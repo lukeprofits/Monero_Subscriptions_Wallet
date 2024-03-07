@@ -3,6 +3,8 @@ from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.rpc_server_status_observer import RPCServerStatusObserver
 
+import config as cfg
+
 class MainView(View):
     def __init__(self, app):
         self._app = app
@@ -11,18 +13,18 @@ class MainView(View):
 
     def build(self):
         # Sync Status
-        sync_status = self.add(ctk.CTkLabel(self._app, text='( Sync Status )'))
-        observer = RPCServerStatusObserver(sync_status)  # TODO: Make this get the status and display it in sync status
+        sync_status = self.add(ctk.CTkLabel(self._app, text='( Sync Status )'))  # TODO: Make this get the status and display it in sync status
+        observer = RPCServerStatusObserver(sync_status)
         self._element_observers.append(observer)
         self._rpc_server.attach(observer)
         sync_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
-        settings_button = self.add(ctk.CTkButton(self._app, text="⚙", font=("Helvetica", 24), width=35, height=30, command=self.open_settings))
-        settings_button.grid(row=0, column=2, padx=20, pady=10, sticky="e")
+        settings_button = self.add(ctk.CTkButton(self._app, text="⚙", font=(cfg.font, 24), width=35, height=30, command=self.open_settings))
+        settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
-        amount = self.add(ctk.CTkLabel(self._app, text="$150.00 USD", font=("Helvetica", 48)))
+        amount = self.add(ctk.CTkLabel(self._app, text="$150.00 USD", font=(cfg.font, 48)))
         amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Frame to hold buttons

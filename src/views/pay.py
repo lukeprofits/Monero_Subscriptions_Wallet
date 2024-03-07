@@ -1,14 +1,36 @@
 import customtkinter as ctk
 from src.interfaces.view import View
+import config as cfg
 
 class PayView(View):
     def __init__(self, app):
         self._app = app
 
     def build(self):
-        self.label()
+        self._app.geometry("500x195")
 
-    def label(self):
-        label = self.add(ctk.CTkLabel(self._app, text="Pay Window"))
+        # Title
+        label = self.add(ctk.CTkLabel(self._app, text=' Send To:'))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
-        return label
+
+        # Back Button
+        # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
+        settings_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        settings_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        # Wallet input box
+        # Documentation: https://customtkinter.tomschimansky.com/documentation/widgets/entry
+        input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address..."))
+        input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+
+        next_button = self.add(ctk.CTkButton(self._app, text="Paste From Clipboard", command=self.paste_and_next))
+        next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+
+        return self
+
+    def open_main(self):
+        self._app.switch_view('main')
+
+    def paste_and_next(self):
+        self._app.switch_view('main')  # TODO: UPDATE THIS TO WORK!!!
+
