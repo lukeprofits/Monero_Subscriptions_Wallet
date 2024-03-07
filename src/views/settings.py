@@ -1,7 +1,6 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 
-
 class SettingsView(View):
     def __init__(self, app):
         self._app = app

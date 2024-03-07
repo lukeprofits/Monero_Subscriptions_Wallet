@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 
-class RecieveView(View):
+class ReceiveView(View):
     def __init__(self, app):
         self._app = app
 
