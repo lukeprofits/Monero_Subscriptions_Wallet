@@ -32,7 +32,7 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
-        self.title = ctk.CTkLabel(self, text=" My Subscriptions:", font=("Helvetica", 20))
+        self.title = ctk.CTkLabel(self, text=" My Subscriptions:", font=(cfg.font, 20))
         self.title.pack(padx=10, pady=(20, 0))
 
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
