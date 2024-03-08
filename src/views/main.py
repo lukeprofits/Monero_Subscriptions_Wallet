@@ -7,7 +7,7 @@ import config as cfg
 
 class MainView(View):
     def __init__(self, app):
-        self._app = app
+        super().__init__(app)
         self._rpc_server = RPCServer.get()
         self._element_observers = []
 

@@ -1,10 +1,8 @@
 import customtkinter as ctk
 from src.interfaces.view import View
+import config as cfg
 
 class SettingsView(View):
-    def __init__(self, app):
-        self._app = app
-
     def build(self):
 
         self._app.geometry("400x600")
@@ -24,7 +22,13 @@ class SettingsView(View):
         set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", command=self.open_set_currency))
         set_currency_button.pack(side="top", padx=20, pady=20)
 
-        toplevel_window = None
+        # Back Button
+        # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
+        back_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+    def open_main(self):
+        self._app.switch_view('main')
 
     def open_node_selection(self):
         self._app.switch_view('node_selection')

@@ -37,8 +37,8 @@ class App(ctk.CTk):
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()
-        view = self.views[view_name]
-        self.current_view = view.build()
+        self.current_view = self.views[view_name]
+        self.current_view.build()
 
     def shutdown_steps(self):
         self.destroy()
