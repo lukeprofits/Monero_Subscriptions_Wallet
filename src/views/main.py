@@ -46,8 +46,6 @@ class MainView(View):
 
         return self
 
-
-
     def open_subscriptions(self):
         self._app.switch_view('subscriptions')
 

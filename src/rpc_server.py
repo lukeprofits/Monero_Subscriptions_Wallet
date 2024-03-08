@@ -34,6 +34,7 @@ class RPCServer(Notifier):
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
         self.failed_to_start = False
+        self.successful_start = False
         self.status_message = ''
         self._observers = []
 
@@ -66,15 +67,13 @@ class RPCServer(Notifier):
 
         self.process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    def wallet_started(self):
-        blocks_synced = False
-
-        while not blocks_synced:
+    def _wallet_started(self):
+        while not (self.successful_start or self.failed_to_start):
             stdout = self.wallet_process.stdout.readline()
             self.logger.debug(stdout)
 
             if "Refresh done" in stdout and "Error" not in stdout:
-                blocks_synced = True
+                self.successful_start = True
                 break
 
             if "Error" in stdout:
@@ -85,23 +84,13 @@ class RPCServer(Notifier):
 
         return not self.failed_to_start
 
-    def _start(self):
-        self.logger.debug(f'Block Height: {self.wallet.block_height}')
-
-        if self.wallet.block_height:
-            self._start_wallet()
-            self.wallet_started()
-
-        self.logger.debug(f'{self.host}:{self.port}')
-        self._start_rpc()
-
     def kill(self):
         self.logger.debug('Killing RPC Server Process')
         self.process.kill()
         self.logger.debug('Killing Wallet CLI Process')
         self.wallet_process.kill()
 
-    def rpc_server_ready(self):
+    def ready(self):
         rpc_client = RPCClient()
         while True:
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
@@ -128,10 +117,17 @@ class RPCServer(Notifier):
 
             break
 
-
-    def check_if_rpc_server_ready(self):
+    def check_readiness(self):
         self.logger.debug('Checking if RPC Ready')
-        threading.Thread(target=self.rpc_server_ready).start()
+        threading.Thread(target=self.ready).start()
 
     def start(self):
-        self._start()
+        self.logger.debug(f'Block Height: {self.wallet.block_height}')
+
+        if self.wallet.block_height:
+            self._start_wallet()
+            wallet_check_thread = threading.Thread(target=self._wallet_started)
+            wallet_check_thread.start()
+
+        self.logger.debug(f'{self.host}:{self.port}')
+        self._start_rpc()
