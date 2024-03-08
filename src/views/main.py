@@ -12,6 +12,11 @@ class MainView(View):
         self._element_observers = []
 
     def build(self):
+        self._app.geometry("500x195")
+
+        # Configure the main window grid for spacing and alignment
+        self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
+
         # Sync Status
         sync_status = self.add(ctk.CTkLabel(self._app, text='( Sync Status )'))  # TODO: Make this get the status and display it in sync status
 

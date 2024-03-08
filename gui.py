@@ -14,11 +14,6 @@ SECONDARY_CURRENCY = cfg.CURRENCY_OPTIONS[1]
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("500x195")
-        # 3 columns 2 rows
-
-        # Configure the main window grid for spacing and alignment
-        self.columnconfigure([0, 1, 2], weight=1)
 
         # Define what the views are
         self.views = {

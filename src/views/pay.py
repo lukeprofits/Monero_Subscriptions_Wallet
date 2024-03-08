@@ -2,6 +2,7 @@ import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
 
+
 class PayView(View):
     def __init__(self, app):
         self._app = app
@@ -15,8 +16,8 @@ class PayView(View):
 
         # Back Button
         # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-        settings_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
-        settings_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        back_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Wallet input box
         # Documentation: https://customtkinter.tomschimansky.com/documentation/widgets/entry
