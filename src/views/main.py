@@ -14,9 +14,11 @@ class MainView(View):
     def build(self):
         # Sync Status
         sync_status = self.add(ctk.CTkLabel(self._app, text='( Sync Status )'))  # TODO: Make this get the status and display it in sync status
+
         observer = RPCServerStatusObserver(sync_status)
         self._element_observers.append(observer)
         self._rpc_server.attach(observer)
+
         sync_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
@@ -57,11 +59,6 @@ class MainView(View):
 
     def open_settings(self):
         self._app.switch_view('settings')
-
-    def currency_selector_callback(self, choice):
-        SELECTED_CURRENCY = choice
-        print("User chose:", choice)
-        print(SELECTED_CURRENCY)
 
     def destroy(self):
         super().destroy()

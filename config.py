@@ -125,3 +125,5 @@ else:
     # Update this path to the location where you want to save the wallet file
     wallet_file_path = f'{os.getcwd()}/'
 #'''
+
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
