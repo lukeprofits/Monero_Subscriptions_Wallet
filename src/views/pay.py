@@ -16,7 +16,7 @@ class PayView(View):
 
         # Back Button
         # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-        back_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button = self.add(ctk.CTkButton(self._app, text="←", font=(cfg.font, 24), width=35, height=30, command=self.open_main))  # ⬅
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Wallet input box
