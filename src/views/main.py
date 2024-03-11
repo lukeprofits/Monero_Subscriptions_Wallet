@@ -12,7 +12,7 @@ class MainView(View):
         self._element_observers = []
 
     def build(self):
-        self._app.geometry("500x195")
+        self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
 
         # Configure the main window grid for spacing and alignment
         self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
@@ -27,7 +27,7 @@ class MainView(View):
         sync_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
-        settings_button = self.add(ctk.CTkButton(self._app, text="⚙", font=(cfg.font, 24), width=35, height=30, command=self.open_settings))
+        settings_button = self.add(ctk.CTkButton(self._app, text=cfg.SETTINGS_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_settings))
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount

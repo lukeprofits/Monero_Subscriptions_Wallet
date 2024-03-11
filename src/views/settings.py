@@ -8,7 +8,7 @@ class SettingsView(View):
         self._app = app
 
     def build(self):
-        self._app.geometry("500x205")
+        self._app.geometry(cfg.SETTINGS_VIEW_GEOMETRY)
 
         # Configure the main window grid for spacing and alignment
         #self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
@@ -24,7 +24,7 @@ class SettingsView(View):
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button
-        back_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", command=self.open_node_selection))

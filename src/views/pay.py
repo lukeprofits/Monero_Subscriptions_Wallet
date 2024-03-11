@@ -8,15 +8,14 @@ class PayView(View):
         self._app = app
 
     def build(self):
-        self._app.geometry("500x195")
+        self._app.geometry(cfg.PAY_VIEW_GEOMETRY)
 
         # Title
         label = self.add(ctk.CTkLabel(self._app, text=' Send To:'))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button
-        # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-        back_button = self.add(ctk.CTkButton(self._app, text="←", font=(cfg.font, 24), width=35, height=30, command=self.open_main))  # ⬅
+        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Wallet input box
