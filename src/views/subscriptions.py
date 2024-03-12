@@ -47,14 +47,14 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
         if cfg.subscriptions:
             for i, sub in enumerate(cfg.subscriptions):
-                subscription_name = ctk.CTkLabel(self, text=f"{sub["custom_label"]}")
+                subscription_name = ctk.CTkLabel(self, text=f'{sub["custom_label"]}')
                 subscription_name.pack(pady=0)
 
-                subscription_price = ctk.CTkLabel(self, text=f"{sub["amount"]} {sub["currency"]}")
+                subscription_price = ctk.CTkLabel(self, text=f'{sub["amount"]} {sub["currency"]}')
                 subscription_price.pack()
 
                 # TODO: Make this accurate. Right now it just shows billing cycle
-                subscription_renews_in = ctk.CTkLabel(self, text=f"Renews In {sub["days_per_billing_cycle"]} Days")
+                subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub["days_per_billing_cycle"]} Days')
                 subscription_renews_in.pack()
 
                 subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
