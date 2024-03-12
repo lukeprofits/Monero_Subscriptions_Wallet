@@ -21,14 +21,14 @@ class Subscriptions(ctk.CTkToplevel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("400x600")
+        self.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
 
         #'''  # Comment out to make NOT fullscreen.
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         # '''
 
-        self.my_frame = SubscriptionsScrollableFrame(master=self, width=300, height=200, corner_radius=0, fg_color="transparent")
+        self.my_frame = SubscriptionsScrollableFrame(master=self, corner_radius=0, fg_color="transparent")
         self.my_frame.grid(row=0, column=0, sticky="nsew")
 
 
