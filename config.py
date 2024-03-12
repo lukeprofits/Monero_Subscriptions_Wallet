@@ -135,11 +135,11 @@ def set_platform_specific_variables(platform=PLATFORM):
         BACK_BUTTON_EMOJI = '←'
         SETTINGS_BUTTON_EMOJI = '⚙'
         # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
+        MAIN_VIEW_GEOMETRY = '500x215'
+        PAY_VIEW_GEOMETRY = '500x215'
+        SETTINGS_VIEW_GEOMETRY = '500x215'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
+        RECEIVE_VIEW_GEOMETRY = '500x215'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
 
     elif platform == 'Mac':
