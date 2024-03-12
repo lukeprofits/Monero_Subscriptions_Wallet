@@ -122,8 +122,8 @@ PLATFORM = get_platform()
 
 
 def set_platform_specific_variables(platform=PLATFORM):
-    global BACK_BUTTON_EMOJI
-    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙
+    global BACK_BUTTON_EMOJI  # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
+    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙ 🔧🔧🔧🛠☰🎚
     # Views
     global MAIN_VIEW_GEOMETRY
     global PAY_VIEW_GEOMETRY
@@ -132,8 +132,8 @@ def set_platform_specific_variables(platform=PLATFORM):
     global RECEIVE_VIEW_GEOMETRY
 
     if platform == 'Windows':
-        BACK_BUTTON_EMOJI = '←'
-        SETTINGS_BUTTON_EMOJI = '⚙'
+        BACK_BUTTON_EMOJI = '⏴'
+        SETTINGS_BUTTON_EMOJI = '☰'
         # Views
         MAIN_VIEW_GEOMETRY = '500x215'
         PAY_VIEW_GEOMETRY = '500x215'
