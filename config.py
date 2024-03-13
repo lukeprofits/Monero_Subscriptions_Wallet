@@ -109,10 +109,13 @@ https://github.com/lukeprofits/Monero_Subscriptions_Wallet
 # =====================
 # Platform-Dependent Configurations
 # =====================
-def get_platform(platform=platform.system().lower()):
-    if platform == 'darwin':
+
+
+def get_platform(os=platform.system()):
+    os = os.lower()
+    if os == 'darwin':
         return 'Mac'
-    if platform == 'windows':
+    if os == 'windows':
         return 'Windows'
     else:
         return 'Linux'
@@ -195,4 +198,3 @@ else:
 #'''
 
 CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
-

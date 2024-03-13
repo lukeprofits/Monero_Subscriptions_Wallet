@@ -1,8 +1,6 @@
 import customtkinter as ctk
-
 from src.rpc_server import RPCServer
 from src.views import MainView, ReceiveView, PayView, SubscriptionsView, SettingsView
-
 import config as cfg
 
 ctk.set_default_color_theme("monero_theme.json")

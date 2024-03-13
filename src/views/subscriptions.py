@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from src.interfaces.view import View
-
 import subscription_functions
 import config as cfg
 
