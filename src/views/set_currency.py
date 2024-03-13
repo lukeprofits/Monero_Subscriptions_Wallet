@@ -22,8 +22,7 @@ class SetCurrencyView(View):
             cfg.SECONDARY_CURRENCY = choice
             print("Now set to:", cfg.SECONDARY_CURRENCY)
 
-        SET_CURRENCY_TEXT = """
-                Select the currencies that you would like for your wallet balance to be displayed in. 
+        SET_CURRENCY_TEXT = """Select the currencies that you would like for your wallet balance to be displayed in. 
 
                 Primary will be shown by default. Click the amount shown to toggle to secondary."""
 
@@ -36,6 +35,7 @@ class SetCurrencyView(View):
         back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
+        '''  # THIS IS CAUSING ISSUES
         text = ctk.CTkLabel(self._app, text=SET_CURRENCY_TEXT)
         text.grid(row=1, column=0, columnspan=3, padx=20, pady=20, sticky="ew")
 
@@ -55,7 +55,7 @@ class SetCurrencyView(View):
         selected_currency = ctk.StringVar(value=cfg.SECONDARY_CURRENCY)
         currency_selector = ctk.CTkOptionMenu(self._app, values=cfg.CURRENCY_OPTIONS, command=secondary_currency_selector_callback, variable=selected_currency)
         currency_selector.grid(row=3, column=2, columnspan=1, padx=20, pady=20)
-
+        '''
         return self
 
     def open_main(self):
