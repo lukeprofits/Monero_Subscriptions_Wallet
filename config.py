@@ -145,7 +145,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x215'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
-        SET_CURRENCY_VIEW_GEOMETRY = '500x300'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
     elif platform == 'Mac':
@@ -158,7 +158,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
-        SET_CURRENCY_VIEW_GEOMETRY = '500x300'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     elif platform == 'Linux':
         BACK_BUTTON_EMOJI = '⬅'
@@ -170,7 +170,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
-        SET_CURRENCY_VIEW_GEOMETRY = '500x300'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
         BACK_BUTTON_EMOJI = '⬅'
@@ -181,7 +181,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SETTINGS_VIEW_GEOMETRY = '500x205'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '500x300'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
 set_platform_specific_variables(platform=PLATFORM)
