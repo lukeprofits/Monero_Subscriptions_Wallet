@@ -3,9 +3,9 @@ from src.interfaces.view import View
 import config as cfg
 import src.views.set_currency as set_currency
 
-
 class SettingsView(View):
     def __init__(self, app):
+        super().__init__(app)
         self._app = app
         self.toplevel_window = None
 
@@ -60,11 +60,11 @@ class SettingsView(View):
     # TODO: This does not exist yet and needs to be created.
     def open_set_currency(self):
         # Code for view (can't seem to get this working. It messes up any subsequest windows when closed)
-        #self._app.switch_view('set_currency')
+        self._app.switch_view('set_currency')
 
         #''' # Code for pop-up window
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = set_currency.SetCurrency(self._app)  # create window if its None or destroyed
-        else:
-            self.toplevel_window.focus()  # if window exists focus it
+        # if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+        #     self.toplevel_window = set_currency.SetCurrency(self._app)  # create window if its None or destroyed
+        # else:
+        #     self.toplevel_window.focus()  # if window exists focus it
         #'''

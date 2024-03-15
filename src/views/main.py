@@ -59,13 +59,13 @@ class MainView(View):
 
     def open_subscriptions(self):
         # Code for view (can't seem to get this working. It does not destroy the scroll bar when closed)
-        #self._app.switch_view('subscriptions')
+        self._app.switch_view('subscriptions')
 
         #''' # Code for pop-up window
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = subscriptions.Subscriptions(self._app)  # create window if its None or destroyed
-        else:
-            self.toplevel_window.focus()  # if window exists focus it
+        # if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+        #     self.toplevel_window = subscriptions.Subscriptions(self._app)  # create window if its None or destroyed
+        # else:
+        #     self.toplevel_window.focus()  # if window exists focus it
         #'''
 
     def open_recieve(self):
