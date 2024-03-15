@@ -109,10 +109,13 @@ https://github.com/lukeprofits/Monero_Subscriptions_Wallet
 # =====================
 # Platform-Dependent Configurations
 # =====================
-def get_platform(platform=platform.system().lower()):
-    if platform == 'darwin':
+
+
+def get_platform(os=platform.system()):
+    os = os.lower()
+    if os == 'darwin':
         return 'Mac'
-    if platform == 'windows':
+    if os == 'windows':
         return 'Windows'
     else:
         return 'Linux'
@@ -122,18 +125,19 @@ PLATFORM = get_platform()
 
 
 def set_platform_specific_variables(platform=PLATFORM):
-    global BACK_BUTTON_EMOJI
-    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙
+    global BACK_BUTTON_EMOJI  # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
+    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙ 🔧🔧🔧🛠☰🎚
     # Views
     global MAIN_VIEW_GEOMETRY
     global PAY_VIEW_GEOMETRY
     global SETTINGS_VIEW_GEOMETRY
     global SUBSCRIPTIONS_VIEW_GEOMETRY
     global RECEIVE_VIEW_GEOMETRY
+    global SET_CURRENCY_VIEW_GEOMETRY
 
     if platform == 'Windows':
-        BACK_BUTTON_EMOJI = '←'
-        SETTINGS_BUTTON_EMOJI = '⚙'
+        BACK_BUTTON_EMOJI = '⏴'
+        SETTINGS_BUTTON_EMOJI = '☰'
         # Views
         MAIN_VIEW_GEOMETRY = '500x215'
         PAY_VIEW_GEOMETRY = '500x215'
@@ -141,6 +145,8 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x215'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+
 
     elif platform == 'Mac':
         BACK_BUTTON_EMOJI = '⬅'
@@ -152,6 +158,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     elif platform == 'Linux':
         BACK_BUTTON_EMOJI = '⬅'
@@ -163,6 +170,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
         BACK_BUTTON_EMOJI = '⬅'
@@ -173,6 +181,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         SETTINGS_VIEW_GEOMETRY = '500x205'
         SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         RECEIVE_VIEW_GEOMETRY = '500x195'
+        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
 set_platform_specific_variables(platform=PLATFORM)
@@ -195,4 +204,5 @@ else:
 #'''
 
 CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
-
+DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
+SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]

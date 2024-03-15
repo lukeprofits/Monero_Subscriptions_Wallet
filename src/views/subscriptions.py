@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from src.interfaces.view import View
-import config as cfg
 import subscription_functions
+import config as cfg
 
 # View - NOT USED CURRENTLY
 class SubscriptionsView(View):

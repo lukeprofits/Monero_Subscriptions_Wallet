@@ -3,11 +3,9 @@ from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.rpc_server_status_observer import RPCServerStatusObserver
 import src.views.subscriptions as subscriptions
-
-
-
 import subscription_functions
 import config as cfg
+
 
 class MainView(View):
     def __init__(self, app):
@@ -15,6 +13,7 @@ class MainView(View):
         self._rpc_server = RPCServer.get()
         self._element_observers = []
         self.toplevel_window = None
+        self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
 
     def build(self):
         self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
@@ -36,8 +35,8 @@ class MainView(View):
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
-        amount = self.add(ctk.CTkLabel(self._app, text="$150.00 USD", font=(cfg.font, 48)))
-        amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
+        self.amount = self.add(ctk.CTkLabel(self._app, text="$150.00 USD", font=(cfg.font, 48)))
+        self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
