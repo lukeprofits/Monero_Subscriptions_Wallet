@@ -4,3 +4,4 @@ subscriptions_wallet*
 test_wallet*
 __pycache__/
 .DS_Store
+temp.py
