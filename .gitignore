@@ -5,3 +5,4 @@ test_wallet*
 __pycache__/
 .DS_Store
 Subscriptions.json
+temp.py

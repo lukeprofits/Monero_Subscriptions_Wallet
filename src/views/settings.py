@@ -4,28 +4,40 @@ import config as cfg
 
 class SettingsView(View):
     def build(self):
+        self._app.geometry(cfg.SETTINGS_VIEW_GEOMETRY)
+        # Configure the main window grid for spacing and alignment
+        #self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
 
-        self._app.geometry("400x600")
+        BUTTONS_COL = 0
+        BUTTONS_COL_SPAN = 3
+        BUTTONS_PADX = 10
+        BUTTONS_PADY = 5
+        BUTTONS_STICKY = "ew"
 
-        label = self.add(ctk.CTkLabel(self._app, text="Settings Window"))
-        label.pack(padx=20, pady=20)
-
-        node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", command=self.open_node_selection))
-        node_selection_button.pack(side="top", padx=20, pady=20)
-
-        welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", command=self.open_welcome_message))
-        welcome_message_button.pack(side="top", padx=20, pady=20)
-
-        manually_create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request))
-        manually_create_payment_request_button.pack(side="top", padx=20, pady=20)
-
-        set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", command=self.open_set_currency))
-        set_currency_button.pack(side="top", padx=20, pady=20)
+        # Title
+        label = self.add(ctk.CTkLabel(self._app, text=' Settings Window:'))
+        label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button
-        # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-        back_button = self.add(ctk.CTkButton(self._app, text="⬅", font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", command=self.open_node_selection))
+        node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(0, BUTTONS_PADY), sticky=BUTTONS_STICKY)
+
+        welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", command=self.open_welcome_message))
+        welcome_message_button.grid(row=2, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
+
+        manually_create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request))
+        manually_create_payment_request_button.grid(row=3, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
+
+        set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", command=self.open_set_currency))
+        set_currency_button.grid(row=4, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
+
+        # delete below if not needed 8-27-2024
+        #toplevel_window = None
+
+        return self
 
     def open_main(self):
         self._app.switch_view('main')

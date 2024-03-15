@@ -106,10 +106,78 @@ Enjoy using the Monero Subscriptions Wallet, thank you for your support, and if 
 https://github.com/lukeprofits/Monero_Subscriptions_Wallet
 '''
 
-'''
 # =====================
 # Platform-Dependent Configurations
 # =====================
+def get_platform(platform=platform.system().lower()):
+    if platform == 'darwin':
+        return 'Mac'
+    if platform == 'windows':
+        return 'Windows'
+    else:
+        return 'Linux'
+
+
+PLATFORM = get_platform()
+
+
+def set_platform_specific_variables(platform=PLATFORM):
+    global BACK_BUTTON_EMOJI
+    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙
+    # Views
+    global MAIN_VIEW_GEOMETRY
+    global PAY_VIEW_GEOMETRY
+    global SETTINGS_VIEW_GEOMETRY
+    global SUBSCRIPTIONS_VIEW_GEOMETRY
+    global RECEIVE_VIEW_GEOMETRY
+
+    if platform == 'Windows':
+        BACK_BUTTON_EMOJI = '←'
+        SETTINGS_BUTTON_EMOJI = '⚙'
+        # Views
+        MAIN_VIEW_GEOMETRY = '500x215'
+        PAY_VIEW_GEOMETRY = '500x215'
+        SETTINGS_VIEW_GEOMETRY = '500x215'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        RECEIVE_VIEW_GEOMETRY = '500x215'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+
+    elif platform == 'Mac':
+        BACK_BUTTON_EMOJI = '⬅'
+        SETTINGS_BUTTON_EMOJI = '⚙'
+        # Views
+        MAIN_VIEW_GEOMETRY = '500x195'
+        PAY_VIEW_GEOMETRY = '500x195'
+        SETTINGS_VIEW_GEOMETRY = '500x205'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        RECEIVE_VIEW_GEOMETRY = '500x195'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+
+    elif platform == 'Linux':
+        BACK_BUTTON_EMOJI = '⬅'
+        SETTINGS_BUTTON_EMOJI = '⚙'
+        # Views
+        MAIN_VIEW_GEOMETRY = '500x195'
+        PAY_VIEW_GEOMETRY = '500x195'
+        SETTINGS_VIEW_GEOMETRY = '500x205'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        RECEIVE_VIEW_GEOMETRY = '500x195'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+
+    else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
+        BACK_BUTTON_EMOJI = '⬅'
+        SETTINGS_BUTTON_EMOJI = '⚙'
+        # Views
+        MAIN_VIEW_GEOMETRY = '500x195'
+        PAY_VIEW_GEOMETRY = '500x195'
+        SETTINGS_VIEW_GEOMETRY = '500x205'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        RECEIVE_VIEW_GEOMETRY = '500x195'
+
+
+set_platform_specific_variables(platform=PLATFORM)
+
+'''
 # Set Monero Wallet CLI Path
 if platform.system() == 'Windows':
     # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
@@ -125,3 +193,6 @@ else:
     # Update this path to the location where you want to save the wallet file
     wallet_file_path = f'{os.getcwd()}/'
 #'''
+
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
+

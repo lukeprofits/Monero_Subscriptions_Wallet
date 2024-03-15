@@ -47,3 +47,7 @@ class Subscriptions():
 
     def _file_exists(self):
         return path.exists(self.SUBS_FILE_PATH)
+
+    def add(self, subscription):
+        self._add(subscription)
+        self._write_file()
