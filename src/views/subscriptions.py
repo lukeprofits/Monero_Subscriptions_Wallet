@@ -18,7 +18,7 @@ class SubscriptionsView(View):
         self._app.switch_view('main')
 
     def destroy(self):
-        self.my_frame._scrollbar.destroy()
+        self.my_frame._parent_frame.destroy()
         super().destroy()
 
 # Pop-up window
