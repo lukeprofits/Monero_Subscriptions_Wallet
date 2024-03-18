@@ -26,9 +26,9 @@ class App(ctk.CTk):
         self.current_view = self.views['main'].build()
 
         # Disabled for GUI creation
-        self.rpc_server = RPCServer.get()
-        self.rpc_server.start()
-        self.rpc_server.check_readiness()
+        #self.rpc_server = RPCServer.get()
+        #self.rpc_server.start()
+        #self.rpc_server.check_readiness()
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()

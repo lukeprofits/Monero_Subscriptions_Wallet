@@ -3,14 +3,26 @@ from src.interfaces.view import View
 import subscription_functions
 import config as cfg
 
-# View - NOT USED CURRENTLY
+
 class SubscriptionsView(View):
+    # Update subscriptions in config
+    subscription_functions.get_subscriptions_from_file()
+
     def build(self):
-        self.my_frame = self.add(SubscriptionsScrollableFrame(master=self._app, corner_radius=0, fg_color="transparent"))
-        self.my_frame.grid(row=0, column=0, sticky="nsew")
+        self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
+
+        # Title
+        title = self.add(ctk.CTkLabel(self._app, text=' My Subscriptions:'))
+        title.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+
         # Back Button
         back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        self._app.grid_rowconfigure(1, weight=1)
+
+        self.my_frame = self.add(SubscriptionsScrollableFrame(master=self._app, corner_radius=0, fg_color="transparent"))
+        self.my_frame.grid(row=1, column=0, columnspan=3, sticky="nsew")
 
         return self
 
@@ -21,30 +33,10 @@ class SubscriptionsView(View):
         self.my_frame._parent_frame.destroy()
         super().destroy()
 
-# Pop-up window
-class Subscriptions(ctk.CTkToplevel):
-    # Update subscriptions in config
-    subscription_functions.get_subscriptions_from_file()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
-
-        #'''  # Comment out to make NOT fullscreen.
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        # '''
-
-        self.my_frame = SubscriptionsScrollableFrame(master=self, corner_radius=0, fg_color="transparent")
-        self.my_frame.grid(row=0, column=0, sticky="nsew")
-
 
 class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-
-        title = ctk.CTkLabel(self, text=" My Subscriptions:", font=("Helvetica", 20))
-        title.pack(padx=10, pady=(20, 0))
 
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
@@ -105,3 +97,22 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
         subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
         subscription_cancel_button.pack(pady=10)
+
+
+'''
+# Pop-up window - NOT USED CURRENTLY
+class Subscriptions(ctk.CTkToplevel):
+    # Update subscriptions in config
+    subscription_functions.get_subscriptions_from_file()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
+
+        # Comment out to make NOT fullscreen.
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        self.my_frame = SubscriptionsScrollableFrame(master=self, corner_radius=0, fg_color="transparent")
+        self.my_frame.grid(row=0, column=0, sticky="nsew")
+'''
