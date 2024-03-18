@@ -1,12 +1,10 @@
 import customtkinter as ctk
 from src.interfaces.view import View
+import config as cfg
 
 import config as cfg
 
 class ReceiveView(View):
-    def __init__(self, app):
-        self._app = app
-
     def build(self):
         self._app.geometry(cfg.RECEIVE_VIEW_GEOMETRY)
 

@@ -3,15 +3,23 @@ from src.interfaces.view import View
 import subscription_functions
 import config as cfg
 
-
 # View - NOT USED CURRENTLY
 class SubscriptionsView(View):
-    def __init__(self, app):
-        self._app = app
-
     def build(self):
+        self.my_frame = self.add(SubscriptionsScrollableFrame(master=self._app, corner_radius=0, fg_color="transparent"))
+        self.my_frame.grid(row=0, column=0, sticky="nsew")
+        # Back Button
+        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
         return self
 
+    def open_main(self):
+        self._app.switch_view('main')
+
+    def destroy(self):
+        self.my_frame._parent_frame.destroy()
+        super().destroy()
 
 # Pop-up window
 class Subscriptions(ctk.CTkToplevel):
@@ -79,4 +87,21 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
     # TODO: Make this do something.
     def cancel_subscription(self):
-        pass
+            pass
+
+    def open_main(self):
+        self.master.master.master.switch_view('main') #TODO: Change this to something actually sane.
+
+    def _create_subscription(self, sub):
+        subscription_name = ctk.CTkLabel(self, text=sub["custom_label"])
+        subscription_name.pack()
+
+        subscription_price = ctk.CTkLabel(self, text=f"{sub['amount']} {sub['currency']}")
+        subscription_price.pack()
+
+        # TODO: Make this accurate. Right now it just shows billing cycle
+        subscription_renews_in = ctk.CTkLabel(self, text=f"Renews In {sub['days_per_billing_cycle']} Days")
+        subscription_renews_in.pack()
+
+        subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
+        subscription_cancel_button.pack(pady=10)
