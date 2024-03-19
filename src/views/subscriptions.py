@@ -70,8 +70,8 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
             no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
             no_subs_text.pack(padx=10, pady=(20, 0))
 
-            # TODO: Have this close the window, open "Pay".
-            subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", command=self.cancel_subscription)
+            # TODO: Have this close the window
+            subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", command=self.add_subscription)
             subscription_cancel_button.pack(pady=10)
 
             separator = ctk.CTkFrame(self, height=2)
@@ -79,10 +79,14 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
     # TODO: Make this do something.
     def cancel_subscription(self):
-            pass
+        # Code to cancel
+        pass
+
+    def add_subscription(self):
+        self.master.master.master.switch_view('pay')
 
     def open_main(self):
-        self.master.master.master.switch_view('main') #TODO: Change this to something actually sane.
+        self.master.master.master.switch_view('main')
 
     def _create_subscription(self, sub):
         subscription_name = ctk.CTkLabel(self, text=sub["custom_label"])
