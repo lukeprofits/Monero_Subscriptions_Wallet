@@ -35,7 +35,7 @@ class MainView(View):
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
-        self.amount = self.add(ctk.CTkLabel(self._app, text="$150.00 USD", font=(cfg.font, 48)))
+        self.amount = self.add(ctk.CTkLabel(self._app, text=cfg.currency_in_display_format(currency=cfg.DEFAULT_CURRENCY, xmr_amount=1.01), font=(cfg.font, 48)))
         self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Frame to hold buttons

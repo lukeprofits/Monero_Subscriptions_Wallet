@@ -206,3 +206,36 @@ else:
 CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
 DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
 SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
+
+
+def currency_in_display_format(currency=DEFAULT_CURRENCY, xmr_amount=0):
+
+    def check_for_symbol():
+        if currency.upper() in symbols.keys():
+            symbol = symbols[currency.upper()]
+        else:
+            symbol = ""
+        return symbol
+
+    has_ticker_before = ["XMR", "BTC", "LTC"]
+
+    symbols = {"USD": "$",
+               "GBP": "£",
+               "AUD": "$",
+               "EUR": "€",
+               "JPY": "¥"}
+
+    # TODO: WRITE AMOUNT CONVERSION
+    amount = xmr_amount
+    # TODO: FORMAT AMOUNT TO THE PROPER NUMBER OF 0's
+
+    # Currency ticker goes before amount
+    if currency.upper() in has_ticker_before:
+        return f"{amount} {currency.upper()}"
+
+    # Currency ticker goes after amount
+    else:
+        return f"{check_for_symbol()}{amount} {currency.upper()}"
+
+
+#print(currency_in_display_format(currency="XMR", xmr_amount=1.00))
