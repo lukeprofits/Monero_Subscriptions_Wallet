@@ -1,6 +1,12 @@
+# NOTE: Using this for fiat currencies other than the hard-coded ones: https://github.com/datasets/currency-codes
+
 import os
 import platform
 import threading
+import requests
+from io import StringIO
+import csv
+import monero_usd_price
 
 """
 Configuration File for Monero Subscriptions Wallet
@@ -142,9 +148,8 @@ def set_platform_specific_variables(platform=PLATFORM):
         MAIN_VIEW_GEOMETRY = '500x215'
         PAY_VIEW_GEOMETRY = '500x215'
         SETTINGS_VIEW_GEOMETRY = '500x215'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
         RECEIVE_VIEW_GEOMETRY = '500x215'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
@@ -155,9 +160,8 @@ def set_platform_specific_variables(platform=PLATFORM):
         MAIN_VIEW_GEOMETRY = '500x195'
         PAY_VIEW_GEOMETRY = '500x195'
         SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
         RECEIVE_VIEW_GEOMETRY = '500x195'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     elif platform == 'Linux':
@@ -167,9 +171,8 @@ def set_platform_specific_variables(platform=PLATFORM):
         MAIN_VIEW_GEOMETRY = '500x195'
         PAY_VIEW_GEOMETRY = '500x195'
         SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
         RECEIVE_VIEW_GEOMETRY = '500x195'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
         SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
     else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
@@ -179,7 +182,7 @@ def set_platform_specific_variables(platform=PLATFORM):
         MAIN_VIEW_GEOMETRY = '500x195'
         PAY_VIEW_GEOMETRY = '500x195'
         SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '400x600'
+        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
         RECEIVE_VIEW_GEOMETRY = '500x195'
         SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
@@ -203,7 +206,28 @@ else:
     wallet_file_path = f'{os.getcwd()}/'
 #'''
 
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "EUR", "GBP"]  # Is there a library for pulling these in automatically?'
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "CNY", "EUR", "JPY", "GBP", "KRW", "INR", "CAD", "HKD", "BRL", "AUD", "TWD", "CHF"]
+
+def add_fiat_currencies_to_currency_options():
+    url = "https://raw.githubusercontent.com/datasets/currency-codes/master/data/codes-all.csv"
+    column_name = "AlphabeticCode"
+    response = requests.get(url)
+    if response.status_code == 200:
+        csv_data = StringIO(response.text)
+        reader = csv.reader(csv_data)
+
+        headers = next(reader)  # Get the header row
+        if 'AlphabeticCode' in headers:
+            code_index = headers.index(column_name)  # Find the index of the AlphabeticCode column
+
+            for row in reader:
+                if row:  # Make sure the row is not empty
+                    currency_code = row[code_index]  # Use the index of AlphabeticCode
+                    if currency_code not in CURRENCY_OPTIONS and currency_code != "":
+                        CURRENCY_OPTIONS.append(currency_code)
+
+add_fiat_currencies_to_currency_options()
+
 DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
 SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
 
@@ -217,25 +241,23 @@ def currency_in_display_format(currency=DEFAULT_CURRENCY, xmr_amount=0):
             symbol = ""
         return symbol
 
-    has_ticker_before = ["XMR", "BTC", "LTC"]
+    has_ticker_after = ["XMR"]
 
     symbols = {"USD": "$",
-               "GBP": "£",
-               "AUD": "$",
+               "BTC": "₿",
+               "CYN": "¥",
                "EUR": "€",
-               "JPY": "¥"}
+               "JPY": "¥",
+               "GBP": "£",
+               "KRW": "₩",
+               "INR": "₹",
+               "CAD": "$",
+               "HKD": "$",
+               "AUD": "$"
+               }
 
     # TODO: WRITE AMOUNT CONVERSION
     amount = xmr_amount
     # TODO: FORMAT AMOUNT TO THE PROPER NUMBER OF 0's
 
-    # Currency ticker goes before amount
-    if currency.upper() in has_ticker_before:
-        return f"{amount} {currency.upper()}"
-
-    # Currency ticker goes after amount
-    else:
-        return f"{check_for_symbol()}{amount} {currency.upper()}"
-
-
-#print(currency_in_display_format(currency="XMR", xmr_amount=1.00))
+    return f"{check_for_symbol()}{amount} {currency.upper()}"
