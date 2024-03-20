@@ -7,6 +7,8 @@ import requests
 from io import StringIO
 import csv
 import monero_usd_price
+from lxml import html
+from decimal import Decimal, ROUND_HALF_UP
 
 """
 Configuration File for Monero Subscriptions Wallet
@@ -232,7 +234,7 @@ DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
 SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
 
 
-def currency_in_display_format(currency=DEFAULT_CURRENCY, xmr_amount=0):
+def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
 
     def check_for_symbol():
         if currency.upper() in symbols.keys():
@@ -256,8 +258,32 @@ def currency_in_display_format(currency=DEFAULT_CURRENCY, xmr_amount=0):
                "AUD": "$"
                }
 
-    # TODO: WRITE AMOUNT CONVERSION
-    amount = xmr_amount
     # TODO: FORMAT AMOUNT TO THE PROPER NUMBER OF 0's
 
     return f"{check_for_symbol()}{amount} {currency.upper()}"
+
+rounded_differently = {"": ""}
+
+def get_value(currency_ticker, usd_value):
+    url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
+    main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+
+    response = requests.get(url)
+
+    tree = html.fromstring(response.content)
+    dollar_value_in_currency = tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
+
+    final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
+
+    if currency_ticker not in rounded_differently.keys():
+        final_rounded = final.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        final_rounded = format(final_rounded, ",.2f")
+    else:
+        final_rounded = final
+    print(final_rounded)
+    return str(final_rounded)
+
+# Failed: PRB SLSH CKD NKR -- check if we have these in the wallet or not.
+
+LATEST_XMR_AMOUNT = 1.01
+LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
