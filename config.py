@@ -262,7 +262,11 @@ def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
 
     return f"{check_for_symbol()}{amount} {currency.upper()}"
 
-rounded_differently = {"": ""}
+
+rounded_differently = {"BTC": 8,
+                       "LTC": 8,
+                       "BCH": 8}
+
 
 def get_value(currency_ticker, usd_value):
     url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
@@ -279,8 +283,10 @@ def get_value(currency_ticker, usd_value):
         final_rounded = final.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
         final_rounded = format(final_rounded, ",.2f")
     else:
-        final_rounded = final
-    print(final_rounded)
+        rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
+        final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
+        final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
+
     return str(final_rounded)
 
 # Failed: PRB SLSH CKD NKR -- check if we have these in the wallet or not.
