@@ -4,7 +4,7 @@ import gzip
 import json
 
 class Subscription():
-    DATE_FORMAT = "%Y-%m-%d"
+    DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
     def __init__(self, custom_label, amount, days_per_billing_cycle, start_date, sellers_wallet, currency, number_of_payments, payment_id='', change_indicator_url=''):
         self.custom_label = custom_label
         self.amount = float(amount)
@@ -14,11 +14,13 @@ class Subscription():
             self.days_per_billing_cycle = None
         self.payment_id = payment_id
         if start_date:
-            self.start_date = datetime.strptime(start_date, self.DATE_FORMAT)
+            self.start_date = datetime.fromisoformat(start_date)
         else:
             self.start_date = datetime.now()
         self.currency = currency
         self.sellers_wallet = sellers_wallet
+        self.number_of_payments = number_of_payments
+        self.change_indicator_url = change_indicator_url
 
     def json_friendly(self):
         attributes = self.__dict__.copy()
