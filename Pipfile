@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 customtkinter = "*"
 requests = "*"
+monero_usd_price = "*"
 
 [dev-packages]
 

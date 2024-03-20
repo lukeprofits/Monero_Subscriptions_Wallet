@@ -6,8 +6,6 @@ class Subscriptions():
     SUBS_FILE_PATH = 'Subscriptions.json'
 
     def __init__(self):
-        self._subscriptions = []
-        self._write_file()
         self._subscriptions = self._read_file()
 
     def all(self):
@@ -15,7 +13,7 @@ class Subscriptions():
 
     def _read_file(self):
         if not self._file_exists():
-            return []
+            self._write_file()
 
         with open(self.SUBS_FILE_PATH, "r") as file:
             raw_subscriptions = json.load(file)
@@ -23,17 +21,17 @@ class Subscriptions():
         subscriptions = [Subscription(**sub) for sub in raw_subscriptions]
 
         # Sort subscriptions by billing_cycle_days
-        subscriptions.sort(key=lambda x: x.billing_cycle_days)
+        subscriptions.sort(key=lambda x: x.days_per_billing_cycle)
 
         return subscriptions
 
     def _write_file(self):
         if not self._file_exists():
-            return []
+            self._subscriptions = []
 
         with open(self.SUBS_FILE_PATH, 'w') as file:
             prepared_subscriptions = [sub.json_friendly() for sub in self.all()]
-            file.write(json.dumps(prepared_subscriptions))
+            file.write(json.dumps(prepared_subscriptions, indent=4))
 
     def _set(self, subscriptions):
         self._subscriptions = subscriptions
@@ -50,4 +48,8 @@ class Subscriptions():
 
     def add(self, subscription):
         self._add(subscription)
+        self._write_file()
+
+    def remove(self, subscription):
+        self._remove(subscription)
         self._write_file()

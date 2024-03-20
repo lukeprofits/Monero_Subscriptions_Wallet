@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from src.interfaces.view import View
+from src.subscriptions import Subscriptions
 import subscription_functions
 import config as cfg
 
@@ -38,33 +39,37 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.subscriptions = Subscriptions()
+
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
 
         separator = ctk.CTkFrame(self, height=2)
         separator.pack(fill='x', padx=10, pady=20)
 
-        if cfg.subscriptions:
-            for i, sub in enumerate(cfg.subscriptions):
-                subscription_name = ctk.CTkLabel(self, text=f'{sub["custom_label"]}')
+        if self.subscriptions.all():
+            i = 0
+            for sub in self.subscriptions.all():
+                subscription_name = ctk.CTkLabel(self, text=f'{sub.custom_label}')
                 subscription_name.pack(pady=0)
 
-                subscription_price = ctk.CTkLabel(self, text=f'{sub["amount"]} {sub["currency"]}')
+                subscription_price = ctk.CTkLabel(self, text=f'{sub.amount} {sub.currency}')
                 subscription_price.pack()
 
                 # TODO: Make this accurate. Right now it just shows billing cycle
-                subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub["days_per_billing_cycle"]} Days')
+                subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub.days_per_billing_cycle} Days')
                 subscription_renews_in.pack()
 
-                subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=self.cancel_subscription)
+                subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=lambda: self.cancel_subscription(sub))
                 subscription_cancel_button.pack(pady=(15, 30))
 
                 # Separator
                 separator = ctk.CTkFrame(self, height=2)  # bg_color="#ffffff" if needed
 
                 # Do not pack separator if it's the last subscription
-                if i < len(cfg.subscriptions) - 1:
+                if i < len(self.subscriptions.all()) - 1:
                     separator.pack(fill='x', padx=10, pady=(0, 30))
+                i += 1
 
         else:
             no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
@@ -77,10 +82,9 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
             separator = ctk.CTkFrame(self, height=2)
             separator.pack(fill='x', padx=10, pady=20)
 
-    # TODO: Make this do something.
-    def cancel_subscription(self):
-        # Code to cancel
-        pass
+    def cancel_subscription(self, subscription):
+        #TODO: Make it remove the element from the list in the UI
+        self.subscriptions.remove(subscription)
 
     def add_subscription(self):
         self.master.master.master.switch_view('pay')

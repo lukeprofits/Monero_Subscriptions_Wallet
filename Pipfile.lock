@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1316b66980ec0340fbfe8ca6768b0f876c295b6b4312063afd248134a8d0fc15"
+            "sha256": "f78effa5593cc50b892486326e6f8c75cf12d5aa0b649a128494842c82ea913e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -145,13 +145,21 @@
             "markers": "python_version >= '3.5'",
             "version": "==3.6"
         },
+        "monero-usd-price": {
+            "hashes": [
+                "sha256:1b0b310d1d532eb862c0ddb35d07f6b53be32aea1e800bca7555731475125b98",
+                "sha256:abab7c30e6b7bf841352cafbd996249502186da6847ed787b2eccecc75713a3c"
+            ],
+            "index": "pypi",
+            "version": "==1.3.0"
+        },
         "packaging": {
             "hashes": [
-                "sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5",
-                "sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7"
+                "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5",
+                "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==23.2"
+            "version": "==24.0"
         },
         "requests": {
             "hashes": [
