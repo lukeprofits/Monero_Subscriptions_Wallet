@@ -20,6 +20,9 @@ class SubscriptionsView(View):
         back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
+        # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
+        # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
+
         self._app.grid_rowconfigure(1, weight=1)
 
         self.my_frame = self.add(SubscriptionsScrollableFrame(master=self._app, corner_radius=0, fg_color="transparent"))
@@ -42,8 +45,6 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
         self.grid_columnconfigure(1, weight=1)
         subscriptions = AllSubscriptions()
 
-        # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
-        # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
         if subscriptions.all():
             for i, sub in enumerate(subscriptions.all()):
                 self._create_subscription(sub, i)
@@ -71,7 +72,9 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 class SubscriptionFrame(ctk.CTkFrame):
     def __init__(self, master, sub, row, **kwargs):
         super().__init__(master, **kwargs)
-        self.grid(row=row,column=0, columnspan=3, sticky="nsew", padx=10, pady=10)
+
+        # Padding and stuff for each SubscriptionFrame
+        self.grid(row=row, column=1, columnspan=3, sticky="nsew", padx=10, pady=(0, 10))
 
         self.subscription_name = ctk.CTkLabel(self, text=f'{sub.custom_label}')
         self.subscription_name.grid(row=0, column=1)
@@ -84,7 +87,12 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.subscription_renews_in.grid(row=2, column=1)
 
         self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=lambda: self.cancel_subscription(sub))
-        self.subscription_cancel_button.grid(row=3, column=1)
+        self.subscription_cancel_button.grid(row=3, column=1, pady=(10, 20))
+
+        # Center the widgets within each column
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=2)  # Higher weight for the middle column
+        self.columnconfigure(2, weight=1)
 
     def cancel_subscription(self, subscription):
         AllSubscriptions().remove(subscription)
