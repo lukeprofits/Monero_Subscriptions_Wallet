@@ -3,8 +3,10 @@ import base64
 import gzip
 import json
 
-class Subscription():
+
+class Subscription:
     DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+
     def __init__(self, custom_label, amount, days_per_billing_cycle, start_date, sellers_wallet, currency, number_of_payments, payment_id='', change_indicator_url=''):
         self.custom_label = custom_label
         self.amount = float(amount)

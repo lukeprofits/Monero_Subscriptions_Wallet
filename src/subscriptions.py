@@ -1,9 +1,11 @@
 import json
 from os import path
 from src.subscription import Subscription
+import config as cfg
 
-class Subscriptions():
-    SUBS_FILE_PATH = 'Subscriptions.json'
+
+class Subscriptions:
+    SUBS_FILE_PATH = cfg.SUBS_FILE_PATH
 
     def __init__(self):
         self._subscriptions = self._read_file()

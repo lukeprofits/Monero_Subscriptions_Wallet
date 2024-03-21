@@ -3,15 +3,18 @@ import json
 
 import config as cfg
 
-
+'''
 def get_subscriptions_from_file():
-    if not os.path.exists(cfg.subs_file_path):
+    SUBS_FILE_PATH = cfg.SUBS_FILE_PATH
+
+    if not os.path.exists(SUBS_FILE_PATH):
         return []
 
-    with open(cfg.subs_file_path, "r") as file:
+    with open(SUBS_FILE_PATH, "r") as file:
         cfg.subscriptions = json.load(file)
 
     # Sort subscriptions by days_per_billing_cycle
     cfg.subscriptions.sort(key=lambda x: x['days_per_billing_cycle'])
 
     return cfg.subscriptions
+'''

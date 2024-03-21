@@ -18,7 +18,7 @@ Contains global settings and variables used across the application.
 # =====================
 # Files
 # =====================
-subs_file_path = 'Subscriptions.json'
+SUBS_FILE_PATH = 'Subscriptions.json'
 
 '''
 node_filename = "node_to_use.txt"
@@ -289,7 +289,9 @@ def get_value(currency_ticker, usd_value):
 
     return str(final_rounded)
 
-# Failed: PRB SLSH CKD NKR -- check if we have these in the wallet or not.
+# Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
+
+#Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
