@@ -40,7 +40,7 @@ class Subscriptions():
         self._subscriptions.append(subscription)
 
     def _remove(self, subscription):
-        self._subscriptions.remove(subscription)
+        self._subscriptions = [sub for sub in self._subscriptions if sub.json_friendly() != subscription.json_friendly()]
         return self._subscriptions
 
     def _file_exists(self):
