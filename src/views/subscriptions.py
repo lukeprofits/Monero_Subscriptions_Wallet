@@ -45,10 +45,8 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
         if subscriptions.all():
-            i=0
-            for sub in subscriptions.all():
+            for i, sub in enumerate(subscriptions.all()):
                 self._create_subscription(sub, i)
-                i += 1
 
         else:
             no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
