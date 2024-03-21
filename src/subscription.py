@@ -1,3 +1,7 @@
+"""
+A class for each individual Subscription object
+"""
+
 from datetime import datetime
 import base64
 import gzip

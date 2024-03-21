@@ -1,10 +1,14 @@
+"""
+A class that holds ALL Subcription objects
+"""
+
 import json
 from os import path
 from src.subscription import Subscription
 import config as cfg
 
 
-class Subscriptions:
+class AllSubscriptions:
     def __init__(self):
         self._subscriptions = self._read_file()
 

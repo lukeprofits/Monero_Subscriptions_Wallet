@@ -1,6 +1,10 @@
+"""
+The "Manage Subscriptions" window
+"""
+
 import customtkinter as ctk
 from src.interfaces.view import View
-from src.subscriptions import Subscriptions
+from src.all_subscriptions import AllSubscriptions
 import config as cfg
 
 
@@ -36,7 +40,7 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
         self.grid(row=1, column=0, columnspan=3, sticky='nsew')
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(1, weight=1)
-        subscriptions = Subscriptions()
+        subscriptions = AllSubscriptions()
 
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
@@ -85,7 +89,7 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.subscription_cancel_button.grid(row=3, column=1)
 
     def cancel_subscription(self, subscription):
-        Subscriptions().remove(subscription)
+        AllSubscriptions().remove(subscription)
         self.destroy()
 '''
 # Pop-up window - NOT USED CURRENTLY

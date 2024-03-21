@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from src.interfaces.view import View
-from src.subscriptions import Subscriptions
+from src.all_subscriptions import AllSubscriptions
 from src.subscription import Subscription
 import config as cfg
 
@@ -32,7 +32,7 @@ class PayView(View):
 
     def paste_and_next(self):
         request = self.input_box_for_wallet_or_request.get()
-        subs = Subscriptions()
+        subs = AllSubscriptions()
         subs.add(Subscription(**Subscription.decode(request)))
         self._app.switch_view('main')  # TODO: UPDATE THIS TO WORK!!!
 
