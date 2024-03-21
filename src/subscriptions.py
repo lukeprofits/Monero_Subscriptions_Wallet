@@ -5,8 +5,6 @@ import config as cfg
 
 
 class Subscriptions:
-    SUBS_FILE_PATH = cfg.SUBS_FILE_PATH
-
     def __init__(self):
         self._subscriptions = self._read_file()
 
@@ -17,7 +15,7 @@ class Subscriptions:
         if not self._file_exists():
             self._write_file()
 
-        with open(self.SUBS_FILE_PATH, "r") as file:
+        with open(cfg.SUBS_FILE_PATH, "r") as file:
             raw_subscriptions = json.load(file)
 
         subscriptions = [Subscription(**sub) for sub in raw_subscriptions]
@@ -31,7 +29,7 @@ class Subscriptions:
         if not self._file_exists():
             self._subscriptions = []
 
-        with open(self.SUBS_FILE_PATH, 'w') as file:
+        with open(cfg.SUBS_FILE_PATH, 'w') as file:
             prepared_subscriptions = [sub.json_friendly() for sub in self.all()]
             file.write(json.dumps(prepared_subscriptions, indent=4))
 
@@ -46,7 +44,7 @@ class Subscriptions:
         return self._subscriptions
 
     def _file_exists(self):
-        return path.exists(self.SUBS_FILE_PATH)
+        return path.exists(cfg.SUBS_FILE_PATH)
 
     def add(self, subscription):
         self._add(subscription)

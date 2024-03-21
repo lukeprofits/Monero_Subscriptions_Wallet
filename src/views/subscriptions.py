@@ -1,14 +1,10 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 from src.subscriptions import Subscriptions
-#import subscription_functions
 import config as cfg
 
 
 class SubscriptionsView(View):
-    # Update subscriptions in config
-    #subscription_functions.get_subscriptions_from_file()
-
     def build(self):
         self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
 

@@ -3,7 +3,6 @@ from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.rpc_server_status_observer import RPCServerStatusObserver
 import src.views.subscriptions as subscriptions
-import subscription_functions
 import config as cfg
 
 
