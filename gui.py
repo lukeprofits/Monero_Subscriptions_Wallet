@@ -25,12 +25,10 @@ class App(ctk.CTk):
 
         self.current_view = self.views['main'].build()
 
-        # TEMP FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if cfg.PLATFORM != "Mac":
-            if cfg.rpc:
-                self.rpc_server = RPCServer.get()
-                self.rpc_server.start()
-                self.rpc_server.check_readiness()
+        if cfg.rpc:
+            self.rpc_server = RPCServer.get()
+            self.rpc_server.start()
+            self.rpc_server.check_readiness()
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()
