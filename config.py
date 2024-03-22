@@ -2,36 +2,59 @@
 
 import os
 import platform
-import threading
 import requests
 from io import StringIO
 import csv
 import monero_usd_price
 from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
+import argparse
+
+cli_options = {
+    'subs_file_path': 'Subscriptions.json',
+    'rpc_bind_port': 18088,
+    'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
+    'rpc_username': 'monero',
+    'rpc_password': 'monero',
+    'rpc': True,
+    'node_filename': 'node_to_use.txt'
+}
+
+parser=argparse.ArgumentParser()
+parser.add_argument('--subs_file_path', nargs='?')
+parser.add_argument('--rpc_bind_port', type=int)
+parser.add_argument('--local_rpc_url')
+parser.add_argument('--rpc_username')
+parser.add_argument('--rpc_password')
+parser.add_argument('--rpc', type=bool, action=argparse.BooleanOptionalAction)
+parser.add_argument('--node_filename')
+
+args=parser.parse_args()
+
+def variable_value(args, option):
+    value = getattr(args, option)
+
+    if value is None:
+        value = os.environ.get(option.upper())
+
+    if value is None:
+        value = cli_options[option]
+
+    return value
+
+#Set CLI Options as importable variables
+for option in cli_options.keys():
+    exec(f'{option} = variable_value(args, "{option}")')
 
 """
 Configuration File for Monero Subscriptions Wallet
 Contains global settings and variables used across the application.
 """
 
-# =====================
-# Files
-# =====================
-SUBS_FILE_PATH = 'Subscriptions.json'
-
 '''
 node_filename = "node_to_use.txt"
 wallet_name = "subscriptions_wallet"
-
-# =====================
-# RPC Settings
-# =====================
-rpc_bind_port = '18088'
-local_rpc_url = f"http://127.0.0.1:{rpc_bind_port}/json_rpc"
-rpc_username = "monero"
-rpc_password = "monero"
-
+'''
 # =====================
 # Placeholders and Dynamic Values
 # =====================

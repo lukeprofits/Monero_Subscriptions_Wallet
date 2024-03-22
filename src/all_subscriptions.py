@@ -19,7 +19,7 @@ class AllSubscriptions:
         if not self._file_exists():
             self._write_file()
 
-        with open(cfg.SUBS_FILE_PATH, "r") as file:
+        with open(cfg.subs_file_path, "r") as file:
             raw_subscriptions = json.load(file)
 
         subscriptions = [Subscription(**sub) for sub in raw_subscriptions]
@@ -33,7 +33,7 @@ class AllSubscriptions:
         if not self._file_exists():
             self._subscriptions = []
 
-        with open(cfg.SUBS_FILE_PATH, 'w') as file:
+        with open(cfg.subs_file_path, 'w') as file:
             prepared_subscriptions = [sub.json_friendly() for sub in self.all()]
             file.write(json.dumps(prepared_subscriptions, indent=4))
 
@@ -48,7 +48,7 @@ class AllSubscriptions:
         return self._subscriptions
 
     def _file_exists(self):
-        return path.exists(cfg.SUBS_FILE_PATH)
+        return path.exists(cfg.subs_file_path)
 
     def add(self, subscription):
         self._add(subscription)
