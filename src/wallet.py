@@ -3,7 +3,7 @@ import platform
 import subprocess
 import logging
 import logging.config
-from src.rpc_config import RPCConfig
+from config import cli_path
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
 
@@ -13,7 +13,6 @@ class Wallet():
         self.path = self._get_path()
         self._block_height = 0
         self._address = None
-        self.config = RPCConfig()
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
 
@@ -55,7 +54,7 @@ class Wallet():
         except:
             pass
 
-        command = f"{self.config.cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
+        command = f"{cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
         process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Sending two newline characters, pressing 'Enter' twice

@@ -4,7 +4,7 @@ import subprocess
 import time
 import logging
 import logging.config
-from src.rpc_config import RPCConfig
+from config import node_url, cli_path, rpc_bind_port
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
@@ -22,13 +22,12 @@ class RPCServer(Notifier):
         return cls._wallet_servers[wallet.name]
 
     def __init__(self, wallet=Wallet()):
-        self.config = RPCConfig()
         self.wallet = wallet
-        self.host = self.config.host
-        self.port = self.config.port
-        self.wallet_cli_path = self.config.cli_path
+        self.host = node_url.split(':')[0]
+        self.port = node_url.split(':')[1]
+        self.wallet_cli_path = cli_path
         self.rpc_is_ready = 0
-        self.rpc_bind_port = self.config.bind_port
+        self.rpc_bind_port = rpc_bind_port
         self.process = None
         self.wallet_process = None
         logging.config.dictConfig(logging_config)
