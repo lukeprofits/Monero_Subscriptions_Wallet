@@ -235,6 +235,7 @@ if platform == 'Windows':
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
     RECEIVE_VIEW_GEOMETRY = '500x215'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 
 elif platform == 'Mac':
@@ -247,6 +248,7 @@ elif platform == 'Mac':
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
     RECEIVE_VIEW_GEOMETRY = '500x195'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
@@ -259,6 +261,7 @@ elif platform == 'Linux':
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
     RECEIVE_VIEW_GEOMETRY = '500x195'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -270,6 +273,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
     RECEIVE_VIEW_GEOMETRY = '500x195'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 '''
 # Set Monero Wallet CLI Path
