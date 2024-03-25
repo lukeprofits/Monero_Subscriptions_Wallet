@@ -17,7 +17,7 @@ class NodeSelectionView(View):
         # Documentation: https://customtkinter.tomschimansky.com/documentation/widgets/entry
         self._node_selection(cfg)
 
-        next_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.paste_and_next))
+        next_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.select_node))
         next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         return self
@@ -25,7 +25,7 @@ class NodeSelectionView(View):
     def open_main(self):
         self._app.switch_view('main')
 
-    def paste_and_next(self):
+    def select_node(self):
         node = self.node_selection.get()
         config = cfg.config_file
         config.set('rpc', 'node_url', node)
