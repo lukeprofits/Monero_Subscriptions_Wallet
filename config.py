@@ -1,4 +1,11 @@
-# NOTE: Using this for fiat currencies other than the hard-coded ones: https://github.com/datasets/currency-codes
+"""
+Configuration File for Monero Subscriptions Wallet
+Contains global settings and variables used across the application.
+
+Using this for fiat currencies (other than the hard-coded ones): https://github.com/datasets/currency-codes
+
+Exchange rates scraped from XE.com
+"""
 
 import os
 import platform
@@ -43,6 +50,7 @@ parser.add_argument('--daemon-url')
 parser.add_argument('--config-file')
 args=parser.parse_args()
 
+
 class ConfigFile():
     def __init__(self, path='./config.ini'):
         self._config = ConfigParser()
@@ -84,35 +92,35 @@ class ConfigFile():
             self._config[section] = {}
         self.write()
 
+
 config_file = ConfigFile(args.config_file or './config.ini')
 
+
 def variable_value(args, section, option):
-    #Get From CLI Options
+    # Get From CLI Options
     value = getattr(args, option)
 
-    #Get From Config File
+    # Get From Config File
     if value is None:
         value = config_file.get(section, option)
 
-    #Get From Environment
+    # Get From Environment
     if value is None:
         value = os.environ.get(option.upper())
 
-    #Get Default Value
+    # Get Default Value
     if value is None:
         value = config_options[section][option]
 
     return value
 
-#Set CLI Options as importable variables
+
+# Set CLI Options as importable variables
 for section, options in config_options.items():
     for option in options.keys():
         exec(f'{option} = variable_value(args, "{section}", "{option}")')
 
-"""
-Configuration File for Monero Subscriptions Wallet
-Contains global settings and variables used across the application.
-"""
+
 
 '''
 wallet_name = "subscriptions_wallet"
@@ -280,7 +288,8 @@ else:
     wallet_file_path = f'{os.getcwd()}/'
 #'''
 
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "CNY", "EUR", "JPY", "GBP", "KRW", "INR", "CAD", "HKD", "BRL", "AUD", "TWD", "CHF"]
+# TODO: Adjust the sorting of these at some point.
+CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "GBP", "EUR", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
 
 def add_fiat_currencies_to_currency_options():
     url = "https://raw.githubusercontent.com/datasets/currency-codes/master/data/codes-all.csv"
@@ -337,7 +346,15 @@ def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
 
 rounded_differently = {"BTC": 8,
                        "LTC": 8,
-                       "BCH": 8}
+                       "BCH": 8,
+                       "ADA": 6,
+                       "DOGE": 8,
+                       "DOT": 8,  # 10, but rounded to fit well
+                       "ETH": 8,  # 18, but that does not fit on the window
+                       "LINK": 8,  # 18, but that does not fit on the window
+                       "UNI": 8  # 18, but that does not fit on the window
+                       }
+
 
 
 def get_value(currency_ticker, usd_value):
@@ -368,11 +385,14 @@ def get_value(currency_ticker, usd_value):
         final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
         final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
 
+    # TODO: Consider chopping digits off the right if the length is longer than 12 so that it fits in the window.
+
     return str(final_rounded)
+
 
 # Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
 
-#Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
+# Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
