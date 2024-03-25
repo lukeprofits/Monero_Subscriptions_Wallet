@@ -10,7 +10,7 @@ from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
-
+from src.interfaces.notifier import Notifier
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -44,6 +44,8 @@ class ConfigFile():
     def __init__(self, path='./config.ini'):
         self._config = ConfigParser()
         self._path = path
+        self._observers = []
+
         if self.exists():
             self.read()
         else:
@@ -71,7 +73,7 @@ class ConfigFile():
         self._config[section][option] = value
 
     def get(self, section, option):
-        self._config.get(section, option)
+        return self._config.get(section, option)
 
     def create(self):
         self.set_defaults()
@@ -209,67 +211,54 @@ def get_platform(os=platform.system()):
         return 'Linux'
 
 
-PLATFORM = get_platform()
+platform = get_platform()
 
 
-def set_platform_specific_variables(platform=PLATFORM):
-    global BACK_BUTTON_EMOJI  # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙ 🔧🔧🔧🛠☰🎚
+if platform == 'Windows':
+    BACK_BUTTON_EMOJI = '⏴'
+    SETTINGS_BUTTON_EMOJI = '☰'
     # Views
-    global MAIN_VIEW_GEOMETRY
-    global PAY_VIEW_GEOMETRY
-    global SETTINGS_VIEW_GEOMETRY
-    global SUBSCRIPTIONS_VIEW_GEOMETRY
-    global RECEIVE_VIEW_GEOMETRY
-    global SET_CURRENCY_VIEW_GEOMETRY
-
-    if platform == 'Windows':
-        BACK_BUTTON_EMOJI = '⏴'
-        SETTINGS_BUTTON_EMOJI = '☰'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x215'
-        PAY_VIEW_GEOMETRY = '500x215'
-        SETTINGS_VIEW_GEOMETRY = '500x215'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x215'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    MAIN_VIEW_GEOMETRY = '500x215'
+    PAY_VIEW_GEOMETRY = '500x215'
+    SETTINGS_VIEW_GEOMETRY = '500x215'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x215'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
-    elif platform == 'Mac':
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+elif platform == 'Mac':
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
-    elif platform == 'Linux':
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+elif platform == 'Linux':
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    NODE_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
-    else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
-
-
-set_platform_specific_variables(platform=PLATFORM)
+else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 '''
 # Set Monero Wallet CLI Path
