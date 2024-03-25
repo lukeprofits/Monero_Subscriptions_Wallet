@@ -11,6 +11,10 @@ from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
 from src.interfaces.notifier import Notifier
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -338,6 +342,15 @@ rounded_differently = {"BTC": 8,
 
 
 def get_value(currency_ticker, usd_value):
+    # Skip conversion if the currency is XMR (no need)
+    if currency_ticker.upper() == "XMR":
+        return LATEST_XMR_AMOUNT
+
+    # Skip conversion if the currency is USD (we already have it)
+    if currency_ticker.upper() == "USD":
+        return usd_value
+
+    # Get the value in any non-XMR/USD currency
     url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
     main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
 
