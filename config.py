@@ -12,6 +12,8 @@ import argparse
 from configparser import ConfigParser
 from src.interfaces.notifier import Notifier
 
+NODE_URL = 'xmr-node.cakewallet.com:18081'
+
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -19,9 +21,9 @@ config_options = {
         'rpc_password': 'monero',
         'rpc': True,
         'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
-        'node_url': 'xmr-node.cakewallet.com:18081',
+        'node_url': NODE_URL,
         'cli_path': 'monero-wallet-cli',
-        'daemon_url': 'http://xmr-node.cakewallet.com:18081/json_rpc'
+        'daemon_url': f'{NODE_URL}/json_rpc'
     },
     'subscriptions': {
         'subs_file_path': 'Subscriptions.json'
