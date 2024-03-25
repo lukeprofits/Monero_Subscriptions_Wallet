@@ -97,20 +97,3 @@ class SubscriptionFrame(ctk.CTkFrame):
     def cancel_subscription(self, subscription):
         AllSubscriptions().remove(subscription)
         self.destroy()
-'''
-# Pop-up window - NOT USED CURRENTLY
-class Subscriptions(ctk.CTkToplevel):
-    # Update subscriptions in config
-    subscription_functions.get_subscriptions_from_file()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
-
-        # Comment out to make NOT fullscreen.
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-
-        self.my_frame = SubscriptionsScrollableFrame(master=self, corner_radius=0, fg_color="transparent")
-        self.my_frame.grid(row=0, column=0, sticky="nsew")
-'''

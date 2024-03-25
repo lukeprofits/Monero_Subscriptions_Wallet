@@ -2,7 +2,6 @@ import customtkinter as ctk
 from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.rpc_server_status_observer import RPCServerStatusObserver
-import src.views.subscriptions as subscriptions
 import config as cfg
 
 
@@ -57,15 +56,7 @@ class MainView(View):
         return self
 
     def open_subscriptions(self):
-        # Code for view (can't seem to get this working. It does not destroy the scroll bar when closed)
         self._app.switch_view('subscriptions')
-
-        #''' # Code for pop-up window
-        # if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-        #     self.toplevel_window = subscriptions.Subscriptions(self._app)  # create window if its None or destroyed
-        # else:
-        #     self.toplevel_window.focus()  # if window exists focus it
-        #'''
 
     def open_recieve(self):
         self._app.switch_view('recieve')

@@ -9,42 +9,102 @@ import monero_usd_price
 from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
 import argparse
-
-cli_options = {
-    'subs_file_path': 'Subscriptions.json',
-    'rpc_bind_port': 18088,
-    'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
-    'rpc_username': 'monero',
-    'rpc_password': 'monero',
-    'rpc': True,
-    'node_filename': 'node_to_use.txt'
+from configparser import ConfigParser
+from src.interfaces.notifier import Notifier
+config_options = {
+    'rpc': {
+        'rpc_bind_port': 18088,
+        'rpc_username': 'monero',
+        'rpc_password': 'monero',
+        'rpc': True,
+        'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
+        'node_url': 'xmr-node.cakewallet.com:18081',
+        'cli_path': 'monero-wallet-cli',
+        'daemon_url': 'http://xmr-node.cakewallet.com:18081/json_rpc'
+    },
+    'subscriptions': {
+        'subs_file_path': 'Subscriptions.json'
+    }
 }
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--subs_file_path', nargs='?')
-parser.add_argument('--rpc_bind_port', type=int)
-parser.add_argument('--local_rpc_url')
-parser.add_argument('--rpc_username')
-parser.add_argument('--rpc_password')
+parser.add_argument('--subs-file-path')
+parser.add_argument('--rpc-bind-port', type=int)
+parser.add_argument('--local-rpc-url')
+parser.add_argument('--rpc-username')
+parser.add_argument('--rpc-password')
 parser.add_argument('--rpc', type=bool, action=argparse.BooleanOptionalAction)
-parser.add_argument('--node_filename')
-
+parser.add_argument('--node-url')
+parser.add_argument('--cli-path')
+parser.add_argument('--daemon-url')
+parser.add_argument('--config-file')
 args=parser.parse_args()
 
-def variable_value(args, option):
+class ConfigFile():
+    def __init__(self, path='./config.ini'):
+        self._config = ConfigParser()
+        self._path = path
+        self._observers = []
+
+        if self.exists():
+            self.read()
+        else:
+            self.create()
+
+    def read(self):
+        options = {}
+        if self.exists():
+            options = self._config.read(self._path)
+        return options
+
+    def write(self):
+        with open(self._path, 'w') as conf:
+            self._config.write(conf)
+
+    def exists(self):
+        return os.path.isfile(self._path)
+
+    def set_defaults(self):
+        for section, options in config_options.items():
+            for option, value in options.items():
+                self._config['DEFAULT'][option] = str(value)
+
+    def set(self, section, option, value):
+        self._config[section][option] = value
+
+    def get(self, section, option):
+        return self._config.get(section, option)
+
+    def create(self):
+        self.set_defaults()
+        for section in config_options.keys():
+            self._config[section] = {}
+        self.write()
+
+config_file = ConfigFile(args.config_file or './config.ini')
+
+def variable_value(args, section, option):
+    #Get From CLI Options
     value = getattr(args, option)
 
+    #Get From Config File
+    if value is None:
+        value = config_file.get(section, option)
+
+    #Get From Environment
     if value is None:
         value = os.environ.get(option.upper())
 
+    #Get Default Value
     if value is None:
-        value = cli_options[option]
+        value = config_options[section][option]
 
     return value
 
 #Set CLI Options as importable variables
-for option in cli_options.keys():
-    exec(f'{option} = variable_value(args, "{option}")')
+for section, options in config_options.items():
+    for option in options.keys():
+        exec(f'{option} = variable_value(args, "{section}", "{option}")')
 
 """
 Configuration File for Monero Subscriptions Wallet
@@ -52,7 +112,6 @@ Contains global settings and variables used across the application.
 """
 
 '''
-node_filename = "node_to_use.txt"
 wallet_name = "subscriptions_wallet"
 '''
 # =====================
@@ -152,67 +211,54 @@ def get_platform(os=platform.system()):
         return 'Linux'
 
 
-PLATFORM = get_platform()
+platform = get_platform()
 
 
-def set_platform_specific_variables(platform=PLATFORM):
-    global BACK_BUTTON_EMOJI  # unicode back button options: ← ↼ ↽ ⇐ ⇚ ⇦ ⇽ 🔙 ⏴ ◅ ← ⬅ ⬅️⬅ ◄ ◅
-    global SETTINGS_BUTTON_EMOJI  # unicode settings button options: ⚙ ⚙️ ⛭ ⛭ ⛭ ⚙ 🔧🔧🔧🛠☰🎚
+if platform == 'Windows':
+    BACK_BUTTON_EMOJI = '⏴'
+    SETTINGS_BUTTON_EMOJI = '☰'
     # Views
-    global MAIN_VIEW_GEOMETRY
-    global PAY_VIEW_GEOMETRY
-    global SETTINGS_VIEW_GEOMETRY
-    global SUBSCRIPTIONS_VIEW_GEOMETRY
-    global RECEIVE_VIEW_GEOMETRY
-    global SET_CURRENCY_VIEW_GEOMETRY
-
-    if platform == 'Windows':
-        BACK_BUTTON_EMOJI = '⏴'
-        SETTINGS_BUTTON_EMOJI = '☰'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x215'
-        PAY_VIEW_GEOMETRY = '500x215'
-        SETTINGS_VIEW_GEOMETRY = '500x215'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x215'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    MAIN_VIEW_GEOMETRY = '500x215'
+    PAY_VIEW_GEOMETRY = '500x215'
+    SETTINGS_VIEW_GEOMETRY = '500x215'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x215'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 
-    elif platform == 'Mac':
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+elif platform == 'Mac':
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
-    elif platform == 'Linux':
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+elif platform == 'Linux':
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    NODE_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
-    else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
-        BACK_BUTTON_EMOJI = '⬅'
-        SETTINGS_BUTTON_EMOJI = '⚙'
-        # Views
-        MAIN_VIEW_GEOMETRY = '500x195'
-        PAY_VIEW_GEOMETRY = '500x195'
-        SETTINGS_VIEW_GEOMETRY = '500x205'
-        SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-        RECEIVE_VIEW_GEOMETRY = '500x195'
-        SET_CURRENCY_VIEW_GEOMETRY = '360x165'
-
-
-set_platform_specific_variables(platform=PLATFORM)
+else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
+    BACK_BUTTON_EMOJI = '⬅'
+    SETTINGS_BUTTON_EMOJI = '⚙'
+    # Views
+    MAIN_VIEW_GEOMETRY = '500x195'
+    PAY_VIEW_GEOMETRY = '500x195'
+    SETTINGS_VIEW_GEOMETRY = '500x205'
+    SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    RECEIVE_VIEW_GEOMETRY = '500x195'
+    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 '''
 # Set Monero Wallet CLI Path

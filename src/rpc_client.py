@@ -1,12 +1,11 @@
 import requests
 import json
 import logging
-from src.rpc_config import RPCConfig
+from config import local_rpc_url, daemon_url
 from src.logging import config as logging_config
 
 class RPCClient():
     def __init__(self):
-        self.config = RPCConfig()
         self._headers = None
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
@@ -47,14 +46,14 @@ class RPCClient():
         return self._headers
 
     def post(self, data):
-        response = requests.post(self.config.local_url, headers=self.headers, data=json.dumps(data))
+        response = requests.post(local_rpc_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
             self.logger.error('Error:', result['error']['message'])
         return result
 
     def daemon_post(self, data):
-        response = requests.post(self.config.daemon_url, headers=self.headers, data=json.dumps(data))
+        response = requests.post(daemon_url, headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
             self.logger.error('Error:', result['error']['message'])
