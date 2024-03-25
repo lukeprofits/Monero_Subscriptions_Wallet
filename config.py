@@ -11,10 +11,7 @@ from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
 from src.interfaces.notifier import Notifier
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
