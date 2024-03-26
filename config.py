@@ -18,6 +18,7 @@ from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
 from src.interfaces.notifier import Notifier
+import re
 
 NODE_URL = 'xmr-node.cakewallet.com:18081'
 
@@ -293,7 +294,7 @@ else:
 #'''
 
 # TODO: Adjust the sorting of these at some point.
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "GBP", "EUR", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
+CURRENCY_OPTIONS = ["XMR", "BTC", "XGB", "XAU", "XAG", "USD", "EUR", "GBP", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
 
 def add_fiat_currencies_to_currency_options():
     url = "https://raw.githubusercontent.com/datasets/currency-codes/master/data/codes-all.csv"
@@ -360,43 +361,62 @@ rounded_differently = {"BTC": 8,
                        }
 
 
-
 def get_value(currency_ticker, usd_value):
+    def scrape_xe(currency_ticker):
+        url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
+        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+
+        response = requests.get(url)
+        tree = html.fromstring(response.content)
+        return tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
+
+    def scrape_goldback_exchange_rate():
+        url = 'https://www.goldback.com/exchange-rate'
+        page_content = requests.get(url).text
+        # Find the gb_average_exchange_rate constant's value
+        match = re.search(r"gb_average_exchange_rate\s*=\s*'([\d.]+)';", page_content)
+
+        usd_cost_for_one_goldback = match.group(1)
+        dollar_value_in_goldbacks = Decimal(1) / Decimal(usd_cost_for_one_goldback)
+        return dollar_value_in_goldbacks
+
+    def round_to_two_decimal_places(value):
+        final_decimal = Decimal(value)
+        final_rounded = final_decimal.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        formatted_value = format(final_rounded, ",.2f")
+        return formatted_value
+
     # Skip conversion if the currency is XMR (no need)
     if currency_ticker.upper() == "XMR":
         return LATEST_XMR_AMOUNT
 
     # Skip conversion if the currency is USD (we already have it)
-    if currency_ticker.upper() == "USD":
+    elif currency_ticker.upper() == "USD":
         return usd_value
 
-    # Get the value in any non-XMR/USD currency
-    url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
-    main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+    # Goldbacks
+    elif currency_ticker.upper() == "XGB":
+        dollar_value_in_goldbacks = scrape_goldback_exchange_rate()
+        final = Decimal(dollar_value_in_goldbacks) * Decimal(usd_value)
+        return round_to_two_decimal_places(final)
 
-    response = requests.get(url)
-
-    tree = html.fromstring(response.content)
-    dollar_value_in_currency = tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
-
-    final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
-
-    if currency_ticker not in rounded_differently.keys():
-        final_rounded = final.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-        final_rounded = format(final_rounded, ",.2f")
+    # Everything Else
     else:
-        rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
-        final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
-        final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
+        dollar_value_in_currency = scrape_xe(currency_ticker)
+        final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
 
-    # TODO: Consider chopping digits off the right if the length is longer than 12 so that it fits in the window.
+        if currency_ticker not in rounded_differently.keys():
+            final_rounded = round_to_two_decimal_places(final)
+        else:
+            rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
+            final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
+            final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
 
-    return str(final_rounded)
+        # TODO: Consider chopping digits off the right if the length is longer than 12 so that it fits in the window.
+        # Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
+        # Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
+        return str(final_rounded)
 
-
-# Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
-
-# Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
