@@ -9,16 +9,12 @@ class SetCurrencyView(View):
         self._app.geometry(cfg.SET_CURRENCY_VIEW_GEOMETRY)
 
         def default_currency_selector_callback(choice):
-            print(cfg.DEFAULT_CURRENCY)
             cfg.DEFAULT_CURRENCY = choice
-            print("User chose:", choice)
-            print("Now set to:", cfg.DEFAULT_CURRENCY)
+            #print("User chose:", choice)
 
         def secondary_currency_selector_callback(choice):
-            print(cfg.SECONDARY_CURRENCY)
-            print("User chose:", choice)
             cfg.SECONDARY_CURRENCY = choice
-            print("Now set to:", cfg.SECONDARY_CURRENCY)
+            # print("User chose:", choice)
 
         # Title
         label = self.add(ctk.CTkLabel(self._app, text='Set Currencies:'))
@@ -50,50 +46,3 @@ class SetCurrencyView(View):
 
     def open_main(self):
         self._app.switch_view('main')
-
-'''
-class SetCurrency(ctk.CTkToplevel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.geometry(cfg.SET_CURRENCY_VIEW_GEOMETRY)
-
-        def default_currency_selector_callback(choice):
-            print(cfg.DEFAULT_CURRENCY)
-            cfg.DEFAULT_CURRENCY = choice
-            print("User chose:", choice)
-            print("Now set to:", cfg.DEFAULT_CURRENCY)
-
-        def secondary_currency_selector_callback(choice):
-            print(cfg.SECONDARY_CURRENCY)
-            print("User chose:", choice)
-            cfg.SECONDARY_CURRENCY = choice
-            print("Now set to:", cfg.SECONDARY_CURRENCY)
-
-        # Title
-        label = ctk.CTkLabel(self, text='Set Currencies:')
-        label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
-
-        # Back Button
-        back_button = ctk.CTkButton(self, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.close)
-        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-
-        # Labels
-        label1 = ctk.CTkLabel(self, text='Default:')
-        label1.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
-
-        label2 = ctk.CTkLabel(self, text='Secondary:')
-        label2.grid(row=1, column=2, padx=10, pady=5, sticky="ew")
-
-        # Default Currency
-        selected_currency = ctk.StringVar(value=cfg.DEFAULT_CURRENCY)
-        currency_selector = ctk.CTkOptionMenu(self, values=cfg.CURRENCY_OPTIONS, command=default_currency_selector_callback, variable=selected_currency)
-        currency_selector.grid(row=2, column=0, columnspan=1, padx=20, pady=20)
-
-        # Secondary Currency
-        selected_currency = ctk.StringVar(value=cfg.SECONDARY_CURRENCY)
-        currency_selector = ctk.CTkOptionMenu(self, values=cfg.CURRENCY_OPTIONS, command=secondary_currency_selector_callback, variable=selected_currency)
-        currency_selector.grid(row=2, column=2, columnspan=1, padx=20, pady=20)
-
-    def close(self):
-        self.destroy()
-'''
