@@ -62,7 +62,9 @@ class NodeSelectionView(View):
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Documentation: https://customtkinter.tomschimansky.com/documentation/widgets/entry
-        self._node_selection(cfg)
+        node = ctk.StringVar(self._app, cfg.config_file.get('rpc', 'node_url'))
+        self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=node, placeholder_text='xmr-node.cakewallet.com:18081'))
+        self.node_selection.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         random_node = self.add(ctk.CTkButton(self._app, text="Get A Random Node", command=self.get_random_node_button_clicked))
         random_node.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
@@ -78,14 +80,9 @@ class NodeSelectionView(View):
     def paste_and_next(self):
         node = self.node_selection.get()
         config = cfg.config_file
-        config.set('rpc', 'node_url', node)
+        config.set(section='rpc', option='node_url', value=node)
         config.write()
         self._app.switch_view('main')
 
     def get_random_node_button_clicked(self):
         print(get_random_node())
-
-    def _node_selection(self, config):
-        node = ctk.StringVar(self._app, config.config_file.get('rpc', 'node_url'))
-        self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=node, placeholder_text='xmr-node.cakewallet.com:18081'))
-        self.node_selection.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")

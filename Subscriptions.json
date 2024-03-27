@@ -22,6 +22,61 @@
         "change_indicator_url": ""
     },
     {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
+    },
+    {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
+    },
+    {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
+    },
+    {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
+    },
+    {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
+    },
+    {
         "custom_label": "My VPN",
         "amount": 90.0,
         "days_per_billing_cycle": 90,
@@ -31,5 +86,16 @@
         "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
         "number_of_payments": 0,
         "change_indicator_url": ""
+    },
+    {
+        "custom_label": "My Subscription",
+        "amount": 19.99,
+        "days_per_billing_cycle": 30,
+        "payment_id": "9fc88080d1d5dc09",
+        "start_date": "2023-04-26T13:45:33.000000Z",
+        "currency": "USD",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "number_of_payments": 0,
+        "change_indicator_url": "www.example.com/api/monero-request"
     }
 ]

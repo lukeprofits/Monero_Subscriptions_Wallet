@@ -10,10 +10,16 @@ class SetCurrencyView(View):
 
         def default_currency_selector_callback(choice):
             cfg.DEFAULT_CURRENCY = choice
+
+            cfg.config_file.set(section='DEFAULT', option='default_currency', value=choice)
+            cfg.config_file.write()
             #print("User chose:", choice)
 
         def secondary_currency_selector_callback(choice):
             cfg.SECONDARY_CURRENCY = choice
+
+            cfg.config_file.set(section='DEFAULT', option='secondary_currency', value=choice)
+            cfg.config_file.write()
             # print("User chose:", choice)
 
         # Title

@@ -31,9 +31,27 @@ class PayView(View):
         self._app.switch_view('main')
 
     def paste_and_next(self):
-        request = self.input_box_for_wallet_or_request.get()
-        subs = AllSubscriptions()
-        subs.add(Subscription(**Subscription.decode(request)))
-        self._app.switch_view('main')  # TODO: UPDATE THIS TO WORK!!!
+        def input_is_valid():
+            # TODO: Add more validation here
+            return True
+
+        input = self.input_box_for_wallet_or_request.get()
+
+        if input_is_valid():
+            if 'monero-request:' in input:
+                monero_request = input
+                subs = AllSubscriptions()
+                subs.add(Subscription(**Subscription.decode(monero_request)))
+                self._app.switch_view('subscriptions')
+            else:
+                wallet = input
+                print(wallet)
+                # Add more here
+                self._app.switch_view('main')
+
+        else:
+            print('Not a Monero Payment Request or wallet address')
+
+
 
 #monero-request:1:H4sIAAAAAAAC/y2OX2+CMBTFv0uf1VSsirzpMBiTGQao05emlE7r2kL6B8Vl333FLLnJzfmdm3vODyCydsqCCMARHIMBoFeiLgxzVXFKbK2x08K7veO0Zop2Xu3z+AWMrSUWpGT9ScGM9bQincEN07jkQnB1wbSjgoFoAgdAOVl6p/7CDekkU9aAyON/gXnl3yBEZ2M4Y+GcIMbCvpNhQjBt8J343XdF0+1t/zgmK/ksl4tNmNspjYM0OQRb1zbt5/OEdDtr3nRxzIvT9JrdyfKWb/ni/Dg+rnUsM75RqZT1R5jJ8/Lw7r53ydqs012eFsGqj7REW1wR65uDAAZoCCdDOC8gjF4zghCewe8f/GxR8kABAAA=
