@@ -1,6 +1,8 @@
+import time
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
+from src.rpc_server import RPCServer
 
 class NodeSelectionView(View):
     def build(self):
@@ -27,9 +29,14 @@ class NodeSelectionView(View):
 
     def select_node(self):
         node = self.node_selection.get()
+        rpc_server = RPCServer.get()
         config = cfg.config_file
         config.set('rpc', 'node_url', node)
         config.write()
+        rpc_server.kill()
+        rpc_server.start()
+        rpc_server.failed_to_start = False
+        rpc_server.check_readiness()
         self._app.switch_view('main')
 
     def _node_selection(self, config):

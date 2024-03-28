@@ -1,6 +1,6 @@
 from src.interfaces.observer import Observer
 
-class RPCServerStatusObserver(Observer):
+class StatusLabelObserver(Observer):
     def __init__(self, label):
         self.label = label
 

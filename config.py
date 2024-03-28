@@ -10,7 +10,6 @@ from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
-from src.interfaces.notifier import Notifier
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -104,7 +103,7 @@ def variable_value(args, section, option):
 #Set CLI Options as importable variables
 for section, options in config_options.items():
     for option in options.keys():
-        exec(f'{option} = variable_value(args, "{section}", "{option}")')
+        exec(f'{option} = lambda: variable_value(args, "{section}", "{option}")')
 
 """
 Configuration File for Monero Subscriptions Wallet
@@ -241,12 +240,12 @@ elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
     SETTINGS_BUTTON_EMOJI = '⚙'
     # Views
-    MAIN_VIEW_GEOMETRY = '500x195'
-    PAY_VIEW_GEOMETRY = '500x195'
-    NODE_VIEW_GEOMETRY = '500x195'
-    SETTINGS_VIEW_GEOMETRY = '500x205'
+    MAIN_VIEW_GEOMETRY = '500x215'
+    PAY_VIEW_GEOMETRY = '500x215'
+    NODE_VIEW_GEOMETRY = '500x215'
+    SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x215'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.

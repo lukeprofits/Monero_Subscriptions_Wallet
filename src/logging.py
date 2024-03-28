@@ -24,6 +24,10 @@ config = {
         'src.rpc_config': {
             'level': 'DEBUG',
             'handlers': ['console']
+        },
+        'src.wallet': {
+            'level': 'DEBUG',
+            'handlers': ['console']
         }
     }
 }

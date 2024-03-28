@@ -1,14 +1,15 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 from src.rpc_server import RPCServer
-from src.observers.rpc_server_status_observer import RPCServerStatusObserver
+from src.observers.status_label_observer import StatusLabelObserver
 import config as cfg
-
+from src.wallet import Wallet
 
 class MainView(View):
     def __init__(self, app):
         super().__init__(app)
-        self._rpc_server = RPCServer.get()
+        self._wallet = Wallet()
+        self._rpc_server = RPCServer.get(self._wallet)
         self._element_observers = []
         self.toplevel_window = None
         self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
@@ -20,13 +21,12 @@ class MainView(View):
         self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
 
         # Sync Status
-        sync_status = self.add(ctk.CTkLabel(self._app, text='( Sync Status )'))  # TODO: Make this get the status and display it in sync status
+        rpc_status = self.add(ctk.CTkLabel(self._app, text=f'RPC Status: {self._rpc_server.status_message or "( Sync Status )"}'))
+        rpc_observer = StatusLabelObserver(rpc_status)
+        self._element_observers.append(rpc_observer)
+        self._rpc_server.attach(rpc_observer)
 
-        observer = RPCServerStatusObserver(sync_status)
-        self._element_observers.append(observer)
-        self._rpc_server.attach(observer)
-
-        sync_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+        rpc_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
         settings_button = self.add(ctk.CTkButton(self._app, text=cfg.SETTINGS_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_settings))
