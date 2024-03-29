@@ -156,7 +156,6 @@ stop_flag = threading.Event()  # Define a flag to indicate if the threads should
 # =====================
 # Hex Colors
 ui_title_bar = '#222222'
-ui_overall_background = '#1D1D1D'
 ui_button_a = '#F96800'
 ui_button_a_font = '#F0FFFF'
 ui_button_b = '#716F74'
@@ -168,7 +167,6 @@ ui_outline = '#2E2E2E'
 ui_barely_visible = '#373737'
 ui_regular = '#FCFCFC'
 monero_grey = '#4c4c4c'
-monero_orange = '#ff6600'
 monero_white = '#FFFFFF'
 monero_grayscale_top = '#7D7D7D'
 monero_grayscale_bottom = '#505050'
@@ -234,7 +232,7 @@ if platform == 'Windows':
     PAY_VIEW_GEOMETRY = '500x215'
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x215'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
 
@@ -247,7 +245,7 @@ elif platform == 'Mac':
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x195'
 
@@ -260,7 +258,7 @@ elif platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
 
@@ -272,7 +270,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
 
@@ -418,3 +416,7 @@ def get_value(currency_ticker, usd_value):
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
+WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S'
+
+monero_orange = '#ff6600'
+ui_overall_background = '#1D1D1D'

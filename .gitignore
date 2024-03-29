@@ -6,3 +6,4 @@ __pycache__/
 temp.py
 config.ini
 *.idea
+wallet_qr_code.png
