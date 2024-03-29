@@ -41,5 +41,6 @@ class App(ctk.CTk):
         self.rpc_server.kill()
 
 app = App()
+app.title("Monero Subscriptions Wallet")
 app.protocol("WM_DELETE_WINDOW", app.shutdown_steps)
 app.mainloop()
