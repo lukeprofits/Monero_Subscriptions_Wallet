@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 import qrcode
+import clipboard
 from PIL import Image, ImageTk
 
 import config as cfg
@@ -31,7 +32,7 @@ class ReceiveView(View):
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # QR Code
-        qr_image_name = generate_monero_qr(cfg.wallet_address)
+        qr_image_name = generate_monero_qr(cfg.WALLET_ADDRESS)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(150, 150))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=0)
@@ -50,4 +51,5 @@ class ReceiveView(View):
         self._app.switch_view('main')
 
     def copy_wallet_address(self):
+        clipboard.copy(cfg.WALLET_ADDRESS)
         self._app.switch_view('main')  # TODO: UPDATE THIS TO WORK!!!
