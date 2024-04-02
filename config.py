@@ -321,8 +321,9 @@ def add_fiat_currencies_to_currency_options():
 
 add_fiat_currencies_to_currency_options()
 
-DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
-SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
+SHOW_DEFAULT_CURRENCY = True
+DEFAULT_CURRENCY = CURRENCY_OPTIONS[5]
+SECONDARY_CURRENCY = CURRENCY_OPTIONS[0]
 
 
 def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
@@ -369,7 +370,8 @@ rounded_differently = {"BTC": 8,
 def get_value(currency_ticker, usd_value):
     def scrape_xe(currency_ticker):
         url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
-        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[2]'
+        # Used to use: [contains(@class, "BigRate")] ...but that broke so switched to [2]
 
         response = requests.get(url)
         tree = html.fromstring(response.content)

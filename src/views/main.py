@@ -33,8 +33,11 @@ class MainView(View):
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
-        self.amount = self.add(ctk.CTkLabel(self._app, text=cfg.currency_in_display_format(currency=cfg.DEFAULT_CURRENCY, amount=cfg.get_value(currency_ticker=cfg.DEFAULT_CURRENCY, usd_value=cfg.LASTEST_USD_AMOUNT)), font=(cfg.font, 48)))
+        self.amount = self.add(ctk.CTkLabel(self._app, text=self._get_currency_text(), font=(cfg.font, 48)))
         self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
+
+        # Bind the click event
+        self.amount.bind("<Button-1>", self._toggle_currency)
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
@@ -54,6 +57,21 @@ class MainView(View):
         subscriptions_button.grid(row=1, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
         return self
+
+    def _toggle_currency(self, event=None):
+        if cfg.SHOW_DEFAULT_CURRENCY:
+            cfg.SHOW_DEFAULT_CURRENCY = False
+        else:
+            cfg.SHOW_DEFAULT_CURRENCY = True
+
+        self.amount.configure(text=self._get_currency_text())
+
+    def _get_currency_text(self):
+        """Return the formatted currency text based on the current state."""
+        if cfg.SHOW_DEFAULT_CURRENCY:
+            return cfg.currency_in_display_format(currency=cfg.DEFAULT_CURRENCY, amount=cfg.get_value(currency_ticker=cfg.DEFAULT_CURRENCY, usd_value=cfg.LASTEST_USD_AMOUNT))
+        else:
+            return cfg.currency_in_display_format(currency=cfg.SECONDARY_CURRENCY, amount=cfg.get_value(currency_ticker=cfg.SECONDARY_CURRENCY, usd_value=cfg.LASTEST_USD_AMOUNT))
 
     def open_subscriptions(self):
         self._app.switch_view('subscriptions')
