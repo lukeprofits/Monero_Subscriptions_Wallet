@@ -10,7 +10,12 @@ import config as cfg
 
 class SubscriptionsView(View):
     def build(self):
-        self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
+        # If we have existing subscriptions
+        if len(AllSubscriptions().all()) > 1:
+            self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
+        # If we have no existing subscriptions
+        else:
+            self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
 
         # Title
         title = self.add(ctk.CTkLabel(self._app, text=' My Subscriptions:'))

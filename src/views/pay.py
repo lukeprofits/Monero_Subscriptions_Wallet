@@ -45,7 +45,7 @@ class PayView(View):
         self._app.geometry(cfg.PAY_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Send To:'))
+        label = self.add(ctk.CTkLabel(self._app, text=' Pay To:'))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button
@@ -61,31 +61,31 @@ class PayView(View):
         next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # CHECK IF WE CAN SKIP DISPLAYING THIS STEP
-        if input_is_valid(input_string=clipboard.paste()) and clipboard.paste() != cfg.WALLET_ADDRESS:
-            # Record who it is to
-
-            # Switch the view to the next one
-            self._app.switch_view('amount')
-            pass
+        clipboard_contents = clipboard.paste()
+        if input_is_valid(input_string=clipboard_contents) and clipboard_contents != cfg.WALLET_ADDRESS:
+            self.wallet_or_request_logic(input_string=clipboard_contents)
 
         return self
 
     def open_main(self):
         self._app.switch_view('main')
 
+    def wallet_or_request_logic(self, input_string):
+        if 'monero-request:' in input_string:
+            monero_request = input_string
+            # Show the details of the monero request, ask them to confirm
+            subs = AllSubscriptions()
+            subs.add(Subscription(**Subscription.decode(monero_request)))
+            self._app.switch_view('subscriptions')
+        else:
+            cfg.SEND_TO_WALLET = input_string
+            # Move to "how much" view
+            self._app.switch_view('amount')
+
     def next_button(self):
         input_string = self.input_box_for_wallet_or_request.get().strip()
         if input_is_valid(input_string=input_string):
-            if 'monero-request:' in input_string:
-                monero_request = input_string
-                # Show the details of the monero request, ask them to confirm
-                subs = AllSubscriptions()
-                subs.add(Subscription(**Subscription.decode(monero_request)))
-                self._app.switch_view('subscriptions')
-            else:
-                cfg.SEND_TO_WALLET = input_string
-                # Move to "how much" view
-                self._app.switch_view('amount')
+            self.wallet_or_request_logic(input_string=input_string)
 
         else:
             print('Not a Monero Payment Request or wallet address')

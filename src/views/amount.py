@@ -16,7 +16,7 @@ class AmountView(View):
         back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Wallet
-        wallet = self.add(ctk.CTkLabel(self._app, text=f'Sending to wallet: {cfg.SEND_TO_WALLET[:4]}... ...{cfg.SEND_TO_WALLET[-4:]}'))
+        wallet = self.add(ctk.CTkLabel(self._app, text=f'Sending to wallet: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
         wallet.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Input box
