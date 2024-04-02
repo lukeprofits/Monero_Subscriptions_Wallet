@@ -62,9 +62,10 @@ class PayView(View):
 
         # CHECK IF WE CAN SKIP DISPLAYING THIS STEP
         if input_is_valid(input_string=clipboard.paste()) and clipboard.paste() != cfg.WALLET_ADDRESS:
-            self._app.switch_view('settings')
             # Record who it is to
+
             # Switch the view to the next one
+            self._app.switch_view('amount')
             pass
 
         return self
@@ -82,10 +83,9 @@ class PayView(View):
                 subs.add(Subscription(**Subscription.decode(monero_request)))
                 self._app.switch_view('subscriptions')
             else:
-                wallet = input_string
-                print(wallet)
+                cfg.SEND_TO_WALLET = input_string
                 # Move to "how much" view
-                self._app.switch_view('main')
+                self._app.switch_view('amount')
 
         else:
             print('Not a Monero Payment Request or wallet address')

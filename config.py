@@ -235,7 +235,7 @@ if platform == 'Windows':
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
-
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Mac':
     BACK_BUTTON_EMOJI = '⬅'
@@ -248,6 +248,7 @@ elif platform == 'Mac':
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x195'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
@@ -261,6 +262,7 @@ elif platform == 'Linux':
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -273,6 +275,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 '''
 # Set Monero Wallet CLI Path
@@ -417,6 +420,6 @@ def get_value(currency_ticker, usd_value):
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
 WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S'
-
+SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
