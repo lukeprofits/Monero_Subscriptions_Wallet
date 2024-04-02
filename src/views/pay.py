@@ -8,10 +8,11 @@ import monerorequest
 
 
 def input_is_valid(input_string):
-    if input_is_valid_monero_wallet(input_string) or input_is_valid_monero_request(input_string):
-        return True
-    else:
-        return False
+    if input_string:
+        if input_is_valid_monero_wallet(input_string) or input_is_valid_monero_request(input_string):
+            return True
+
+    return False
 
 
 def input_is_valid_monero_wallet(input_string):
@@ -56,7 +57,7 @@ class PayView(View):
         self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # Next button
-        next_button = self.add(ctk.CTkButton(self._app, text="Next", command=self.next))
+        next_button = self.add(ctk.CTkButton(self._app, text="Next", command=self.next_button))
         next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # CHECK IF WE CAN SKIP DISPLAYING THIS STEP
@@ -71,8 +72,9 @@ class PayView(View):
     def open_main(self):
         self._app.switch_view('main')
 
-    def next(self):
-        if input_is_valid(input_string=self.input_box_for_wallet_or_request.get().strip()):
+    def next_button(self):
+        input_string = self.input_box_for_wallet_or_request.get().strip()
+        if input_is_valid(input_string=input_string):
             if 'monero-request:' in input_string:
                 monero_request = input_string
                 # Show the details of the monero request, ask them to confirm
@@ -89,4 +91,5 @@ class PayView(View):
             print('Not a Monero Payment Request or wallet address')
 
 
+#4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2D
 #monero-request:1:H4sIAAAAAAAC/y2OX2+CMBTFv0uf1VSsirzpMBiTGQao05emlE7r2kL6B8Vl333FLLnJzfmdm3vODyCydsqCCMARHIMBoFeiLgxzVXFKbK2x08K7veO0Zop2Xu3z+AWMrSUWpGT9ScGM9bQincEN07jkQnB1wbSjgoFoAgdAOVl6p/7CDekkU9aAyON/gXnl3yBEZ2M4Y+GcIMbCvpNhQjBt8J343XdF0+1t/zgmK/ksl4tNmNspjYM0OQRb1zbt5/OEdDtr3nRxzIvT9JrdyfKWb/ni/Dg+rnUsM75RqZT1R5jJ8/Lw7r53ydqs012eFsGqj7REW1wR65uDAAZoCCdDOC8gjF4zghCewe8f/GxR8kABAAA=
