@@ -429,3 +429,4 @@ WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnT
 SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
+HEADINGS_FONT_SIZE = (font, 20)

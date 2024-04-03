@@ -54,7 +54,7 @@ class NodeSelectionView(View):
         self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text='Set A Node'))
+        label = self.add(ctk.CTkLabel(self._app, text='Set A Node', font=cfg.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button

@@ -24,7 +24,7 @@ class ReceiveView(View):
         self._app.geometry(cfg.RECEIVE_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Receive:'))
+        label = self.add(ctk.CTkLabel(self._app, text=' Receive:', font=cfg.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button

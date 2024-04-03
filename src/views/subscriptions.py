@@ -18,7 +18,7 @@ class SubscriptionsView(View):
             self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
 
         # Title
-        title = self.add(ctk.CTkLabel(self._app, text=' My Subscriptions:'))
+        title = self.add(ctk.CTkLabel(self._app, text=' My Subscriptions:', font=cfg.HEADINGS_FONT_SIZE))
         title.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button

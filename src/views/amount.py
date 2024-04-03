@@ -8,7 +8,7 @@ class AmountView(View):
         self._app.geometry(cfg.AMOUNT_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Amount:'))
+        label = self.add(ctk.CTkLabel(self._app, text=' Amount:', font=cfg.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button

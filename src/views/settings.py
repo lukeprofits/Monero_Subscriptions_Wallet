@@ -21,7 +21,7 @@ class SettingsView(View):
         BUTTONS_STICKY = "ew"
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Settings Window:'))
+        label = self.add(ctk.CTkLabel(self._app, text=' Settings Window:', font=cfg.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button

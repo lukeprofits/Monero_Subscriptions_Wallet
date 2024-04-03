@@ -45,7 +45,7 @@ class PayView(View):
         self._app.geometry(cfg.PAY_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Pay To:'))
+        label = self.add(ctk.CTkLabel(self._app, text=' Pay To:', font=cfg.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Back Button
