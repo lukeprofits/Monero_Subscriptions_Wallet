@@ -68,10 +68,8 @@ class PayView(View):
     def wallet_or_request_logic(self, input_string):
         if 'monero-request:' in input_string:
             monero_request = input_string
-            # Show the details of the monero request, ask them to confirm
-            subs = AllSubscriptions()
-            subs.add(Subscription(**Subscription.decode(monero_request)))
-            self._app.switch_view('subscriptions')
+            cfg.CURRENT_PAYMENT_REQUEST = monero_request
+            self._app.switch_view('review_request')
         else:
             cfg.SEND_TO_WALLET = input_string
             # Move to "how much" view

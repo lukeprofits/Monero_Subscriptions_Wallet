@@ -430,6 +430,8 @@ SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
 HEADINGS_FONT_SIZE = (font, 20)
+SUBHEADING_FONT_SIZE = (font, 16)
+CURRENT_PAYMENT_REQUEST = ''
 
 
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
