@@ -17,13 +17,8 @@ class SubscriptionsView(View):
         else:
             self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
 
-        # Title
-        title = self.add(ctk.CTkLabel(self._app, text=' My Subscriptions:', font=cfg.HEADINGS_FONT_SIZE))
-        title.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
-
-        # Back Button
-        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
-        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        # Back button and title
+        cfg.back_and_title(self, ctk, cfg, title=' My Subscriptions:')
 
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.

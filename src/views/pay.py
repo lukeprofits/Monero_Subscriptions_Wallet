@@ -44,13 +44,8 @@ class PayView(View):
     def build(self):
         self._app.geometry(cfg.PAY_VIEW_GEOMETRY)
 
-        # Title
-        label = self.add(ctk.CTkLabel(self._app, text=' Pay To:', font=cfg.HEADINGS_FONT_SIZE))
-        label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
-
-        # Back Button
-        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
-        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        # Back button and title
+        cfg.back_and_title(self, ctk, cfg, title=' Pay To:')
 
         # Input box
         self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address..."))
