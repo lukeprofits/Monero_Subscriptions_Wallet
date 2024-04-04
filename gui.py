@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from src.rpc_server import RPCServer
-from src.views import MainView, ReceiveView, PayView, SubscriptionsView, SettingsView, SetCurrencyView, NodeSelectionView
+from src.views import MainView, ReceiveView, PayView, SubscriptionsView, SettingsView, SetCurrencyView, NodeSelectionView, AmountView, ReviewRequestView
 import config as cfg
 
 ctk.set_default_color_theme("monero_theme.json")
@@ -21,7 +21,9 @@ class App(ctk.CTk):
             'subscriptions': SubscriptionsView(self),
             'settings': SettingsView(self),
             'set_currency': SetCurrencyView(self),
-            'node_selection': NodeSelectionView(self)
+            'node_selection': NodeSelectionView(self),
+            'amount': AmountView(self),
+            'review_request': ReviewRequestView(self),
         }
 
         self.current_view = self.views['main'].build()

@@ -58,13 +58,8 @@ class NodeSelectionView(View):
     def build(self):
         self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
 
-        # Title
-        label = self.add(ctk.CTkLabel(self._app, text='Set A Node'))
-        label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
-
-        # Back Button
-        back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
-        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        # Back button and title
+        cfg.back_and_title(self, ctk, cfg, title=' Set A Node:')
 
         # Documentation: https://customtkinter.tomschimansky.com/documentation/widgets/entry
         node = ctk.StringVar(self._app, cfg.config_file.get('rpc', 'node_url'))

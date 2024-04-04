@@ -230,10 +230,11 @@ if platform == 'Windows':
     PAY_VIEW_GEOMETRY = '500x215'
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x195'
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
-
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Mac':
     BACK_BUTTON_EMOJI = '⬅'
@@ -243,9 +244,11 @@ elif platform == 'Mac':
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x195'
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x195'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
@@ -256,9 +259,11 @@ elif platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x215'
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x195'
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -268,9 +273,11 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
+    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x195'
     RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
+    AMOUNT_VIEW_GEOMETRY = '500x195'
 
 '''
 # Set Monero Wallet CLI Path
@@ -312,8 +319,9 @@ def add_fiat_currencies_to_currency_options():
 
 add_fiat_currencies_to_currency_options()
 
-DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]
-SECONDARY_CURRENCY = CURRENCY_OPTIONS[1]
+SHOW_DEFAULT_CURRENCY = True
+DEFAULT_CURRENCY = CURRENCY_OPTIONS[5]
+SECONDARY_CURRENCY = CURRENCY_OPTIONS[0]
 
 
 def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
@@ -360,7 +368,8 @@ rounded_differently = {"BTC": 8,
 def get_value(currency_ticker, usd_value):
     def scrape_xe(currency_ticker):
         url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
-        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[2]'
+        # Used to use: [contains(@class, "BigRate")] ...but that broke so switched to [2]
 
         response = requests.get(url)
         tree = html.fromstring(response.content)
@@ -415,6 +424,21 @@ def get_value(currency_ticker, usd_value):
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
 WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S'
-
+SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
+HEADINGS_FONT_SIZE = (font, 20)
+SUBHEADING_FONT_SIZE = (font, 16)
+CURRENT_PAYMENT_REQUEST = ''
+
+
+def back_and_title(self, ctk, cfg, title='Enter A Title'):
+    # Title
+    label = self.add(ctk.CTkLabel(self._app, text=title, font=cfg.HEADINGS_FONT_SIZE))
+    label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+
+    # Back Button
+    back_button = self.add(
+        ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30,
+                      command=self.open_main))
+    back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
