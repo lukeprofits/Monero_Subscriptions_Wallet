@@ -1,10 +1,7 @@
-import time
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
-<<<<<<< HEAD
 from src.rpc_server import RPCServer
-=======
 from lxml import html
 import requests
 import random
@@ -52,8 +49,6 @@ def check_if_node_works(node):
         print(e)
         return False
 
->>>>>>> f67953feb5df1deb2984ba7e891586b9f5d431bd
-
 class NodeSelectionView(View):
     def build(self):
         self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
@@ -66,16 +61,11 @@ class NodeSelectionView(View):
         self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=node, placeholder_text='xmr-node.cakewallet.com:18081'))
         self.node_selection.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
-<<<<<<< HEAD
-        next_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.select_node))
-        next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
-=======
         random_node = self.add(ctk.CTkButton(self._app, text="Get A Random Node", command=self.get_random_node_button_clicked))
         random_node.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
-        submit_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.paste_and_next))
+        submit_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.select_node))
         submit_button.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
->>>>>>> f67953feb5df1deb2984ba7e891586b9f5d431bd
 
         return self
 
