@@ -1,4 +1,11 @@
-# NOTE: Using this for fiat currencies other than the hard-coded ones: https://github.com/datasets/currency-codes
+"""
+Configuration File for Monero Subscriptions Wallet
+Contains global settings and variables used across the application.
+
+Using this for fiat currencies (other than the hard-coded ones): https://github.com/datasets/currency-codes
+
+Exchange rates scraped from XE.com
+"""
 
 import os
 import platform
@@ -10,6 +17,10 @@ from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
+import re
+
+NODE_URL = 'xmr-node.cakewallet.com:18081'
+
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -17,9 +28,9 @@ config_options = {
         'rpc_password': 'monero',
         'rpc': True,
         'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
-        'node_url': 'xmr-node.cakewallet.com:18081',
+        'node_url': NODE_URL,
         'cli_path': 'monero-wallet-cli',
-        'daemon_url': 'http://xmr-node.cakewallet.com:18081/json_rpc'
+        'daemon_url': f'{NODE_URL}/json_rpc'
     },
     'subscriptions': {
         'subs_file_path': 'Subscriptions.json'
@@ -38,6 +49,7 @@ parser.add_argument('--cli-path')
 parser.add_argument('--daemon-url')
 parser.add_argument('--config-file')
 args=parser.parse_args()
+
 
 class ConfigFile():
     def __init__(self, path='./config.ini'):
@@ -80,35 +92,34 @@ class ConfigFile():
             self._config[section] = {}
         self.write()
 
+
 config_file = ConfigFile(args.config_file or './config.ini')
 
+
 def variable_value(args, section, option):
-    #Get From CLI Options
+    # Get From CLI Options
     value = getattr(args, option)
 
-    #Get From Config File
+    # Get From Config File
     if value is None:
         value = config_file.get(section, option)
 
-    #Get From Environment
+    # Get From Environment
     if value is None:
         value = os.environ.get(option.upper())
 
-    #Get Default Value
+    # Get Default Value
     if value is None:
         value = config_options[section][option]
 
     return value
 
-#Set CLI Options as importable variables
+
+# Set CLI Options as importable variables
 for section, options in config_options.items():
     for option in options.keys():
         exec(f'{option} = lambda: variable_value(args, "{section}", "{option}")')
 
-"""
-Configuration File for Monero Subscriptions Wallet
-Contains global settings and variables used across the application.
-"""
 
 '''
 wallet_name = "subscriptions_wallet"
@@ -143,7 +154,6 @@ stop_flag = threading.Event()  # Define a flag to indicate if the threads should
 # =====================
 # Hex Colors
 ui_title_bar = '#222222'
-ui_overall_background = '#1D1D1D'
 ui_button_a = '#F96800'
 ui_button_a_font = '#F0FFFF'
 ui_button_b = '#716F74'
@@ -155,7 +165,6 @@ ui_outline = '#2E2E2E'
 ui_barely_visible = '#373737'
 ui_regular = '#FCFCFC'
 monero_grey = '#4c4c4c'
-monero_orange = '#ff6600'
 monero_white = '#FFFFFF'
 monero_grayscale_top = '#7D7D7D'
 monero_grayscale_bottom = '#505050'
@@ -221,8 +230,9 @@ if platform == 'Windows':
     PAY_VIEW_GEOMETRY = '500x215'
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x215'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 
 elif platform == 'Mac':
@@ -233,8 +243,9 @@ elif platform == 'Mac':
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x195'
 
 elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
@@ -245,8 +256,9 @@ elif platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x215'
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x215'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -256,8 +268,9 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     PAY_VIEW_GEOMETRY = '500x195'
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x430'
-    RECEIVE_VIEW_GEOMETRY = '500x195'
+    RECEIVE_VIEW_GEOMETRY = '500x255'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    NODE_VIEW_GEOMETRY = '500x215'
 
 '''
 # Set Monero Wallet CLI Path
@@ -276,7 +289,8 @@ else:
     wallet_file_path = f'{os.getcwd()}/'
 #'''
 
-CURRENCY_OPTIONS = ["USD", "XMR", "BTC", "CNY", "EUR", "JPY", "GBP", "KRW", "INR", "CAD", "HKD", "BRL", "AUD", "TWD", "CHF"]
+# TODO: Adjust the sorting of these at some point.
+CURRENCY_OPTIONS = ["XMR", "BTC", "XGB", "XAU", "XAG", "USD", "EUR", "GBP", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
 
 def add_fiat_currencies_to_currency_options():
     url = "https://raw.githubusercontent.com/datasets/currency-codes/master/data/codes-all.csv"
@@ -333,33 +347,74 @@ def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
 
 rounded_differently = {"BTC": 8,
                        "LTC": 8,
-                       "BCH": 8}
+                       "BCH": 8,
+                       "ADA": 6,
+                       "DOGE": 8,
+                       "DOT": 8,  # 10, but rounded to fit well
+                       "ETH": 8,  # 18, but that does not fit on the window
+                       "LINK": 8,  # 18, but that does not fit on the window
+                       "UNI": 8  # 18, but that does not fit on the window
+                       }
 
 
 def get_value(currency_ticker, usd_value):
-    url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
-    main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
+    def scrape_xe(currency_ticker):
+        url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
+        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[contains(@class, "BigRate")]'
 
-    response = requests.get(url)
+        response = requests.get(url)
+        tree = html.fromstring(response.content)
+        return tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
 
-    tree = html.fromstring(response.content)
-    dollar_value_in_currency = tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
+    def scrape_goldback_exchange_rate():
+        url = 'https://www.goldback.com/exchange-rate'
+        page_content = requests.get(url).text
+        # Find the gb_average_exchange_rate constant's value
+        usd_cost_for_one_goldback = re.search(r"gb_average_exchange_rate\s*=\s*'([\d.]+)';", page_content).group(1)
+        dollar_value_in_goldbacks = Decimal(1) / Decimal(usd_cost_for_one_goldback)
+        return dollar_value_in_goldbacks
 
-    final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
+    def round_to_two_decimal_places(value):
+        final_decimal = Decimal(value)
+        final_rounded = final_decimal.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        formatted_value = format(final_rounded, ",.2f")
+        return formatted_value
 
-    if currency_ticker not in rounded_differently.keys():
-        final_rounded = final.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-        final_rounded = format(final_rounded, ",.2f")
+    # Skip conversion if the currency is XMR (no need)
+    if currency_ticker.upper() == "XMR":
+        return LATEST_XMR_AMOUNT
+
+    # Skip conversion if the currency is USD (we already have it)
+    elif currency_ticker.upper() == "USD":
+        return usd_value
+
+    # Goldbacks
+    elif currency_ticker.upper() == "XGB":
+        dollar_value_in_goldbacks = scrape_goldback_exchange_rate()
+        final = Decimal(dollar_value_in_goldbacks) * Decimal(usd_value)
+        return round_to_two_decimal_places(final)
+
+    # Everything Else
     else:
-        rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
-        final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
-        final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
+        dollar_value_in_currency = scrape_xe(currency_ticker)
+        final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
 
-    return str(final_rounded)
+        if currency_ticker not in rounded_differently.keys():
+            final_rounded = round_to_two_decimal_places(final)
+        else:
+            rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
+            final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
+            final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
 
-# Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
+        # TODO: Consider chopping digits off the right if the length is longer than 12 so that it fits in the window.
+        # Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
+        # Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
+        return str(final_rounded)
 
-#Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
+WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S'
+
+monero_orange = '#ff6600'
+ui_overall_background = '#1D1D1D'

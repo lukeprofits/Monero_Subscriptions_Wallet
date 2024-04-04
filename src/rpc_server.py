@@ -1,4 +1,3 @@
-import os
 import threading
 import subprocess
 import time
