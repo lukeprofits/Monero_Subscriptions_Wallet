@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
+from src.rpc_server import RPCServer
 from lxml import html
 import requests
 import random
@@ -48,7 +49,6 @@ def check_if_node_works(node):
         print(e)
         return False
 
-
 class NodeSelectionView(View):
     def build(self):
         self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
@@ -64,7 +64,7 @@ class NodeSelectionView(View):
         random_node = self.add(ctk.CTkButton(self._app, text="Get A Random Node", command=self.get_random_node_button_clicked))
         random_node.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
-        submit_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.paste_and_next))
+        submit_button = self.add(ctk.CTkButton(self._app, text="Submit", command=self.select_node))
         submit_button.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         return self
@@ -72,11 +72,16 @@ class NodeSelectionView(View):
     def open_main(self):
         self._app.switch_view('main')
 
-    def paste_and_next(self):
+    def select_node(self):
         node = self.node_selection.get()
+        rpc_server = RPCServer.get()
         config = cfg.config_file
         config.set(section='rpc', option='node_url', value=node)
         config.write()
+        rpc_server.kill()
+        rpc_server.start()
+        rpc_server.failed_to_start = False
+        rpc_server.check_readiness()
         self._app.switch_view('main')
 
     def get_random_node_button_clicked(self):

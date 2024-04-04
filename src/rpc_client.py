@@ -39,6 +39,20 @@ class RPCClient():
             self.logger.debug(str(e))
             return False
 
+    def refresh(self):
+        try:
+            return self.post(self._refresh())
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _refresh(self):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "refresh"
+        }
+
     @property
     def headers(self):
         if not self._headers:
@@ -46,15 +60,15 @@ class RPCClient():
         return self._headers
 
     def post(self, data):
-        response = requests.post(local_rpc_url, headers=self.headers, data=json.dumps(data))
+        response = requests.post(local_rpc_url(), headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            self.logger.error('Error:', result['error']['message'])
+            self.logger.error('Error: %s', result['error']['message'])
         return result
 
     def daemon_post(self, data):
-        response = requests.post(daemon_url, headers=self.headers, data=json.dumps(data))
+        response = requests.post(daemon_url(), headers=self.headers, data=json.dumps(data))
         result = response.json()
         if 'error' in result:
-            self.logger.error('Error:', result['error']['message'])
+            self.logger.error('Error: %s', result['error']['message'])
         return result

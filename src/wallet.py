@@ -1,9 +1,10 @@
 import os
 import platform
+import threading
 import subprocess
 import logging
 import logging.config
-from config import cli_path
+from config import cli_path, node_url
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
 
@@ -13,6 +14,7 @@ class Wallet():
         self.path = self._get_path()
         self._block_height = 0
         self._address = None
+        self.status_message = "Starting"
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
 
@@ -25,6 +27,10 @@ class Wallet():
     def get_current_block_height(self):
         # Send the JSON-RPC request to the daemon
         return RPCClient().current_block_height()
+
+    def _daemon_address(self):
+        node = node_url().split(':')
+        return f'{node[0]}:{node[1]}'
 
     @property
     def block_height(self):
@@ -54,7 +60,7 @@ class Wallet():
         except:
             pass
 
-        command = f"{cli_path} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
+        command = f"{cli_path()} --generate-new-wallet {os.path.join(self.path, self.name)} --mnemonic-language English --command exit"
         process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Sending two newline characters, pressing 'Enter' twice

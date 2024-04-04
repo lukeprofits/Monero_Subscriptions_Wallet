@@ -8,6 +8,10 @@ customtkinter = "*"
 requests = "*"
 monero_usd_price = "*"
 lxml = "*"
+monerorequest = "*"
+clipboard = "*"
+qrcode = "*"
+pillow = "*"
 
 [dev-packages]
 

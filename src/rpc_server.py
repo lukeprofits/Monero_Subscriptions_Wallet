@@ -1,10 +1,9 @@
-import os
 import threading
 import subprocess
 import time
 import logging
 import logging.config
-from config import node_url, cli_path, rpc_bind_port
+from config import node_url, rpc_bind_port
 from src.environment import STAGENET
 from src.rpc_client import RPCClient
 from src.logging import config as logging_config
@@ -23,11 +22,7 @@ class RPCServer(Notifier):
 
     def __init__(self, wallet=Wallet()):
         self.wallet = wallet
-        self.host = node_url.split(':')[0]
-        self.port = node_url.split(':')[1]
-        self.wallet_cli_path = cli_path
         self.rpc_is_ready = 0
-        self.rpc_bind_port = rpc_bind_port
         self.process = None
         self.wallet_process = None
         logging.config.dictConfig(logging_config)
@@ -47,18 +42,14 @@ class RPCServer(Notifier):
         for observer in self._observers:
             observer.update(self)
 
-    def _start_wallet(self):
-        command = f'{self.wallet_cli_path} --wallet-file {os.path.join(self.wallet.path, self.wallet.name)}'
-        command += f' --password "" --restore-height {self.wallet.block_height} --daemon-address {self.host}:{self.port}'
-        command += ' --command refresh'
-        self.logger.debug(command)
-        proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        self.wallet_process = proc
+    def _daemon_address(self):
+        node = node_url().split(':')
+        return f'{node[0]}:{node[1]}'
 
     def _start_rpc(self):
         cmd = f'stdbuf -oL monero-wallet-rpc --wallet-file {self.wallet.name} --password ""'
-        cmd += f' --rpc-bind-port {self.rpc_bind_port} --disable-rpc-login --confirm-external-bind'
-        cmd += f' --daemon-address {self.host}:{self.port}'
+        cmd += f' --rpc-bind-port {rpc_bind_port()} --disable-rpc-login --confirm-external-bind'
+        cmd += f' --daemon-address {self._daemon_address()}'
         if STAGENET:
             cmd += ' --stagenet'
 
@@ -66,39 +57,30 @@ class RPCServer(Notifier):
 
         self.process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    def _wallet_started(self):
-        while not (self.successful_start or self.failed_to_start):
-            stdout = self.wallet_process.stdout.readline()
-            self.logger.debug(stdout)
-
-            if "Refresh done" in stdout and "Error" not in stdout:
-                self.successful_start = True
-                break
-
-            if "Error" in stdout:
-                self.failed_to_start = True
-
-            if self.wallet_process.poll() is not None:
-                break
-
-        return not self.failed_to_start
-
     def kill(self):
         self.logger.debug('Killing RPC Server Process')
         self.process.kill()
-        self.logger.debug('Killing Wallet CLI Process')
-        self.wallet_process.kill()
 
     def ready(self):
         rpc_client = RPCClient()
         while True:
+            self.logger.debug("test")
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
                 output = self.process.stdout.readline()
-                if self.process.poll() is not None:
+                self.logger.debug(output.strip())
+                status = self.process.poll()
+                self.logger.debug(f'Poll: {status}')
+                if status is not None:
+                    if status != 0 or "Initial refresh failed" in output:
+                        self.failed_to_start = True
+                    break
+
+                if 'THROW EXCEPTION' in output or 'needs to connect to a monero deamon' in output:
+                    self.failed_to_start = True
                     break
 
                 if output:
-                    self.status_message = output.strip()
+                    self.status_message = f'RPC Server: {output.strip()}'
                     self.notify()
 
                 time.sleep(0.1)
@@ -107,11 +89,12 @@ class RPCServer(Notifier):
                 self.wallet.create()
 
             if not self.failed_to_start:
-                self.status_message = "Ready"
+                self.status_message = 'RPC Server: Ready'
+                self.logger.debug(rpc_client.refresh())
                 self.notify()
 
             if self.failed_to_start:
-                self.status_message = 'Failed To Start RPC Server - Check Logs'
+                self.status_message = 'RPC Server: Failed To Start'
                 self.notify()
 
             break
@@ -121,12 +104,4 @@ class RPCServer(Notifier):
         threading.Thread(target=self.ready).start()
 
     def start(self):
-        self.logger.debug(f'Block Height: {self.wallet.block_height}')
-
-        if self.wallet.block_height:
-            self._start_wallet()
-            wallet_check_thread = threading.Thread(target=self._wallet_started)
-            wallet_check_thread.start()
-
-        self.logger.debug(f'{self.host}:{self.port}')
         self._start_rpc()
