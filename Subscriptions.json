@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "custom_label": "Developer Donation",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "currency": "USD",
+        "amount": "25.00",
+        "payment_id": "1347d24ad28a797f",
+        "start_date": "2023-10-27T00:00:00.000Z",
+        "days_per_billing_cycle": 30,
+        "number_of_payments": 0,
+        "change_indicator_url": ""
+    },
+    {
+        "custom_label": "Developer Donation",
+        "sellers_wallet": "4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2S",
+        "currency": "USD",
+        "amount": "10.00",
+        "payment_id": "48bf42470eb12d99",
+        "start_date": "2023-10-27T00:00:00.000Z",
+        "days_per_billing_cycle": 30,
+        "number_of_payments": 0,
+        "change_indicator_url": ""
+    }
+]
