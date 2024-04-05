@@ -30,7 +30,8 @@ config_options = {
         'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
         'node_url': NODE_URL,
         'cli_path': 'monero-wallet-cli',
-        'daemon_url': f'{NODE_URL}/json_rpc'
+        'daemon_url': f'{NODE_URL}/json_rpc',
+        'wallet_dir': 'wallets'
     },
     'subscriptions': {
         'subs_file_path': 'Subscriptions.json'
@@ -48,6 +49,7 @@ parser.add_argument('--node-url')
 parser.add_argument('--cli-path')
 parser.add_argument('--daemon-url')
 parser.add_argument('--config-file')
+parser.add_argument('--wallet-dir')
 args=parser.parse_args()
 
 

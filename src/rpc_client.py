@@ -53,6 +53,41 @@ class RPCClient():
             "method": "refresh"
         }
 
+    def create_wallet(self):
+        try:
+            return self.post(self._create_wallet())
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _create_wallet(self, filename='subscriptions_wallet'):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": 'create_wallet',
+            "params": {
+                "filename": filename,
+                "language": "English"
+            }
+        }
+
+    def open_wallet(self):
+        try:
+            return self.post(self._open_wallet())
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _open_wallet(self, filename='subscriptions_wallet'):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": 'open_wallet',
+            "params": {
+                "filename": filename
+            }
+        }
+
     @property
     def headers(self):
         if not self._headers:
