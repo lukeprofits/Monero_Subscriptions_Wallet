@@ -4,14 +4,13 @@ The "Manage Subscriptions" window
 
 import customtkinter as ctk
 from src.interfaces.view import View
-from src.all_subscriptions import AllSubscriptions
 import config as cfg
-
+import json
 
 class SubscriptionsView(View):
     def build(self):
         # If we have existing subscriptions
-        if len(AllSubscriptions().all()) > 1:
+        if len(json.loads(cfg.subscriptions())) > 1:
             self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
         # If we have no existing subscriptions
         else:
@@ -43,10 +42,10 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
         self.grid(row=1, column=0, columnspan=3, sticky='nsew')
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(1, weight=1)
-        subscriptions = AllSubscriptions()
+        subscriptions = json.loads(cfg.subscriptions())
 
-        if subscriptions.all():
-            for i, sub in enumerate(subscriptions.all()):
+        if subscriptions:
+            for i, sub in enumerate(subscriptions):
                 self._create_subscription(sub, i)
 
         else:
@@ -95,5 +94,6 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.columnconfigure(2, weight=1)
 
     def cancel_subscription(self, subscription):
-        AllSubscriptions().remove(subscription)
+        new_subs = [sub for sub in json.loads(cfg.subscriptions()) if sub != subscription.json_friendly()]
+        cfg.config_file.set('subscriptions', 'subscriptions', new_subs)
         self.destroy()

@@ -33,12 +33,11 @@ config_options = {
         'wallet_dir': 'wallets'
     },
     'subscriptions': {
-        'subs_file_path': 'Subscriptions.json'
+        'subscriptions': []
     }
 }
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--subs-file-path')
 parser.add_argument('--rpc-bind-port', type=int)
 parser.add_argument('--local-rpc-url')
 parser.add_argument('--rpc-username')
@@ -49,6 +48,7 @@ parser.add_argument('--cli-path')
 parser.add_argument('--daemon-url')
 parser.add_argument('--config-file')
 parser.add_argument('--wallet-dir')
+parser.add_argument('--subscriptions')
 args=parser.parse_args()
 
 
@@ -122,9 +122,6 @@ for section, options in config_options.items():
         exec(f'{option} = lambda: variable_value(args, "{section}", "{option}")')
 
 
-'''
-wallet_name = "subscriptions_wallet"
-'''
 # =====================
 # Placeholders and Dynamic Values
 # =====================
@@ -134,8 +131,6 @@ wallet_balance_usd = '---.--'
 current_monero_price = 150.00
 wallet_address = ''
 #'''
-
-subscriptions = ''
 
 
 '''
