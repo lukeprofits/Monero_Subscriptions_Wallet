@@ -29,7 +29,6 @@ config_options = {
         'rpc': True,
         'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
         'node_url': NODE_URL,
-        'cli_path': 'monero-wallet-cli',
         'daemon_url': f'{NODE_URL}/json_rpc',
         'wallet_dir': 'wallets'
     },
@@ -281,22 +280,6 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
 
-'''
-# Set Monero Wallet CLI Path
-if platform.system() == 'Windows':
-    # Update path to the location of the monero-wallet-cli executable if your on WINDOWS
-    monero_wallet_cli_path = "" + 'monero-wallet-cli.exe'
-else:
-    # Update path to the location of the monero-wallet-cli executable if your on other platforms
-    monero_wallet_cli_path = os.getcwd() + '/' + 'monero-wallet-cli'
-
-# Set Wallet Path
-if platform.system() == 'Windows':
-    wallet_file_path = ""
-else:
-    # Update this path to the location where you want to save the wallet file
-    wallet_file_path = f'{os.getcwd()}/'
-#'''
 
 # TODO: Adjust the sorting of these at some point.
 CURRENCY_OPTIONS = ["XMR", "BTC", "XGB", "XAU", "XAG", "USD", "EUR", "GBP", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
