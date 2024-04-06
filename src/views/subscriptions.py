@@ -6,6 +6,7 @@ import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
 import json
+from src.subscription import Subscription
 
 class SubscriptionsView(View):
     def build(self):
@@ -46,7 +47,7 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
 
         if subscriptions:
             for i, sub in enumerate(subscriptions):
-                self._create_subscription(sub, i)
+                self._create_subscription(Subscription(**sub), i)
 
         else:
             no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
@@ -95,5 +96,6 @@ class SubscriptionFrame(ctk.CTkFrame):
 
     def cancel_subscription(self, subscription):
         new_subs = [sub for sub in json.loads(cfg.subscriptions()) if sub != subscription.json_friendly()]
-        cfg.config_file.set('subscriptions', 'subscriptions', new_subs)
+        cfg.config_file.set('subscriptions', 'subscriptions', json.dumps(new_subs))
+        cfg.config_file.write()
         self.destroy()
