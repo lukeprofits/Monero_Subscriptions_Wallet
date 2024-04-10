@@ -7,3 +7,5 @@ from .set_currency import SetCurrencyView
 from .node_selection import NodeSelectionView
 from .amount import AmountView
 from .review_request import ReviewRequestView
+from .review_send import ReviewSendView
+from .review_delete_request import ReviewDeleteRequestView

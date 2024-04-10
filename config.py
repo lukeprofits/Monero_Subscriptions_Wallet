@@ -427,13 +427,15 @@ def get_value(currency_ticker, usd_value):
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
 WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2A'
-SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
 HEADINGS_FONT_SIZE = (font, 20)
 SUBHEADING_FONT_SIZE = (font, 16)
 BODY_FONT_SIZE = (font, 14)
 CURRENT_PAYMENT_REQUEST = ''
+SEND_TO_WALLET = ''
+CURRENT_SEND_AMOUNT = ''
+CURRENT_SEND_CURRENCY = ''
 
 
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
