@@ -19,9 +19,10 @@ class ReviewSendView(View):
 
         if wallet_is_valid and amount_is_valid and currency_is_valid:
             pass
-
         '''
             # STILL WORKING HERE
+            
+            # DON'T USE get_value. Either adjust it to be more flexible or make a new function. 
             one_usd_of_currency = get_value(currency_ticker=cfg.CURRENT_SEND_CURRENCY, usd_value=monero_usd_price.median_price())
             converted_monero_amount = monero_usd_price.calculate_monero_from_usd(usd_amount=cfg.)
             

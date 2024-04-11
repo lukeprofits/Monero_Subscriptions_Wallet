@@ -436,6 +436,7 @@ CURRENT_PAYMENT_REQUEST = ''
 SEND_TO_WALLET = ''
 CURRENT_SEND_AMOUNT = ''
 CURRENT_SEND_CURRENCY = ''
+SELECTED_SUBSCRIPTION = ''
 
 
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
