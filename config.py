@@ -445,6 +445,5 @@ def back_and_title(self, ctk, cfg, title='Enter A Title'):
     label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
     # Back Button
-    back_button = self.add(
-        ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+    back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
