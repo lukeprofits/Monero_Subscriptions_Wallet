@@ -183,26 +183,6 @@ title_bar_text = 'Monero Subscriptions Wallet'
 icon_png_path = "./icon.png"
 
 #'''
-# =====================
-# Longform Text
-# =====================
-welcome_popup_text = '''
-           Welcome to the Monero Subscriptions Wallet!
-
-We're thrilled that you've chosen to use our Free and Open Source Software (FOSS). Before you get started, there are a few important things you should know:
-
-1. Monero Subscriptions Wallet is currently in alpha. Your feedback is valuable to us in making this software better. Please let us know if you encounter any issues or, if you are a developer, help resolve them! All the code is on GitHub.
-
-2. Monero Subscriptions Wallet is intended to be a secondary wallet, rather than your primary one. As an internet-connected hot wallet, its security is only as robust as your computer's. We suggest using it as a side-wallet, maintaining just enough balance for your subscriptions.
-
-3. Upon launching this software, you'll automatically have a $10/mo subscription that serves as a donation to the wallet developer. This helps us continue the development and maintenance of this FOSS project. If you do not want to donate to the developer, you are able to cancel this at any time by clicking on 'Cancel' next to the subscription, and the wallet will continue working as normal.
-
-4. By using this software, you understand and agree that you're doing so at your own risk. The developers cannot be held responsible for any lost funds.
-
-Enjoy using the Monero Subscriptions Wallet, thank you for your support, and if you are a Python developer, please consider helping us improve the project!
-
-https://github.com/lukeprofits/Monero_Subscriptions_Wallet
-'''
 
 # =====================
 # Platform-Dependent Configurations
@@ -236,6 +216,7 @@ if platform == 'Windows':
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
+    WELCOME_VIEW_GEOMETRY = '500x600'
 
 elif platform == 'Mac':
     BACK_BUTTON_EMOJI = '⬅'
@@ -251,6 +232,7 @@ elif platform == 'Mac':
     NODE_VIEW_GEOMETRY = '500x200'
     AMOUNT_VIEW_GEOMETRY = '500x200'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
+    WELCOME_VIEW_GEOMETRY = '500x600'
 
 elif platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
@@ -266,6 +248,7 @@ elif platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
+    WELCOME_VIEW_GEOMETRY = '500x600'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -281,6 +264,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
+    WELCOME_VIEW_GEOMETRY = '500x600'
 
 '''
 # Set Monero Wallet CLI Path
@@ -438,12 +422,14 @@ CURRENT_SEND_AMOUNT = ''
 CURRENT_SEND_CURRENCY = ''
 SELECTED_SUBSCRIPTION = ''
 
+has_seen_welcome = False
+
 
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
     # Title
-    label = self.add(ctk.CTkLabel(self._app, text=title, font=cfg.HEADINGS_FONT_SIZE))
+    label = self.add(ctk.CTkLabel(self._app, text=title, font=HEADINGS_FONT_SIZE))
     label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
     # Back Button
-    back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
+    back_button = self.add(ctk.CTkButton(self._app, text=BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")

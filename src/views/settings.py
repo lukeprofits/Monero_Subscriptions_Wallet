@@ -44,7 +44,7 @@ class SettingsView(View):
         self._app.switch_view('node_selection')
 
     def open_welcome_message(self):
-        self._app.switch_view('welcome_message')
+        self._app.switch_view('welcome')
 
     def open_add_payment_request(self):
         self._app.switch_view('payment_request')
