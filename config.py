@@ -18,6 +18,8 @@ from decimal import Decimal, ROUND_HALF_UP
 import argparse
 from configparser import ConfigParser
 import re
+import json
+from src.subscription import Subscription
 
 NODE_URL = 'xmr-node.cakewallet.com:18081'
 
@@ -93,9 +95,20 @@ class ConfigFile():
             self._config[section] = {}
         self.write()
 
+    def add_subscription(self, subscription):
+        subs = json.loads(self.get('subscriptions', 'subscriptions'))
+        subs.append(subscription.json_friendly())
+        self.set('subscriptions', 'subscriptions', json.dumps(subs))
+        self.write()
+        return True
+
+    def remove_subscription(self, subscription):
+        subs = [sub for sub in json.loads(self.get('subscriptions', 'subscriptions')) if sub != subscription.json_friendly()]
+        self.set('subscriptions', 'subscriptions', json.dumps(subs))
+        self.write()
+        return True
 
 config_file = ConfigFile(args.config_file or './config.ini')
-
 
 def variable_value(args, section, option):
     # Get From CLI Options

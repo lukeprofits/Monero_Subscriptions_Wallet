@@ -1,7 +1,5 @@
 import customtkinter as ctk
 from src.interfaces.view import View
-from src.all_subscriptions import AllSubscriptions
-from src.subscription import Subscription
 import config as cfg
 import clipboard
 import monerorequest

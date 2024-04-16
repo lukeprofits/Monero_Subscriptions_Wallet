@@ -2,10 +2,8 @@ import customtkinter as ctk
 from src.interfaces.view import View
 from src.subscription import Subscription
 import config as cfg
-import clipboard
 import monerorequest
 from datetime import datetime
-import json
 
 class ReviewRequestView(View):
     def build(self):
@@ -72,10 +70,7 @@ class ReviewRequestView(View):
         self.open_main()
 
     def confirm_button(self):
-        subs = json.loads(cfg.subscriptions())
-        subs.append(Subscription(**Subscription.decode(cfg.CURRENT_PAYMENT_REQUEST)).json_friendly())
-        cfg.config_file.set('subscriptions', 'subscriptions', json.dumps(subs))
-        cfg.config_file.write()
+        cfg.config_file.add_subscription(Subscription(**Subscription.decode(cfg.CURRENT_PAYMENT_REQUEST)))
         cfg.CURRENT_PAYMENT_REQUEST = ''
         self._app.switch_view('subscriptions')
 

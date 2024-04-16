@@ -95,7 +95,6 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.columnconfigure(2, weight=1)
 
     def cancel_subscription(self, subscription):
-        new_subs = [sub for sub in json.loads(cfg.subscriptions()) if sub != subscription.json_friendly()]
-        cfg.config_file.set('subscriptions', 'subscriptions', json.dumps(new_subs))
-        cfg.config_file.write()
+        cfg.config_file.remove_subscription(subscription)
+        #TODO: Display the "Add Subscription" Button when Subscriptions are empty
         self.destroy()
