@@ -428,8 +428,8 @@ has_seen_welcome = False
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
     # Title
     label = self.add(ctk.CTkLabel(self._app, text=title, font=HEADINGS_FONT_SIZE))
-    label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+    label.grid(row=0, column=0, columnspan=3, padx=10, pady=(10, 0), sticky="ew")
 
     # Back Button
     back_button = self.add(ctk.CTkButton(self._app, text=BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
-    back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    back_button.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="w")

@@ -23,7 +23,7 @@ class ReceiveView(View):
         self._app.geometry(cfg.RECEIVE_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Receive:')
+        cfg.back_and_title(self, ctk, cfg, title='Your Wallet:')
 
         # QR Code
         qr_image_name = generate_monero_qr(cfg.WALLET_ADDRESS)
