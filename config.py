@@ -216,7 +216,7 @@ if platform == 'Windows':
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
-    WELCOME_VIEW_GEOMETRY = '500x470'
+    WELCOME_VIEW_GEOMETRY = '500x460'
 
 elif platform == 'Mac':
     BACK_BUTTON_EMOJI = '⬅'
@@ -248,7 +248,7 @@ elif platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
-    WELCOME_VIEW_GEOMETRY = '500x470'
+    WELCOME_VIEW_GEOMETRY = '500x460'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
@@ -264,7 +264,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
-    WELCOME_VIEW_GEOMETRY = '500x470'
+    WELCOME_VIEW_GEOMETRY = '500x460'
 
 '''
 # Set Monero Wallet CLI Path
