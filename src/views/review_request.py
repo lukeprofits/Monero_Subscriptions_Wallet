@@ -29,7 +29,7 @@ class ReviewRequestView(View):
 
         # Custom Label
         custom_label = self.add(ctk.CTkLabel(self._app, text=f'{decoded_request["custom_label"][:80]}:', font=cfg.SUBHEADING_FONT_SIZE))
-        custom_label.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
+        custom_label.grid(row=1, column=0, columnspan=3, padx=10, pady=(10, 0), sticky="ew")
 
         # TODO: show conversion to default currency in ()
         amount_label = self.add(ctk.CTkLabel(self._app, text=f'{decoded_request["amount"]} {decoded_request["currency"]}{worth_of_xmr} billed {payment_count}', font=cfg.BODY_FONT_SIZE))

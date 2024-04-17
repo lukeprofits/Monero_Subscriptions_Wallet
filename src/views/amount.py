@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
+from decimal import Decimal
 
 
 class AmountView(View):
@@ -15,7 +16,7 @@ class AmountView(View):
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
-        center_frame.grid(row=1, column=0, columnspan=3, padx=0, pady=15, sticky="nsew")
+        center_frame.grid(row=1, column=0, columnspan=3, padx=0, pady=(25, 10), sticky="nsew")
         center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
         # Input box

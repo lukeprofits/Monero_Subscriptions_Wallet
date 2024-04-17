@@ -58,7 +58,7 @@ class NodeSelectionView(View):
 
         info_text = "NOTE: Remote nodes work, but it is best to use a node that you self-host."
         info = self.add(ctk.CTkLabel(self._app, text=info_text))
-        info.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
+        info.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         node = ctk.StringVar(self._app, cfg.config_file.get('rpc', 'node_url'))
         self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=node, placeholder_text='xmr-node.cakewallet.com:18081'))

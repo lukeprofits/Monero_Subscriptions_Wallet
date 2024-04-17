@@ -24,7 +24,7 @@ class SettingsView(View):
         cfg.back_and_title(self, ctk, cfg, title=' Settings:')
 
         node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", command=self.open_node_selection))
-        node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(0, BUTTONS_PADY), sticky=BUTTONS_STICKY)
+        node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(10, BUTTONS_PADY), sticky=BUTTONS_STICKY)
 
         welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", command=self.open_welcome_message))
         welcome_message_button.grid(row=2, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)

@@ -54,7 +54,7 @@ class PayView(View):
 
         # Next button
         next_button = self.add(ctk.CTkButton(self._app, text="Next", command=self.next_button))
-        next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        next_button.grid(row=2, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
         # CHECK IF WE CAN SKIP DISPLAYING THIS STEP
         clipboard_contents = clipboard.paste()
