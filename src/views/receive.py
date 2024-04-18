@@ -7,8 +7,8 @@ import config as cfg
 
 
 def generate_monero_qr(wallet_address=cfg.WALLET_ADDRESS):
-    qr = qrcode.main.QRCode(version=1, box_size=3, border=4)
-    qr.add_data("monero:" + cfg.WALLET_ADDRESS)
+    qr = qrcode.main.QRCode(version=1, box_size=25, border=0)
+    qr.add_data("monero:" + wallet_address)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color=cfg.monero_orange, back_color=cfg.ui_overall_background)
     # Save the image to a file
@@ -27,12 +27,12 @@ class ReceiveView(View):
 
         # QR Code
         qr_image_name = generate_monero_qr(cfg.WALLET_ADDRESS)
-        qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(150, 150))
+        qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(230, 230))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
-        qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=0)
+        qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(25, 15))
 
         copy_wallet_button = self.add(ctk.CTkButton(self._app, text="Copy Wallet Address", command=self.copy_wallet_address))
-        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
+        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=135, pady=(0, 10), sticky="ew")
 
         return self
 
