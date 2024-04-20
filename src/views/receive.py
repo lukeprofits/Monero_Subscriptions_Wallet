@@ -27,12 +27,12 @@ class ReceiveView(View):
 
         # QR Code
         qr_image_name = generate_monero_qr(cfg.WALLET_ADDRESS)
-        qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(230, 230))
+        qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(25, 15))
 
         copy_wallet_button = self.add(ctk.CTkButton(self._app, text="Copy Wallet Address", command=self.copy_wallet_address))
-        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=135, pady=(0, 10), sticky="ew")
+        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=165, pady=(0, 10), sticky="ew")
 
         return self
 
