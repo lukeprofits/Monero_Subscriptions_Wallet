@@ -56,11 +56,12 @@ class ReviewRequestView(View):
         center_frame.columnconfigure([0, 1], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
         # Cancel button
-        cancel_button = self.add(ctk.CTkButton(center_frame, text="Reject", command=self.cancel_button))
+        cancel_button = self.add(ctk.CTkButton(center_frame, text="No Thanks", command=self.cancel_button))
         cancel_button.grid(row=0, column=0, padx=(10, 5), pady=(0, 10), sticky="ew")
 
         # Confirm button
-        confirm_button = self.add(ctk.CTkButton(center_frame, text="Approve", command=self.confirm_button))
+        confirm_text = "Pay Now" if decoded_request["number_of_payments"] == 1 else "Subscribe"
+        confirm_button = self.add(ctk.CTkButton(center_frame, text=confirm_text, command=self.confirm_button))
         confirm_button.grid(row=0, column=1, padx=(5, 10), pady=(0, 10), sticky="ew")
 
         return self

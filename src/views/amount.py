@@ -31,11 +31,11 @@ class AmountView(View):
 
         # Wallet
         wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
-        wallet.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
+        wallet.grid(row=2, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
 
         # Send button
-        send_button = self.add(ctk.CTkButton(self._app, text="Send", command=self.send_button))
-        send_button.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        send_button = self.add(ctk.CTkButton(self._app, text="Send", corner_radius=15, command=self.send_button))
+        send_button.grid(row=3, column=0, columnspan=3, padx=120, pady=15, sticky="ew")
 
         return self
 
