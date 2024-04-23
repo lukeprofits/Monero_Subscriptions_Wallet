@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter
 from src.interfaces.view import View
 import config as cfg
 import clipboard
@@ -47,7 +48,13 @@ class PayView(View):
 
         # TODO: Can we set the border color through the theme file instead?
         # Input box
-        self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address...", font=(cfg.font, 12), corner_radius=15, border_color=cfg.monero_orange ))
+        self.payment_input = tkinter.StringVar(self._app, name='payment_input')
+        clipboard_contents = clipboard.paste()
+
+        if input_is_valid(input_string=clipboard_contents) and clipboard_contents != cfg.WALLET_ADDRESS:
+            self.payment_input.set(clipboard_contents)
+
+        self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, textvariable=self.payment_input, placeholder_text="Enter a monero payment request or wallet address...", font=(cfg.font, 12), corner_radius=15, border_color=cfg.monero_orange))
         self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=20, pady=(27.5, 20), sticky="ew")  #32.5
 
         # Next button
@@ -58,11 +65,6 @@ class PayView(View):
         note = self.add(ctk.CTkLabel(self._app, text='Remember: All Monero payments are final.'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
         note.grid(row=3, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
-        # CHECK IF WE CAN SKIP DISPLAYING THIS STEP
-        clipboard_contents = clipboard.paste()
-        if input_is_valid(input_string=clipboard_contents) and clipboard_contents != cfg.WALLET_ADDRESS:
-            self.wallet_or_request_logic(input_string=clipboard_contents)
-
         return self
 
     def open_main(self):
@@ -70,8 +72,6 @@ class PayView(View):
 
     def wallet_or_request_logic(self, input_string):
         if 'monero-request:' in input_string:
-            monero_request = input_string
-            cfg.CURRENT_PAYMENT_REQUEST = monero_request
             self._app.switch_view('review_request')
         else:
             cfg.SEND_TO_WALLET = input_string
@@ -82,7 +82,6 @@ class PayView(View):
         input_string = self.input_box_for_wallet_or_request.get().strip()
         if input_is_valid(input_string=input_string):
             self.wallet_or_request_logic(input_string=input_string)
-
         else:
             print('Not a Monero Payment Request or wallet address')
 

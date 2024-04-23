@@ -8,7 +8,7 @@ from datetime import datetime
 class ReviewRequestView(View):
     def build(self):
         # TODO: wrap this whole thing in a try?
-        decoded_request = monerorequest.decode_monero_payment_request(cfg.CURRENT_PAYMENT_REQUEST)
+        decoded_request = monerorequest.decode_monero_payment_request(self._app.views['pay'].payment_input.get())
 
         if decoded_request["number_of_payments"] == 0:
             payment_count = f'every {decoded_request["days_per_billing_cycle"]} days until canceled'
@@ -67,10 +67,8 @@ class ReviewRequestView(View):
         self._app.switch_view('main')
 
     def cancel_button(self):
-        cfg.CURRENT_PAYMENT_REQUEST = ''
         self.open_main()
 
     def confirm_button(self):
-        cfg.config_file.add_subscription(Subscription(**Subscription.decode(cfg.CURRENT_PAYMENT_REQUEST)))
-        cfg.CURRENT_PAYMENT_REQUEST = ''
+        cfg.config_file.add_subscription(Subscription(**Subscription.decode(self._app.views['pay'].payment_input.get())))
         self._app.switch_view('subscriptions')
