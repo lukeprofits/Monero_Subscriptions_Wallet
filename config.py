@@ -255,7 +255,7 @@ elif platform == 'Mac':
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x365'
     SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x200'
-    RECEIVE_VIEW_GEOMETRY = '500x255'
+    RECEIVE_VIEW_GEOMETRY = '500x245'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x200'
     AMOUNT_VIEW_GEOMETRY = '500x200'
@@ -420,13 +420,16 @@ def get_value(currency_ticker, usd_value):
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
 WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2A'
-SEND_TO_WALLET = ''
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
 HEADINGS_FONT_SIZE = (font, 20)
 SUBHEADING_FONT_SIZE = (font, 16)
 BODY_FONT_SIZE = (font, 14)
 CURRENT_PAYMENT_REQUEST = ''
+SEND_TO_WALLET = ''
+CURRENT_SEND_AMOUNT = ''
+CURRENT_SEND_CURRENCY = ''
+SELECTED_SUBSCRIPTION = ''
 
 
 def back_and_title(self, ctk, cfg, title='Enter A Title'):
@@ -435,7 +438,5 @@ def back_and_title(self, ctk, cfg, title='Enter A Title'):
     label.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
     # Back Button
-    back_button = self.add(
-        ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30,
-                      command=self.open_main))
+    back_button = self.add(ctk.CTkButton(self._app, text=cfg.BACK_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")

@@ -32,7 +32,7 @@ class ReceiveView(View):
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=0)
 
         copy_wallet_button = self.add(ctk.CTkButton(self._app, text="Copy Wallet Address", command=self.copy_wallet_address))
-        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
         return self
 

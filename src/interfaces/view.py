@@ -10,7 +10,7 @@ class View(ABC):
         return element
 
     def destroy(self):
-        for element in self._elements:
+        for element in reversed(self._elements):
             element.destroy()
         self._elements = []
 

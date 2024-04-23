@@ -1,21 +1,32 @@
 import customtkinter as ctk
+import monero_usd_price
 from src.interfaces.view import View
 from src.subscription import Subscription
 import config as cfg
+import clipboard
 import monerorequest
 from datetime import datetime
 
-class ReviewRequestView(View):
+
+class ReviewSendView(View):
     def build(self):
         # TODO: wrap this whole thing in a try?
-        decoded_request = monerorequest.decode_monero_payment_request(cfg.CURRENT_PAYMENT_REQUEST)
+        wallet = cfg.SEND_TO_WALLET
+        wallet_is_valid = monerorequest.Check.wallet(wallet_address=wallet, allow_standard=True, allow_integrated_address=True, allow_subaddress=True)
+        amount_is_valid = True
+        currency_is_valid = True
 
-        if decoded_request["number_of_payments"] == 0:
-            payment_count = f'every {decoded_request["days_per_billing_cycle"]} days until canceled'
-        elif decoded_request["number_of_payments"] == 1:
-            payment_count = 'one-time'
-        else:
-            payment_count = f'every {decoded_request["days_per_billing_cycle"]} days until {decoded_request["number_of_payments"]} payments have been made'
+        if wallet_is_valid and amount_is_valid and currency_is_valid:
+            pass
+        '''
+            # STILL WORKING HERE
+            
+            # DON'T USE get_value. Either adjust it to be more flexible or make a new function. 
+            one_usd_of_currency = get_value(currency_ticker=cfg.CURRENT_SEND_CURRENCY, usd_value=monero_usd_price.median_price())
+            converted_monero_amount = monero_usd_price.calculate_monero_from_usd(usd_amount=cfg.)
+            
+            get_value(currency_ticker=cfg.CURRENT_SEND_CURRENCY, )
+            
 
         worth_of_xmr = ' worth of XMR' if decoded_request["currency"].upper() != 'XMR' else ''
 
@@ -40,13 +51,6 @@ class ReviewRequestView(View):
         sellers_wallet_label = self.add(ctk.CTkLabel(self._app, text=f'Paying To: {decoded_request["sellers_wallet"][:5]}...{decoded_request["sellers_wallet"][-5:]}', font=cfg.BODY_FONT_SIZE))
         sellers_wallet_label.grid(row=4, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
 
-        # TODO: Have window adjust automatically if we even display this.
-        '''
-        if decoded_request["change_indicator_url"]:
-            sellers_wallet_label = self.add(ctk.CTkLabel(self._app, text=f'(Seller may request changes to this. If they do, payments will be paused until you approve them.)', font=cfg.BODY_FONT_SIZE))
-            sellers_wallet_label.grid(row=5, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
-        '''
-
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
         center_frame.grid(row=6, column=0, columnspan=3, padx=0, pady=10, sticky="nsew")
@@ -70,6 +74,8 @@ class ReviewRequestView(View):
         self.open_main()
 
     def confirm_button(self):
-        cfg.config_file.add_subscription(Subscription(**Subscription.decode(cfg.CURRENT_PAYMENT_REQUEST)))
+        subs = AllSubscriptions()
+        subs.add(Subscription(**Subscription.decode(cfg.CURRENT_PAYMENT_REQUEST)))
         cfg.CURRENT_PAYMENT_REQUEST = ''
         self._app.switch_view('subscriptions')
+'''

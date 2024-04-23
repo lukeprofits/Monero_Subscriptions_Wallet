@@ -69,6 +69,7 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
     def _create_subscription(self, sub, row):
         SubscriptionFrame(self, sub, row)
 
+
 class SubscriptionFrame(ctk.CTkFrame):
     def __init__(self, master, sub, row, **kwargs):
         super().__init__(master, **kwargs)
@@ -95,6 +96,7 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.columnconfigure(2, weight=1)
 
     def cancel_subscription(self, subscription):
-        cfg.config_file.remove_subscription(subscription)
-        #TODO: Display the "Add Subscription" Button when Subscriptions are empty
-        self.destroy()
+        # cfg.config_file.remove_subscription(subscription)
+        # self.destroy()
+        cfg.SELECTED_SUBSCRIPTION = subscription
+        self.master.master.master.master.switch_view('review_delete')

@@ -45,9 +45,10 @@ class PayView(View):
         # Back button and title
         cfg.back_and_title(self, ctk, cfg, title=' Pay To:')
 
+        # TODO: Can we set the border color through the theme file instead?
         # Input box
-        self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address..."))
-        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=10, pady=32.5, sticky="ew")
+        self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address...", border_color=cfg.monero_orange ))
+        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=20, pady=32.5, sticky="ew")
 
         # Next button
         next_button = self.add(ctk.CTkButton(self._app, text="Next", command=self.next_button))
