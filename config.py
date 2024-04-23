@@ -403,7 +403,6 @@ def get_value(currency_ticker, usd_value):
 
 LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
-WALLET_ADDRESS = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2A'
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
 HEADINGS_FONT_SIZE = (font, 26)

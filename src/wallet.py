@@ -43,6 +43,13 @@ class Wallet():
             self._block_height = self.get_current_block_height()
         return self._block_height
 
+    @property
+    def address(self):
+        if self._address is None:
+            self._address = RPCClient().get_address()
+        return self._address
+
+
     def exists(self):
         return os.path.isfile(f'{wallet_dir()}/{self.name}.keys') or os.path.isfile(f'{wallet_dir()}/{self.name}')
 

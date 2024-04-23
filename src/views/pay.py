@@ -4,7 +4,7 @@ from src.interfaces.view import View
 import config as cfg
 import clipboard
 import monerorequest
-
+from src.wallet import Wallet
 
 def input_is_valid(input_string):
     if input_string:
@@ -51,7 +51,7 @@ class PayView(View):
         self.payment_input = tkinter.StringVar(self._app, name='payment_input')
         clipboard_contents = clipboard.paste()
 
-        if input_is_valid(input_string=clipboard_contents) and clipboard_contents != cfg.WALLET_ADDRESS:
+        if input_is_valid(input_string=clipboard_contents) and clipboard_contents != Wallet().address:
             self.payment_input.set(clipboard_contents)
 
         self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, textvariable=self.payment_input, placeholder_text="Enter a monero payment request or wallet address...", font=(cfg.font, 12), corner_radius=15, border_color=cfg.monero_orange))

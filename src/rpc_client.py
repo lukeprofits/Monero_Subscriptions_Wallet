@@ -88,6 +88,20 @@ class RPCClient():
             }
         }
 
+    def get_address(self):
+        try:
+            return self.post(self._get_address())['result']['address']
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _get_address(self):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "get_address",
+        }
+
     @property
     def headers(self):
         if not self._headers:
