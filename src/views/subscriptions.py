@@ -54,7 +54,7 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
             no_subs_text.pack(padx=10, pady=(20, 0))
 
             # TODO: Have this close the window
-            subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", command=self.add_subscription)
+            subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", corner_radius=15, command=self.add_subscription)
             subscription_cancel_button.pack(pady=10)
 
             separator = ctk.CTkFrame(self, height=2)
@@ -87,7 +87,7 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub.days_per_billing_cycle} Days', font=cfg.BODY_FONT_SIZE)
         self.subscription_renews_in.grid(row=2, column=1, pady=0)
 
-        self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", command=lambda: self.cancel_subscription(sub))
+        self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", corner_radius=15, command=lambda: self.cancel_subscription(sub))
         self.subscription_cancel_button.grid(row=3, column=1, pady=(10, 20))
 
         # Center the widgets within each column

@@ -23,16 +23,16 @@ class SettingsView(View):
         # Back button and title
         cfg.back_and_title(self, ctk, cfg, title=' Settings:')
 
-        node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", command=self.open_node_selection))
-        node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(0, BUTTONS_PADY), sticky=BUTTONS_STICKY)
+        node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", corner_radius=15, command=self.open_node_selection))
+        node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(10, BUTTONS_PADY), sticky=BUTTONS_STICKY)
 
-        welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", command=self.open_welcome_message))
+        welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", corner_radius=15, command=self.open_welcome_message))
         welcome_message_button.grid(row=2, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
 
-        manually_create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Manually Create Monero Payment Request", command=self.open_manually_create_payment_request))
+        manually_create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Manually Create Monero Payment Request", corner_radius=15, command=self.open_manually_create_payment_request))
         manually_create_payment_request_button.grid(row=3, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
 
-        set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", command=self.open_set_currency))
+        set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", corner_radius=15, command=self.open_set_currency))
         set_currency_button.grid(row=4, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
 
         return self
@@ -44,7 +44,7 @@ class SettingsView(View):
         self._app.switch_view('node_selection')
 
     def open_welcome_message(self):
-        self._app.switch_view('welcome_message')
+        self._app.switch_view('welcome')
 
     def open_add_payment_request(self):
         self._app.switch_view('payment_request')
