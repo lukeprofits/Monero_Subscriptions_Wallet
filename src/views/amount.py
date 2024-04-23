@@ -20,13 +20,13 @@ class AmountView(View):
         center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
 
         # Input box
-        self.input_box_for_amount = self.add(ctk.CTkEntry(center_frame, placeholder_text="Enter an amount"))
+        self.input_box_for_amount = self.add(ctk.CTkEntry(center_frame, corner_radius=15, placeholder_text="Enter an amount"))
         self.input_box_for_amount.grid(row=0, column=2, padx=(10, 5), pady=0, sticky="ew")
 
         # TODO: Currently this is a visual and nothing else. Review!
         # Currency Selector
         selected_currency = ctk.StringVar(value=cfg.DEFAULT_CURRENCY)
-        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=cfg.CURRENCY_OPTIONS, command=selected_currency_callback,variable=selected_currency))
+        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=cfg.CURRENCY_OPTIONS, corner_radius=15, command=selected_currency_callback,variable=selected_currency))
         currency_selector.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
         # Wallet
