@@ -63,7 +63,7 @@ class NodeSelectionView(View):
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
         center_frame.grid(row=2, column=0, columnspan=3, padx=0, pady=(10, 0), sticky="nsew")
-        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
+        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)
 
         random_node = self.add(ctk.CTkButton(center_frame, text="Find Random Node", corner_radius=15, command=self.get_random_node_button_clicked))
         random_node.grid(row=0, column=2, padx=(10, 5), pady=0, sticky="ew")
