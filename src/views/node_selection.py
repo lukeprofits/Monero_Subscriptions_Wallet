@@ -54,7 +54,7 @@ class NodeSelectionView(View):
         self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Set A Node:')
+        cfg.back_and_title(self, ctk, cfg, title=' Set Node:')
 
         node = ctk.StringVar(self._app, cfg.config_file.get('rpc', 'node_url'))
         self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=node, corner_radius=15, placeholder_text='xmr-node.cakewallet.com:18081'))
