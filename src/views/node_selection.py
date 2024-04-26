@@ -68,7 +68,7 @@ class NodeSelectionView(View):
         random_node = self.add(ctk.CTkButton(center_frame, text="Find Random Node", corner_radius=15, command=self.get_random_node_button_clicked))
         random_node.grid(row=0, column=2, padx=(10, 5), pady=0, sticky="ew")
 
-        submit_button = self.add(ctk.CTkButton(center_frame, text="Save Settings", corner_radius=15, command=self.select_node))
+        submit_button = self.add(ctk.CTkButton(center_frame, text="Save Settings", corner_radius=15, command=self.set_node))
         submit_button.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
         info_text = "For best privacy, host your own node."
@@ -80,7 +80,7 @@ class NodeSelectionView(View):
     def open_main(self):
         self._app.switch_view('main')
 
-    def select_node(self):
+    def set_node(self):
         node = self.node_selection.get()
         rpc_server = RPCServer.get()
         config = cfg.config_file
