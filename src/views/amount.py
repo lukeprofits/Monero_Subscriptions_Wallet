@@ -26,16 +26,16 @@ class AmountView(View):
         # TODO: Currently this is a visual and nothing else. Review!
         # Currency Selector
         selected_currency = ctk.StringVar(value=cfg.DEFAULT_CURRENCY)
-        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=cfg.CURRENCY_OPTIONS, corner_radius=15, command=selected_currency_callback,variable=selected_currency))
+        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=cfg.CURRENCY_OPTIONS, corner_radius=15, command=selected_currency_callback, variable=selected_currency))
         currency_selector.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
         # Wallet
         wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
-        wallet.grid(row=2, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
+        wallet.grid(row=3, column=0, columnspan=3, padx=10, pady=15, sticky="ew")
 
         # Send button
         send_button = self.add(ctk.CTkButton(self._app, text="Send", corner_radius=15, command=self.send_button))
-        send_button.grid(row=3, column=0, columnspan=3, padx=120, pady=15, sticky="ew")
+        send_button.grid(row=2, column=0, columnspan=3, padx=120, pady=(10, 0), sticky="ew")
 
         return self
 

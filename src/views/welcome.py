@@ -11,8 +11,8 @@ class WelcomeView(View):
         self._app.geometry(cfg.WELCOME_VIEW_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text='Welcome to the Monero Subscriptions Wallet!', font=cfg.HEADINGS_FONT_SIZE))
-        label.grid(row=0, column=0, columnspan=3, padx=10, pady=(5, 0), sticky="ew")
+        label = self.add(ctk.CTkLabel(self._app, text='Welcome to the Subscriptions Wallet!', font=cfg.HEADINGS_FONT_SIZE))
+        label.grid(row=0, column=0, columnspan=3, padx=10, pady=(15, 0), sticky="ew")
 
         # To make this look better, I am adding spaces after to get the lines to line up
         info_text = '''
@@ -43,13 +43,10 @@ class WelcomeView(View):
         info.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
 
         # Send button
-        ok_button = self.add(ctk.CTkButton(self._app, text="Okay", command=self.send_button))
-        ok_button.grid(row=2, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
+        ok_button = self.add(ctk.CTkButton(self._app, text="Okay", corner_radius=15, command=self.open_main))
+        ok_button.grid(row=2, column=0, columnspan=3, padx=120, pady=(5, 10), sticky="ew")
 
         return self
 
     def open_main(self):
-        self._app.switch_view('main')
-
-    def send_button(self):
         self._app.switch_view('main')

@@ -59,11 +59,7 @@ class PayView(View):
 
         # Next button
         next_button = self.add(ctk.CTkButton(self._app, text="Continue", corner_radius=15, command=self.next_button))
-        next_button.grid(row=2, column=0, columnspan=3, padx=70, pady=(0, 10), sticky="ew")
-
-        # Wallet
-        note = self.add(ctk.CTkLabel(self._app, text='Remember: All Monero payments are final.'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
-        note.grid(row=3, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
+        next_button.grid(row=2, column=0, columnspan=3, padx=120, pady=10, sticky="ew")
 
         return self
 
