@@ -3,9 +3,9 @@ import subprocess
 import time
 import logging
 import logging.config
-from config import node_url, rpc_bind_port
+from config import node_url, rpc_bind_port, wallet_dir
 from src.environment import STAGENET
-from src.rpc_client import RPCClient
+from src.clients.rpc import RPCClient
 from src.logging import config as logging_config
 from src.interfaces.notifier import Notifier
 from src.interfaces.observer import Observer
@@ -47,7 +47,7 @@ class RPCServer(Notifier):
         return f'{node[0]}:{node[1]}'
 
     def _start_rpc(self):
-        cmd = f'stdbuf -oL monero-wallet-rpc --wallet-file {self.wallet.name} --password ""'
+        cmd = f'stdbuf -oL monero-wallet-rpc --password "" --wallet-dir {wallet_dir()}'
         cmd += f' --rpc-bind-port {rpc_bind_port()} --disable-rpc-login --confirm-external-bind'
         cmd += f' --daemon-address {self._daemon_address()}'
         if STAGENET:
@@ -64,7 +64,6 @@ class RPCServer(Notifier):
     def ready(self):
         rpc_client = RPCClient()
         while True:
-            self.logger.debug("test")
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
                 output = self.process.stdout.readline()
                 self.logger.debug(output.strip())
@@ -90,6 +89,7 @@ class RPCServer(Notifier):
 
             if not self.failed_to_start:
                 self.status_message = 'RPC Server: Ready'
+                rpc_client.open_wallet()
                 self.logger.debug(rpc_client.refresh())
                 self.notify()
 

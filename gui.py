@@ -8,8 +8,6 @@ import config as cfg
 ctk.set_default_color_theme("monero_theme.json")
 
 # TODO: Get this from the config file first. If not present, use what is currently set below.
-DEFAULT_CURRENCY = cfg.CURRENCY_OPTIONS[0]
-SECONDARY_CURRENCY = cfg.CURRENCY_OPTIONS[1]
 
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):

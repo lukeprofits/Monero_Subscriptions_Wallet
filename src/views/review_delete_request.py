@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import monero_usd_price
 from src.interfaces.view import View
-from src.all_subscriptions import AllSubscriptions
 from src.subscription import Subscription
 import config as cfg
 import clipboard
@@ -36,6 +35,6 @@ class ReviewDeleteRequestView(View):
         self._app.switch_view('subscriptions')
 
     def cancel_action(self):
-        AllSubscriptions().remove(cfg.SELECTED_SUBSCRIPTION)
+        cfg.config_file.remove_subscription(cfg.SELECTED_SUBSCRIPTION)
         cfg.SELECTED_SUBSCRIPTION = ''
         self._app.switch_view('subscriptions')

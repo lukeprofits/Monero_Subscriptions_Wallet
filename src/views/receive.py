@@ -4,9 +4,9 @@ import qrcode
 import clipboard
 from PIL import Image
 import config as cfg
+from src.wallet import Wallet
 
-
-def generate_monero_qr(wallet_address=cfg.WALLET_ADDRESS):
+def generate_monero_qr(wallet_address=Wallet().address):
     qr = qrcode.main.QRCode(version=1, box_size=25, border=0)
     qr.add_data("monero:" + wallet_address)
     qr.make(fit=True)
@@ -20,13 +20,13 @@ def generate_monero_qr(wallet_address=cfg.WALLET_ADDRESS):
 
 class ReceiveView(View):
     def build(self):
-        self._app.geometry(cfg.RECEIVE_VIEW_GEOMETRY)
+        self._app.geometry(Wallet().address)
 
         # Back button and title
         cfg.back_and_title(self, ctk, cfg, title='Your Wallet:')
 
         # QR Code
-        qr_image_name = generate_monero_qr(cfg.WALLET_ADDRESS)
+        qr_image_name = generate_monero_qr(Wallet().address)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(20, 15))
@@ -40,5 +40,5 @@ class ReceiveView(View):
         self._app.switch_view('main')
 
     def copy_wallet_address(self):
-        clipboard.copy(cfg.WALLET_ADDRESS)
+        clipboard.copy(Wallet().address)
         self._app.switch_view('main')

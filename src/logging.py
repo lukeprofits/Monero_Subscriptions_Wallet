@@ -17,7 +17,7 @@ config = {
             'level': 'DEBUG',
             'handlers': ['console'],
         },
-        'src.rpc_client': {
+        'src.clients.rpc': {
             'level': 'DEBUG',
             'handlers': ['console']
         },
