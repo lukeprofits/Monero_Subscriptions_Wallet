@@ -5,7 +5,7 @@ import logging
 import logging.config
 from config import node_url, rpc_bind_port, wallet_dir
 from src.environment import STAGENET
-from src.rpc_client import RPCClient
+from src.clients.rpc import RPCClient
 from src.logging import config as logging_config
 from src.interfaces.notifier import Notifier
 from src.interfaces.observer import Observer

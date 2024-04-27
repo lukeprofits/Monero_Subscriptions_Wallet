@@ -1,6 +1,6 @@
 import unittest
 from src.rpc_server import RPCServer
-from src.rpc_client import RPCClient
+from src.clients.rpc import RPCClient
 from src.wallet import Wallet
 
 class testRPCClient(unittest.TestCase):

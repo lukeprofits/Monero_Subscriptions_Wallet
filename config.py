@@ -35,7 +35,9 @@ config_options = {
         'wallet_dir': 'wallets'
     },
     'subscriptions': {
-        'subscriptions': []
+        'subscriptions': [],
+        'default_currency': 'USD',
+        'secondary_currency': 'XMR'
     }
 }
 
@@ -51,6 +53,8 @@ parser.add_argument('--daemon-url')
 parser.add_argument('--config-file')
 parser.add_argument('--wallet-dir')
 parser.add_argument('--subscriptions')
+parser.add_argument('--default-currency')
+parser.add_argument('--secondary-currency')
 args=parser.parse_args()
 
 
@@ -277,128 +281,19 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
 
 
 # TODO: Adjust the sorting of these at some point.
-CURRENCY_OPTIONS = ["XMR", "BTC", "XGB", "XAU", "XAG", "USD", "EUR", "GBP", "CAD", "AUD", "CNY", "JPY", "KRW", "INR", "HKD", "BRL", "TWD", "CHF", "LTC", "BCH", "ADA", "DOGE", "DOT", "ETH", "LINK", "UNI"]
-
-def add_fiat_currencies_to_currency_options():
-    url = "https://raw.githubusercontent.com/datasets/currency-codes/master/data/codes-all.csv"
-    column_name = "AlphabeticCode"
-    response = requests.get(url)
-    if response.status_code == 200:
-        csv_data = StringIO(response.text)
-        reader = csv.reader(csv_data)
-
-        headers = next(reader)  # Get the header row
-        if 'AlphabeticCode' in headers:
-            code_index = headers.index(column_name)  # Find the index of the AlphabeticCode column
-
-            for row in reader:
-                if row:  # Make sure the row is not empty
-                    currency_code = row[code_index]  # Use the index of AlphabeticCode
-                    if currency_code not in CURRENCY_OPTIONS and currency_code != "":
-                        CURRENCY_OPTIONS.append(currency_code)
-
-add_fiat_currencies_to_currency_options()
 
 SHOW_DEFAULT_CURRENCY = True
-DEFAULT_CURRENCY = CURRENCY_OPTIONS[5]
-SECONDARY_CURRENCY = CURRENCY_OPTIONS[0]
-
-
-def currency_in_display_format(currency=DEFAULT_CURRENCY, amount=0):
-
-    def check_for_symbol():
-        if currency.upper() in symbols.keys():
-            symbol = symbols[currency.upper()]
-        else:
-            symbol = ""
-        return symbol
-
-    has_ticker_after = ["XMR"]
-
-    symbols = {"USD": "$",
-               "BTC": "₿",
-               "CYN": "¥",
-               "EUR": "€",
-               "JPY": "¥",
-               "GBP": "£",
-               "KRW": "₩",
-               "INR": "₹",
-               "CAD": "$",
-               "HKD": "$",
-               "AUD": "$"
-               }
-
-    # TODO: FORMAT AMOUNT TO THE PROPER NUMBER OF 0's
-
-    return f"{check_for_symbol()}{amount} {currency.upper()}"
-
 
 rounded_differently = {"BTC": 8,
                        "LTC": 8,
                        "BCH": 8,
                        "ADA": 6,
                        "DOGE": 8,
-                       "DOT": 8,  # 10, but rounded to fit well
+                       "DTO": 8,  # 10, but rounded to fit well
                        "ETH": 8,  # 18, but that does not fit on the window
                        "LINK": 8,  # 18, but that does not fit on the window
                        "UNI": 8  # 18, but that does not fit on the window
                        }
-
-
-def get_value(currency_ticker, usd_value):
-    def scrape_xe(currency_ticker):
-        url = f"https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To={currency_ticker.upper()}"
-        main_xpath = '//p[contains(text(), "1.00 US Dollar =")]/../p[2]'
-        # Used to use: [contains(@class, "BigRate")] ...but that broke so switched to [2]
-
-        response = requests.get(url)
-        tree = html.fromstring(response.content)
-        return tree.xpath(main_xpath)[0].text_content().strip().split(' ')[0].replace(',', '')
-
-    def scrape_goldback_exchange_rate():
-        url = 'https://www.goldback.com/exchange-rate'
-        page_content = requests.get(url).text
-        # Find the gb_average_exchange_rate constant's value
-        usd_cost_for_one_goldback = re.search(r"gb_average_exchange_rate\s*=\s*'([\d.]+)';", page_content).group(1)
-        dollar_value_in_goldbacks = Decimal(1) / Decimal(usd_cost_for_one_goldback)
-        return dollar_value_in_goldbacks
-
-    def round_to_two_decimal_places(value):
-        final_decimal = Decimal(value)
-        final_rounded = final_decimal.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-        formatted_value = format(final_rounded, ",.2f")
-        return formatted_value
-
-    # Skip conversion if the currency is XMR (no need)
-    if currency_ticker.upper() == "XMR":
-        return LATEST_XMR_AMOUNT
-
-    # Skip conversion if the currency is USD (we already have it)
-    elif currency_ticker.upper() == "USD":
-        return usd_value
-
-    # Goldbacks
-    elif currency_ticker.upper() == "XGB":
-        dollar_value_in_goldbacks = scrape_goldback_exchange_rate()
-        final = Decimal(dollar_value_in_goldbacks) * Decimal(usd_value)
-        return round_to_two_decimal_places(final)
-
-    # Everything Else
-    else:
-        dollar_value_in_currency = scrape_xe(currency_ticker)
-        final = Decimal(dollar_value_in_currency) * Decimal(usd_value)
-
-        if currency_ticker not in rounded_differently.keys():
-            final_rounded = round_to_two_decimal_places(final)
-        else:
-            rounding_spec = Decimal('1.' + ('0' * rounded_differently[currency_ticker]))
-            final_rounded = final.quantize(rounding_spec, rounding=ROUND_HALF_UP)
-            final_rounded = format(final_rounded, f",.{str(rounded_differently[currency_ticker])}f")
-
-        # TODO: Consider chopping digits off the right if the length is longer than 12 so that it fits in the window.
-        # Failed: PRB SLSH CKD NKR AFA -- check if we have these in the wallet or not.
-        # Maybe get a list of all options from XE and then remove from the list if we don't have a conversion rate and not in the hard coded list?
-        return str(final_rounded)
 
 
 LATEST_XMR_AMOUNT = 1.01

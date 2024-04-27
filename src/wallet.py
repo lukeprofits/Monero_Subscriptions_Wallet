@@ -3,7 +3,7 @@ import platform
 import logging
 import logging.config
 from config import node_url, wallet_dir
-from src.rpc_client import RPCClient
+from src.clients.rpc import RPCClient
 from src.logging import config as logging_config
 
 class Wallet():

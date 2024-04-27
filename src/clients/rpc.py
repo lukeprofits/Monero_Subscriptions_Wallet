@@ -102,6 +102,20 @@ class RPCClient():
             "method": "get_address",
         }
 
+    def get_balance(self):
+        try:
+            return self.post(self._get_balance())['result']['balance']
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _get_balance(self):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "get_balance"
+        }
+
     @property
     def headers(self):
         if not self._headers:

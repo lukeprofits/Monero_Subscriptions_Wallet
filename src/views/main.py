@@ -3,7 +3,9 @@ from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.status_label_observer import StatusLabelObserver
 import config as cfg
+from config import default_currency, secondary_currency
 from src.wallet import Wallet
+from src.exchange import Exchange
 
 class MainView(View):
     def __init__(self, app):
@@ -69,9 +71,9 @@ class MainView(View):
     def _get_currency_text(self):
         """Return the formatted currency text based on the current state."""
         if cfg.SHOW_DEFAULT_CURRENCY:
-            return cfg.currency_in_display_format(currency=cfg.DEFAULT_CURRENCY, amount=cfg.get_value(currency_ticker=cfg.DEFAULT_CURRENCY, usd_value=cfg.LASTEST_USD_AMOUNT))
+            return Exchange.display(to_sym=default_currency())
         else:
-            return cfg.currency_in_display_format(currency=cfg.SECONDARY_CURRENCY, amount=cfg.get_value(currency_ticker=cfg.SECONDARY_CURRENCY, usd_value=cfg.LASTEST_USD_AMOUNT))
+            return Exchange.display(to_sym=secondary_currency())
 
     def open_subscriptions(self):
         self._app.switch_view('subscriptions')
