@@ -28,7 +28,7 @@ config_options = {
         'rpc_bind_port': 18088,
         'rpc_username': 'monero',
         'rpc_password': 'monero',
-        'rpc': True,
+        'rpc': False,
         'local_rpc_url': 'http://127.0.0.1:18088/json_rpc',
         'node_url': NODE_URL,
         'daemon_url': f'{NODE_URL}/json_rpc',

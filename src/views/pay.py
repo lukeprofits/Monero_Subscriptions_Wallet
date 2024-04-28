@@ -55,7 +55,7 @@ class PayView(View):
             self.payment_input.set(clipboard_contents)
 
         self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, textvariable=self.payment_input, placeholder_text="Enter a monero payment request or wallet address...", font=(cfg.font, 12), corner_radius=15, border_color=cfg.monero_orange))
-        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=20, pady=(27.5, 20), sticky="ew")  #32.5
+        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=70, pady=(27.5, 20), sticky="ew")  #32.5
 
         # Next button
         next_button = self.add(ctk.CTkButton(self._app, text="Continue", corner_radius=15, command=self.next_button))

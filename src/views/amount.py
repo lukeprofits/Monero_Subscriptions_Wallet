@@ -1,6 +1,9 @@
 import customtkinter as ctk
+
+from src.exchange import Exchange
 from src.interfaces.view import View
 import config as cfg
+from config import default_currency, secondary_currency
 from decimal import Decimal
 
 
@@ -25,8 +28,8 @@ class AmountView(View):
 
         # TODO: Currently this is a visual and nothing else. Review!
         # Currency Selector
-        selected_currency = ctk.StringVar(value=cfg.DEFAULT_CURRENCY)
-        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=cfg.CURRENCY_OPTIONS, corner_radius=15, command=selected_currency_callback, variable=selected_currency))
+        selected_currency = ctk.StringVar(value=default_currency)
+        currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
         currency_selector.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
         # Wallet
