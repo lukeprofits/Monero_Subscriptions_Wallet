@@ -1,4 +1,6 @@
 import customtkinter as ctk
+
+import styles
 from src.interfaces.view import View
 import config as cfg
 import src.views.set_currency as set_currency
@@ -10,7 +12,7 @@ class SettingsView(View):
         self.toplevel_window = None
 
     def build(self):
-        self._app.geometry(cfg.SETTINGS_VIEW_GEOMETRY)
+        self._app.geometry(styles.SETTINGS_VIEW_GEOMETRY)
         # Configure the main window grid for spacing and alignment
         #self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
 
@@ -21,7 +23,7 @@ class SettingsView(View):
         BUTTONS_STICKY = "ew"
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Settings:')
+        styles.back_and_title(self, ctk, cfg, title=' Settings:')
 
         node_selection_button = self.add(ctk.CTkButton(self._app, text="Node Selection", corner_radius=15, command=self.open_node_selection))
         node_selection_button.grid(row=1, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=(10, BUTTONS_PADY), sticky=BUTTONS_STICKY)

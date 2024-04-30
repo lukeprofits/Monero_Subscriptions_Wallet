@@ -3,6 +3,7 @@ from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.status_label_observer import StatusLabelObserver
 import config as cfg
+import styles
 from config import default_currency, secondary_currency
 from src.wallet import Wallet
 from src.exchange import Exchange
@@ -14,10 +15,9 @@ class MainView(View):
         self._rpc_server = RPCServer.get(self._wallet)
         self._element_observers = []
         self.toplevel_window = None
-        self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
 
     def build(self):
-        self._app.geometry(cfg.MAIN_VIEW_GEOMETRY)
+        self._app.geometry(styles.MAIN_VIEW_GEOMETRY)
 
         # Configure the main window grid for spacing and alignment
         self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
@@ -31,11 +31,11 @@ class MainView(View):
         rpc_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
-        settings_button = self.add(ctk.CTkButton(self._app, text=cfg.SETTINGS_BUTTON_EMOJI, font=(cfg.font, 24), width=35, height=30, command=self.open_settings))
+        settings_button = self.add(ctk.CTkButton(self._app, text=styles.SETTINGS_BUTTON_EMOJI, font=(styles.font, 24), width=35, height=30, command=self.open_settings))
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
-        self.amount = self.add(ctk.CTkLabel(self._app, text=self._get_currency_text(), font=(cfg.font, 48)))
+        self.amount = self.add(ctk.CTkLabel(self._app, text=self._get_currency_text(), font=(styles.font, 48)))
         self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Bind the click event

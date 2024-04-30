@@ -3,6 +3,7 @@ import monero_usd_price
 from src.interfaces.view import View
 from src.subscription import Subscription
 import config as cfg
+import styles
 import clipboard
 import monerorequest
 from datetime import datetime
@@ -10,10 +11,10 @@ from datetime import datetime
 
 class ReviewDeleteRequestView(View):
     def build(self):
-        self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
+        self._app.geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text='Cancel Subscription?', font=cfg.HEADINGS_FONT_SIZE))
+        label = self.add(ctk.CTkLabel(self._app, text='Cancel Subscription?', font=styles.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=(50, 5), sticky="ew")
 
         # Frame to hold buttons

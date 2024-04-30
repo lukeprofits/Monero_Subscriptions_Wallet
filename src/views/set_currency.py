@@ -1,4 +1,6 @@
 import customtkinter as ctk
+
+import styles
 from src.interfaces.view import View
 from src.exchange import Exchange
 import config as cfg
@@ -6,7 +8,7 @@ from config import default_currency, secondary_currency
 
 class SetCurrencyView(View):
     def build(self):
-        self._app.geometry(cfg.SET_CURRENCY_VIEW_GEOMETRY)
+        self._app.geometry(styles.SET_CURRENCY_VIEW_GEOMETRY)
 
         def default_currency_selector_callback(choice):
             cfg.config_file.set(section='subscriptions', option='default_currency', value=choice)
@@ -19,7 +21,7 @@ class SetCurrencyView(View):
             # print("User chose:", choice)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Set Currencies:')
+        styles.back_and_title(self, ctk, cfg, title=' Set Currencies:')
 
         # Labels
         label1 = self.add(ctk.CTkLabel(self._app, text='Default:'))

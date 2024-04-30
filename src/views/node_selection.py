@@ -1,4 +1,6 @@
 import customtkinter as ctk
+
+import styles
 from src.interfaces.view import View
 import config as cfg
 from src.rpc_server import RPCServer
@@ -51,10 +53,10 @@ def check_if_node_works(node):
 
 class NodeSelectionView(View):
     def build(self):
-        self._app.geometry(cfg.NODE_VIEW_GEOMETRY)
+        self._app.geometry(styles.NODE_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Set Node:')
+        styles.back_and_title(self, ctk, cfg, title=' Set Node:')
 
         self.node = ctk.StringVar(self._app, cfg.config_file.get('rpc', 'node_url'))
         self.node_selection = self.add(ctk.CTkEntry(self._app, textvariable=self.node, corner_radius=15, placeholder_text='xmr-node.cakewallet.com:18081'))

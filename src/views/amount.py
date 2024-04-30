@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+import styles
 from src.exchange import Exchange
 from src.interfaces.view import View
 import config as cfg
@@ -12,10 +13,10 @@ class AmountView(View):
         def selected_currency_callback(choice):
             cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
 
-        self._app.geometry(cfg.AMOUNT_VIEW_GEOMETRY)
+        self._app.geometry(styles.AMOUNT_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title='How Much:')
+        styles.back_and_title(self, ctk, cfg, title='How Much:')
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
