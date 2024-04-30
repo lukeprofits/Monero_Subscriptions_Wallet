@@ -7,7 +7,7 @@ import config as cfg
 from src.wallet import Wallet
 
 
-DUMMY_WALLET = '4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2A'
+DUMMY_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
 
 
 def generate_monero_qr(wallet_address):
