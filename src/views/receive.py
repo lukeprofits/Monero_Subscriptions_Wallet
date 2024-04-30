@@ -4,8 +4,8 @@ import qrcode
 import clipboard
 from PIL import Image
 import config as cfg
+from config import rpc
 from src.wallet import Wallet
-
 
 DUMMY_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
 
@@ -31,7 +31,7 @@ class ReceiveView(View):
         cfg.back_and_title(self, ctk, cfg, title='Your Wallet:')
 
         # QR Code
-        qr_image_name = generate_monero_qr(Wallet().address if cfg.config_options['rpc']['rpc'] else DUMMY_WALLET)
+        qr_image_name = generate_monero_qr(Wallet().address if rpc() else DUMMY_WALLET)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(20, 15))
@@ -45,5 +45,5 @@ class ReceiveView(View):
         self._app.switch_view('main')
 
     def copy_wallet_address(self):
-        clipboard.copy(Wallet().address if cfg.config_options['rpc']['rpc'] else DUMMY_WALLET)
+        clipboard.copy(Wallet().address if rpc() else DUMMY_WALLET)
         self._app.switch_view('main')
