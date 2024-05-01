@@ -8,7 +8,7 @@ from config import default_currency, secondary_currency
 
 class SetCurrencyView(View):
     def build(self):
-        self._app.geometry(styles.SET_CURRENCY_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_geometry(styles.SET_CURRENCY_VIEW_GEOMETRY))
 
         def default_currency_selector_callback(choice):
             cfg.config_file.set(section='subscriptions', option='default_currency', value=choice)

@@ -2,11 +2,12 @@ import customtkinter as ctk
 from src.interfaces.view import View
 from src.rpc_server import RPCServer
 from src.observers.status_label_observer import StatusLabelObserver
+from config import default_currency, secondary_currency, rpc
 import config as cfg
 import styles
-from config import default_currency, secondary_currency
 from src.wallet import Wallet
 from src.exchange import Exchange
+
 
 class MainView(View):
     def __init__(self, app):
@@ -17,17 +18,18 @@ class MainView(View):
         self.toplevel_window = None
 
     def build(self):
-        self._app.geometry(styles.MAIN_VIEW_GEOMETRY)
+
+        self._app.geometry(styles.make_geometry(styles.MAIN_VIEW_GEOMETRY))
 
         # Configure the main window grid for spacing and alignment
         self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
 
         # Sync Status
-        rpc_status = self.add(ctk.CTkLabel(self._app, text=f'RPC Status: {self._rpc_server.status_message or "( Sync Status )"}'))
+        rpc_status_text = self._rpc_server.status_message or "( Sync Status )"
+        rpc_status = self.add(ctk.CTkLabel(self._app, text=f'RPC Status: {rpc_status_text}'))
         rpc_observer = StatusLabelObserver(rpc_status)
         self._element_observers.append(rpc_observer)
         self._rpc_server.attach(rpc_observer)
-
         rpc_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button

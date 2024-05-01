@@ -4,6 +4,7 @@ from src.clients.goldback import scrape as goldback_scrape
 from src.clients.xe import scrape as xe_scrape
 from src.clients.rpc import RPCClient
 from monero_usd_price import median_price
+from config import rpc
 
 class Exchange():
     _options = None
@@ -34,7 +35,7 @@ class Exchange():
     }
 
     US_EXCHANGE = median_price()
-    XMR_AMOUNT = RPCClient().get_balance()
+    XMR_AMOUNT = RPCClient().get_balance() if rpc() else 1
     USD_AMOUNT = round(US_EXCHANGE * XMR_AMOUNT, 2)
 
     @classmethod

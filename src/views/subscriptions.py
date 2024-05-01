@@ -13,10 +13,10 @@ class SubscriptionsView(View):
     def build(self):
         # If we have existing subscriptions
         if len(json.loads(cfg.subscriptions())) > 1:
-            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
+            self._app.geometry(styles.make_geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY))
         # If we have no existing subscriptions
         else:
-            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
+            self._app.geometry(styles.make_geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY))
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)

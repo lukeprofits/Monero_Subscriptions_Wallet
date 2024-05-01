@@ -3,7 +3,7 @@ import subprocess
 import time
 import logging
 import logging.config
-from config import node_url, rpc_bind_port, wallet_dir
+from config import node_url, rpc_bind_port, wallet_dir, rpc
 from src.environment import STAGENET
 from src.clients.rpc import RPCClient
 from src.logging import config as logging_config
@@ -95,6 +95,10 @@ class RPCServer(Notifier):
 
             if self.failed_to_start:
                 self.status_message = 'RPC Server: Failed To Start'
+                self.notify()
+
+            if not rpc():
+                self.status_message = "( Test Mode )"
                 self.notify()
 
             break

@@ -26,7 +26,7 @@ def generate_monero_qr(wallet_address):
 class ReceiveView(View):
 
     def build(self):
-        self._app.geometry(styles.RECEIVE_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_geometry(styles.RECEIVE_VIEW_GEOMETRY))
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Your Wallet:')

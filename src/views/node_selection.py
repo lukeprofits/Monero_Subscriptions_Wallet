@@ -1,5 +1,4 @@
 import customtkinter as ctk
-
 import styles
 from src.interfaces.view import View
 import config as cfg
@@ -51,9 +50,10 @@ def check_if_node_works(node):
         print(e)
         return False
 
+
 class NodeSelectionView(View):
     def build(self):
-        self._app.geometry(styles.NODE_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_geometry(styles.NODE_VIEW_GEOMETRY))
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title=' Set Node:')

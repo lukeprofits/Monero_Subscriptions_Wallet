@@ -1,5 +1,6 @@
+import tkinter as tk
 import config as cfg
-
+import styles
 
 # =====================
 # Fonts
@@ -21,10 +22,37 @@ BODY_FONT_SIZE = (font, 14)
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
 
+# =====================
+# Other
+# =====================
+def get_screen_size():
+    root = tk.Tk()
+    root.withdraw()  # Hide the window as it's not needed to be visible
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    root.destroy()  # Close the temporary window
+    return screen_width, screen_height
+
+
+SCREEN_WIDTH, SCREEN_HEIGHT = get_screen_size()
 
 # =====================
 # Platform-Dependent Configurations
 # =====================
+
+
+def make_geometry(window_resolution):
+    window_resolution = window_resolution.split('x')
+    window_width = int(window_resolution[0])
+    window_height = int(window_resolution[1])
+
+    # Calculate x and y coordinates for the window
+    x = (styles.SCREEN_WIDTH - window_width) / 2
+    y = (styles.SCREEN_HEIGHT - window_height) / 2
+
+    return f'{window_width}x{window_height}+{int(x)}+{int(y)}'
+
+
 if cfg.platform == 'Windows':
     BACK_BUTTON_EMOJI = '⏴'
     SETTINGS_BUTTON_EMOJI = '☰'

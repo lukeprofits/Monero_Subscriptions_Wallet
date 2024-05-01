@@ -13,7 +13,7 @@ class AmountView(View):
         def selected_currency_callback(choice):
             cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
 
-        self._app.geometry(styles.AMOUNT_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_geometry(styles.AMOUNT_VIEW_GEOMETRY))
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='How Much:')
@@ -21,7 +21,7 @@ class AmountView(View):
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
         center_frame.grid(row=1, column=0, columnspan=3, padx=0, pady=(25, 10), sticky="nsew")
-        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
+        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)
 
         # Input box
         self.input_box_for_amount = self.add(ctk.CTkEntry(center_frame, corner_radius=15, placeholder_text="Enter an amount"))

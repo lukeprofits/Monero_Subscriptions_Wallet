@@ -8,7 +8,7 @@ class WelcomeView(View):
         def selected_currency_callback(choice):
             cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
 
-        self._app.geometry(styles.WELCOME_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_geometry(styles.WELCOME_VIEW_GEOMETRY))
 
         # Title
         label = self.add(ctk.CTkLabel(self._app, text='Welcome to the Subscriptions Wallet!', font=styles.HEADINGS_FONT_SIZE))

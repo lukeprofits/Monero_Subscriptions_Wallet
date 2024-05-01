@@ -4,6 +4,7 @@ from src.views import (MainView, ReceiveView, PayView, SubscriptionsView, Settin
                        NodeSelectionView, AmountView, ReviewRequestView, ReviewSendView, ReviewDeleteRequestView,
                        WelcomeView)
 import config as cfg
+import styles
 
 ctk.set_default_color_theme("monero_theme.json")
 
