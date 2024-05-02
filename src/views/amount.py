@@ -10,7 +10,7 @@ from decimal import Decimal
 class AmountView(View):
     def build(self):
         def selected_currency_callback(choice):
-            cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
+            cfg.CURRENT_SEND_CURRENCY = choice
 
         self._app.geometry(styles.AMOUNT_VIEW_GEOMETRY)
 
@@ -46,6 +46,7 @@ class AmountView(View):
         self._app.switch_view('main')
 
     def send_button(self):
+        # TODO: Make sure we are getting the wallet the right way
         # Send function
         wallet = cfg.SEND_TO_WALLET
 

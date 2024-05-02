@@ -184,7 +184,7 @@ LATEST_XMR_AMOUNT = 1.01
 LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
 
 CURRENT_PAYMENT_REQUEST = ''
-SEND_TO_WALLET = ''
+SEND_TO_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
 CURRENT_SEND_AMOUNT = ''
 CURRENT_SEND_CURRENCY = ''
 SELECTED_SUBSCRIPTION = ''

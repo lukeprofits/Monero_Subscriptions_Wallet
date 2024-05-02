@@ -16,7 +16,7 @@ class SubscriptionsView(View):
             self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
         # If we have no existing subscriptions
         else:
-            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
+            self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
