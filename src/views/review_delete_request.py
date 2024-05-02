@@ -11,7 +11,7 @@ from datetime import datetime
 
 class ReviewDeleteRequestView(View):
     def build(self):
-        self._app.geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETR)
+        self._app.geometry(styles.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
 
         # Title
         label = self.add(ctk.CTkLabel(self._app, text='Cancel Subscription?', font=styles.HEADINGS_FONT_SIZE))
