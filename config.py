@@ -19,7 +19,6 @@ import argparse
 from configparser import ConfigParser
 import re
 import json
-
 from src.subscription import Subscription
 
 SHOULD_CENTER_WINDOW = True

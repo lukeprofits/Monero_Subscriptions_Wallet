@@ -6,6 +6,7 @@ import styles
 import monerorequest
 from datetime import datetime
 
+
 class ReviewRequestView(View):
     def build(self):
         # TODO: wrap this whole thing in a try?

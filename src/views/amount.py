@@ -1,5 +1,4 @@
 import customtkinter as ctk
-
 import styles
 from src.exchange import Exchange
 from src.interfaces.view import View
