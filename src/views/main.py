@@ -19,7 +19,7 @@ class MainView(View):
 
     def build(self):
 
-        self._app.geometry(styles.make_geometry(styles.MAIN_VIEW_GEOMETRY))
+        self._app.geometry(self.make_appropriate_geometry())  # Centered on first launch only.
 
         # Configure the main window grid for spacing and alignment
         self._app.columnconfigure([0, 1, 2], weight=1)  # 3 columns 2 rows
@@ -61,6 +61,14 @@ class MainView(View):
         subscriptions_button.grid(row=1, column=0, columnspan=3, padx=10, pady=(0, 10), sticky="ew")
 
         return self
+
+    def make_appropriate_geometry(self):
+        if cfg.SHOULD_CENTER_WINDOW:
+            cfg.SHOULD_CENTER_WINDOW = False
+            geometry = styles.make_centered_geometry(styles.MAIN_VIEW_GEOMETRY)
+        else:
+            geometry = styles.MAIN_VIEW_GEOMETRY
+        return geometry
 
     def _toggle_currency(self, event=None):
         if cfg.SHOW_DEFAULT_CURRENCY:

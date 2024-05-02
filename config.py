@@ -22,6 +22,8 @@ import json
 
 from src.subscription import Subscription
 
+SHOULD_CENTER_WINDOW = True
+
 NODE_URL = 'xmr-node.cakewallet.com:18081'
 
 config_options = {

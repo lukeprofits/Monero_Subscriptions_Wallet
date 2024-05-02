@@ -13,7 +13,7 @@ class AmountView(View):
         def selected_currency_callback(choice):
             cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
 
-        self._app.geometry(styles.make_geometry(styles.AMOUNT_VIEW_GEOMETRY))
+        self._app.geometry(styles.AMOUNT_VIEW_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='How Much:')

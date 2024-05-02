@@ -20,7 +20,7 @@ class ReviewRequestView(View):
 
         worth_of_xmr = ' worth of XMR' if decoded_request["currency"].upper() != 'XMR' else ''
 
-        self._app.geometry(styles.make_geometry(styles.REVIEW_REQUEST_VIEW_GEOMETRY))
+        self._app.geometry(styles.REVIEW_REQUEST_VIEW_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title=' Add Payment Request?')

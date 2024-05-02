@@ -41,7 +41,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = get_screen_size()
 # =====================
 
 
-def make_geometry(window_resolution):
+def make_centered_geometry(window_resolution):
     window_resolution = window_resolution.split('x')
     window_width = int(window_resolution[0])
     window_height = int(window_resolution[1])

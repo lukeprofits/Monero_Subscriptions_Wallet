@@ -53,7 +53,7 @@ def check_if_node_works(node):
 
 class NodeSelectionView(View):
     def build(self):
-        self._app.geometry(styles.make_geometry(styles.NODE_VIEW_GEOMETRY))
+        self._app.geometry(styles.NODE_VIEW_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title=' Set Node:')
