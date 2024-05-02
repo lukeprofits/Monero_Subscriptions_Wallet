@@ -1,6 +1,18 @@
 import tkinter as tk
 import config as cfg
-import styles
+
+
+def make_centered_geometry(window_resolution):
+    window_resolution = window_resolution.split('x')
+    window_width = int(window_resolution[0])
+    window_height = int(window_resolution[1])
+
+    # Calculate x and y coordinates for the window
+    x = (SCREEN_WIDTH - window_width) / 2
+    y = (SCREEN_HEIGHT - window_height) / 2
+
+    return f'{window_width}x{window_height}+{int(x)}+{int(y)}'
+
 
 # =====================
 # Fonts
@@ -39,20 +51,6 @@ SCREEN_WIDTH, SCREEN_HEIGHT = get_screen_size()
 # =====================
 # Platform-Dependent Configurations
 # =====================
-
-
-def make_centered_geometry(window_resolution):
-    window_resolution = window_resolution.split('x')
-    window_width = int(window_resolution[0])
-    window_height = int(window_resolution[1])
-
-    # Calculate x and y coordinates for the window
-    x = (styles.SCREEN_WIDTH - window_width) / 2
-    y = (styles.SCREEN_HEIGHT - window_height) / 2
-
-    return f'{window_width}x{window_height}+{int(x)}+{int(y)}'
-
-
 if cfg.platform == 'Windows':
     BACK_BUTTON_EMOJI = '⏴'
     SETTINGS_BUTTON_EMOJI = '☰'
@@ -89,17 +87,17 @@ elif cfg.platform == 'Linux':
     BACK_BUTTON_EMOJI = '⬅'
     SETTINGS_BUTTON_EMOJI = '⚙'
     # Views
-    MAIN_VIEW_GEOMETRY = '500x200'
-    PAY_VIEW_GEOMETRY = '500x200'
-    SETTINGS_VIEW_GEOMETRY = '500x210'
+    MAIN_VIEW_GEOMETRY = '500x215'
+    PAY_VIEW_GEOMETRY = '500x215'
+    SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
-    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x195'
+    SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY = '500x215'
     RECEIVE_VIEW_GEOMETRY = '500x325'
     SET_CURRENCY_VIEW_GEOMETRY = '360x165'
     NODE_VIEW_GEOMETRY = '500x215'
-    AMOUNT_VIEW_GEOMETRY = '500x195'
+    AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_VIEW_GEOMETRY = '500x215'
-    WELCOME_VIEW_GEOMETRY = '500x480'
+    WELCOME_VIEW_GEOMETRY = '500x515'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'

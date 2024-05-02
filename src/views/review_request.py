@@ -24,7 +24,7 @@ class ReviewRequestView(View):
         self._app.geometry(styles.REVIEW_REQUEST_VIEW_GEOMETRY)
 
         # Back button and title
-        styles.back_and_title(self, ctk, cfg, title=' Add Payment Request?')
+        styles.back_and_title(self, ctk, cfg, title='Add Payment Request?')
 
         # Custom Label
         custom_label = self.add(ctk.CTkLabel(self._app, text=f'{decoded_request["custom_label"][:80]}:', font=styles.SUBHEADING_FONT_SIZE))
