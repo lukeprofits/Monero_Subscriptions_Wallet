@@ -10,7 +10,6 @@ ctk.set_default_color_theme("monero_theme.json")
 
 # TODO: Get this from the config file first. If not present, use what is currently set below.
 
-
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
