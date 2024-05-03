@@ -50,6 +50,6 @@ class App(ctk.CTk):
 
 app = App()
 app.title("Monero Subscriptions Wallet")
-app.iconphoto(True, PhotoImage(file='icon.png'))
+app.iconphoto(True, PhotoImage(file='icon_orange.png'))
 app.protocol("WM_DELETE_WINDOW", app.shutdown_steps)
 app.mainloop()
