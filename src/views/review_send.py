@@ -40,16 +40,12 @@ class ReviewSendView(View):
 
         # Title
         label = self.add(ctk.CTkLabel(self._app, text='Send Payment?', font=styles.HEADINGS_FONT_SIZE))
-        label.grid(row=0, column=0, columnspan=3, padx=10, pady=(30, 5), sticky="ew")
+        label.grid(row=0, column=0, columnspan=3, padx=10, pady=(45, 5), sticky="ew")
 
         # TODO: show conversion to default currency in ()
         worth_of_xmr_text = ' worth of XMR' if cfg.CURRENT_SEND_CURRENCY.upper() != 'XMR' else ''
-        amount_label = self.add(ctk.CTkLabel(self._app, text=f'{cfg.CURRENT_SEND_AMOUNT} {cfg.CURRENT_SEND_CURRENCY}{worth_of_xmr_text}', font=styles.BODY_FONT_SIZE))
-        amount_label.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
-
-        # Sellers Wallet
-        send_to_label = self.add(ctk.CTkLabel(self._app, text=f'To: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}', font=styles.BODY_FONT_SIZE))
-        send_to_label.grid(row=2, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
+        sending_to = self.add(ctk.CTkLabel(self._app, text=f'{cfg.CURRENT_SEND_AMOUNT} {cfg.CURRENT_SEND_CURRENCY}{worth_of_xmr_text} to: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}', font=styles.SUBHEADING_FONT_SIZE))
+        sending_to.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="ew")
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
@@ -58,11 +54,11 @@ class ReviewSendView(View):
 
         # Cancel button
         cancel_button = self.add(ctk.CTkButton(center_frame, text="Cancel", corner_radius=15, command=self.cancel_button))
-        cancel_button.grid(row=0, column=2, padx=(10, 5), pady=0, sticky="ew")
+        cancel_button.grid(row=0, column=2, padx=(10, 5), pady=0, sticky="e")
 
         # Confirm button
         confirm_button = self.add(ctk.CTkButton(center_frame, text="Send", corner_radius=15, command=self.confirm_button))
-        confirm_button.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
+        confirm_button.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="w")
 
         return self
 
