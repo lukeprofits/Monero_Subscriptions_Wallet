@@ -50,10 +50,6 @@ class App(ctk.CTk):
 
 app = App()
 app.title("Monero Subscriptions Wallet")
-
-# TODO: Continue working on icons
-app.iconphoto(True, PhotoImage(file='icon.png'))  # Does not work on Mac. May work on Linux/Windows
-#app.iconbitmap('icon.ico')  # Backup
-
+app.iconphoto(True, PhotoImage(file='icon.png'))
 app.protocol("WM_DELETE_WINDOW", app.shutdown_steps)
 app.mainloop()
