@@ -25,6 +25,7 @@ SHOULD_CENTER_WINDOW = True
 
 NODE_URL = 'xmr-node.cakewallet.com:18081'
 
+# This sets the defaults for config.ini when initially created. It does NOT overwrite an existing config.ini
 config_options = {
     'rpc': {
         'rpc_bind_port': 18088,
@@ -40,7 +41,11 @@ config_options = {
         'subscriptions': [],
         'default_currency': 'USD',
         'secondary_currency': 'XMR'
+    },
+    'other': {
+        'is_first_launch': True
     }
+
 }
 
 parser=argparse.ArgumentParser()
@@ -57,6 +62,7 @@ parser.add_argument('--wallet-dir')
 parser.add_argument('--subscriptions')
 parser.add_argument('--default-currency')
 parser.add_argument('--secondary-currency')
+parser.add_argument('--is-first-launch')
 args=parser.parse_args()
 
 

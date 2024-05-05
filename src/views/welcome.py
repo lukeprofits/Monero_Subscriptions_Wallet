@@ -49,4 +49,7 @@ class WelcomeView(View):
         return self
 
     def open_main(self):
+                 #config.set(section='rpc', option='node_url', value=node)
+        cfg.config_file.set(section='DEFAULT', option='is_first_launch', value=str(False))
+        cfg.config_file.write()
         self._app.switch_view('main')

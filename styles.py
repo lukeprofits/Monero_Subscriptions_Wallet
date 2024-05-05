@@ -97,7 +97,7 @@ elif cfg.platform == 'Linux':
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
-    WELCOME_VIEW_GEOMETRY = '500x515'
+    WELCOME_VIEW_GEOMETRY = '475x515'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
     BACK_BUTTON_EMOJI = '⬅'
