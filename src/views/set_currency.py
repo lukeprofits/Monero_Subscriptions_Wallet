@@ -21,7 +21,7 @@ class SetCurrencyView(View):
             # print("User chose:", choice)
 
         # Back button and title
-        styles.back_and_title(self, ctk, cfg, title=' Set Currencies:')
+        styles.back_and_title(self, ctk, cfg, title=' Set Currency:')
 
         # Labels
         label1 = self.add(ctk.CTkLabel(self._app, text='Default:'))
