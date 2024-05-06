@@ -2,9 +2,10 @@
 A class for each individual Subscription object
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import monerorequest
-
+from sched import scheduler
+from src.clients.rpc import RPCClient
 
 class Subscription:
     def __init__(self, custom_label, sellers_wallet, currency, amount,  payment_id, start_date, days_per_billing_cycle, number_of_payments, change_indicator_url=''):
@@ -49,8 +50,29 @@ class Subscription:
 
         return monero_request
 
+    def next_payment_time(self):
+        next_time = self.start_date
+        while next_time < datetime.now():
+            next_time = next_time + timedelta(days=self.days_per_billing_cycle)
+        return next_time
+
     @classmethod
     def decode(cls, code):
         subscription_data_as_json = monerorequest.Decode.monero_payment_request_from_code(monero_payment_request=code)
 
         return subscription_data_as_json
+
+    def make_payment(self):
+        '''
+        What are the steps required for this?
+        Need to check for sufficient funds
+        Need to check if the number of payments has already been hit
+        Need to convert the desired currency to XMR
+        '''
+        # if Exchange.XMR_AMOUNT > Exchange:
+
+        #Last step
+        Exchange.refresh_prices()
+
+    def schedule(self):
+        scheduler.enterabs(self.next_payment_time(), 1, self.make_payment)

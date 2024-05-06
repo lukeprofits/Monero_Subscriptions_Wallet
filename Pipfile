@@ -19,5 +19,5 @@ pillow = "*"
 python_version = "3.11"
 
 [scripts]
-tests = 'python -m unittest'
+tests = 'python -m unittest discover test'
 gui = 'python gui.py'
