@@ -35,7 +35,7 @@ class MainView(View):
 
         # Settings Button
         settings_image = ctk.CTkImage(Image.open("settings_icon_sliders.png"), size=(24, 24))
-        settings_button = self.add(ctk.CTkButton(self._app, image=settings_image, text="", width=35, height=30, command=self.open_settings))
+        settings_button = self.add(ctk.CTkButton(self._app, image=settings_image, text="", width=35, height=30, corner_radius=7, command=self.open_settings))
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
