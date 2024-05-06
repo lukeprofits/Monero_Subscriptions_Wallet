@@ -52,8 +52,6 @@ SCREEN_WIDTH, SCREEN_HEIGHT = get_screen_size()
 # Platform-Dependent Configurations
 # =====================
 if cfg.platform == 'Windows':
-    BACK_BUTTON_EMOJI = '⏴'
-    SETTINGS_BUTTON_EMOJI = '☰'
     # Views
     MAIN_VIEW_GEOMETRY = '500x215'
     PAY_VIEW_GEOMETRY = '500x215'
@@ -68,8 +66,6 @@ if cfg.platform == 'Windows':
     WELCOME_VIEW_GEOMETRY = '500x470'
 
 elif cfg.platform == 'Mac':
-    BACK_BUTTON_EMOJI = '⬅'
-    SETTINGS_BUTTON_EMOJI = '⚙'
     # Views
     MAIN_VIEW_GEOMETRY = '500x200'
     PAY_VIEW_GEOMETRY = '500x200'
@@ -84,8 +80,6 @@ elif cfg.platform == 'Mac':
     WELCOME_VIEW_GEOMETRY = '500x480'
 
 elif cfg.platform == 'Linux':
-    BACK_BUTTON_EMOJI = '⬅'
-    SETTINGS_BUTTON_EMOJI = '⚙'
     # Views
     MAIN_VIEW_GEOMETRY = '500x215'
     PAY_VIEW_GEOMETRY = '500x215'
@@ -100,8 +94,6 @@ elif cfg.platform == 'Linux':
     WELCOME_VIEW_GEOMETRY = '475x515'
 
 else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
-    BACK_BUTTON_EMOJI = '⬅'
-    SETTINGS_BUTTON_EMOJI = '⚙'
     # Views
     MAIN_VIEW_GEOMETRY = '500x195'
     PAY_VIEW_GEOMETRY = '500x195'
