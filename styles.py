@@ -1,6 +1,6 @@
 import tkinter as tk
 import config as cfg
-
+from PIL import Image
 
 def make_centered_geometry(window_resolution):
     window_resolution = window_resolution.split('x')
@@ -125,7 +125,8 @@ def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0):
     label.grid(row=0, column=0, columnspan=3, padx=10, pady=(10, pad_bottom), sticky="ew")
 
     # Back Button
-    back_button = self.add(ctk.CTkButton(self._app, text=BACK_BUTTON_EMOJI, font=(font, 24), width=35, height=30, command=self.open_main))
+    back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
+    back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', width=35, height=30, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=(10, pad_bottom), sticky="w")
 
 

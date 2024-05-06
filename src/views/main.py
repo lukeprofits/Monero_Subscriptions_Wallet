@@ -7,6 +7,7 @@ import config as cfg
 import styles
 from src.wallet import Wallet
 from src.exchange import Exchange
+from PIL import Image
 
 
 class MainView(View):
@@ -33,7 +34,8 @@ class MainView(View):
         rpc_status.grid(row=0, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
         # Settings Button
-        settings_button = self.add(ctk.CTkButton(self._app, text=styles.SETTINGS_BUTTON_EMOJI, font=(styles.font, 24), width=35, height=30, command=self.open_settings))
+        settings_image = ctk.CTkImage(Image.open("settings_icon_sliders.png"), size=(24, 24))
+        settings_button = self.add(ctk.CTkButton(self._app, image=settings_image, text="", width=35, height=30, command=self.open_settings))
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
