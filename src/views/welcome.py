@@ -1,17 +1,17 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
-
+import styles
 
 class WelcomeView(View):
     def build(self):
         def selected_currency_callback(choice):
             cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
 
-        self._app.geometry(cfg.WELCOME_VIEW_GEOMETRY)
+        self._app.geometry(styles.make_centered_geometry(styles.WELCOME_VIEW_GEOMETRY))
 
         # Title
-        label = self.add(ctk.CTkLabel(self._app, text='Welcome to the Subscriptions Wallet!', font=cfg.HEADINGS_FONT_SIZE))
+        label = self.add(ctk.CTkLabel(self._app, text='Welcome to the Subscriptions Wallet!', font=styles.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=(15, 0), sticky="ew")
 
         # To make this look better, I am adding spaces after to get the lines to line up
@@ -49,4 +49,7 @@ class WelcomeView(View):
         return self
 
     def open_main(self):
+                 #config.set(section='rpc', option='node_url', value=node)
+        cfg.config_file.set(section='DEFAULT', option='is_first_launch', value=str(False))
+        cfg.config_file.write()
         self._app.switch_view('main')

@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter
 from src.interfaces.view import View
 import config as cfg
+import styles
 import clipboard
 import monerorequest
 from src.wallet import Wallet
@@ -41,10 +42,10 @@ def input_is_valid_monero_request(input_string):
 
 class PayView(View):
     def build(self):
-        self._app.geometry(cfg.PAY_VIEW_GEOMETRY)
+        self._app.geometry(styles.PAY_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title=' Pay To:')
+        styles.back_and_title(self, ctk, cfg, title='Pay To:')
 
         # TODO: Can we set the border color through the theme file instead?
         # Input box
@@ -54,8 +55,12 @@ class PayView(View):
         if input_is_valid(input_string=clipboard_contents) and clipboard_contents != Wallet().address:
             self.payment_input.set(clipboard_contents)
 
-        self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, textvariable=self.payment_input, placeholder_text="Enter a monero payment request or wallet address...", font=(cfg.font, 12), corner_radius=15, border_color=cfg.monero_orange))
-        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=70, pady=(27.5, 20), sticky="ew")  #32.5
+            # TODO: refactor this to be better?
+            self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, textvariable=self.payment_input, font=(styles.font, 12), corner_radius=15, border_color=styles.monero_orange))
+        else:
+            self.input_box_for_wallet_or_request = self.add(ctk.CTkEntry(self._app, placeholder_text="Enter a monero payment request or wallet address...", font=(styles.font, 12), corner_radius=15, border_color=styles.monero_orange))
+
+        self.input_box_for_wallet_or_request.grid(row=1, column=0, columnspan=3, padx=70, pady=(27.5, 20), sticky="ew")
 
         # Next button
         next_button = self.add(ctk.CTkButton(self._app, text="Continue", corner_radius=15, command=self.next_button))
@@ -80,7 +85,3 @@ class PayView(View):
             self.wallet_or_request_logic(input_string=input_string)
         else:
             print('Not a Monero Payment Request or wallet address')
-
-
-#4At3X5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4hCeX2D
-#monero-request:1:H4sIAAAAAAAC/y2OX2+CMBTFv0uf1VSsirzpMBiTGQao05emlE7r2kL6B8Vl333FLLnJzfmdm3vODyCydsqCCMARHIMBoFeiLgxzVXFKbK2x08K7veO0Zop2Xu3z+AWMrSUWpGT9ScGM9bQincEN07jkQnB1wbSjgoFoAgdAOVl6p/7CDekkU9aAyON/gXnl3yBEZ2M4Y+GcIMbCvpNhQjBt8J343XdF0+1t/zgmK/ksl4tNmNspjYM0OQRb1zbt5/OEdDtr3nRxzIvT9JrdyfKWb/ni/Dg+rnUsM75RqZT1R5jJ8/Lw7r53ydqs012eFsGqj7REW1wR65uDAAZoCCdDOC8gjF4zghCewe8f/GxR8kABAAA=

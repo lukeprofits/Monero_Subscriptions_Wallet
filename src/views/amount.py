@@ -1,5 +1,5 @@
 import customtkinter as ctk
-
+import styles
 from src.exchange import Exchange
 from src.interfaces.view import View
 import config as cfg
@@ -10,17 +10,17 @@ from decimal import Decimal
 class AmountView(View):
     def build(self):
         def selected_currency_callback(choice):
-            cfg.CURRENT_SEND_CURRENT_AMOUNT = choice
+            cfg.CURRENT_SEND_CURRENCY = choice
 
-        self._app.geometry(cfg.AMOUNT_VIEW_GEOMETRY)
+        self._app.geometry(styles.AMOUNT_VIEW_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title='How Much:')
+        styles.back_and_title(self, ctk, cfg, title='How Much:')
 
         # Frame to hold buttons
         center_frame = self.add(ctk.CTkFrame(self._app, ))
         center_frame.grid(row=1, column=0, columnspan=3, padx=0, pady=(25, 10), sticky="nsew")
-        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)  # Frame will span 3 columns but contain two columns (0 and 1)
+        center_frame.columnconfigure([0, 1, 2, 3, 4, 5], weight=1)
 
         # Input box
         self.input_box_for_amount = self.add(ctk.CTkEntry(center_frame, corner_radius=15, placeholder_text="Enter an amount"))
@@ -28,7 +28,7 @@ class AmountView(View):
 
         # TODO: Currently this is a visual and nothing else. Review!
         # Currency Selector
-        selected_currency = ctk.StringVar(value=default_currency)
+        selected_currency = ctk.StringVar(value=default_currency())
         currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
         currency_selector.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
@@ -46,6 +46,7 @@ class AmountView(View):
         self._app.switch_view('main')
 
     def send_button(self):
+        # TODO: Make sure we are getting the wallet the right way
         # Send function
         wallet = cfg.SEND_TO_WALLET
 

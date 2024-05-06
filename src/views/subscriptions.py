@@ -5,6 +5,7 @@ The "Manage Subscriptions" window
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
+import styles
 import json
 from src.subscription import Subscription
 
@@ -12,13 +13,13 @@ class SubscriptionsView(View):
     def build(self):
         # If we have existing subscriptions
         if len(json.loads(cfg.subscriptions())) > 1:
-            self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_GEOMETRY)
+            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
         # If we have no existing subscriptions
         else:
-            self._app.geometry(cfg.SUBSCRIPTIONS_VIEW_NO_SUBS_GEOMETRY)
+            self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
 
         # Back button and title
-        cfg.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
+        styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
 
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
@@ -78,14 +79,14 @@ class SubscriptionFrame(ctk.CTkFrame):
         self.grid(row=row, column=1, columnspan=3, sticky="nsew", padx=10, pady=(0, 10))
 
        # Truncated to 50 characters
-        self.subscription_name = ctk.CTkLabel(self, text=f'{sub.custom_label[:50]}:', font=cfg.SUBHEADING_FONT_SIZE)  #
+        self.subscription_name = ctk.CTkLabel(self, text=f'{sub.custom_label[:50]}:', font=styles.SUBHEADING_FONT_SIZE)
         self.subscription_name.grid(row=0, column=1, pady=0, sticky="ns")
 
-        self.subscription_price = ctk.CTkLabel(self, text=f'{sub.amount} {sub.currency}', font=cfg.SUBHEADING_FONT_SIZE)
+        self.subscription_price = ctk.CTkLabel(self, text=f'{sub.amount} {sub.currency}', font=styles.SUBHEADING_FONT_SIZE)
         self.subscription_price.grid(row=1, column=1, pady=0,  sticky="ns")
 
         # TODO: Make this accurate. Right now it just shows billing cycle
-        self.subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub.days_per_billing_cycle} Days', font=cfg.BODY_FONT_SIZE)
+        self.subscription_renews_in = ctk.CTkLabel(self, text=f'Renews In {sub.days_per_billing_cycle} Days', font=styles.BODY_FONT_SIZE)
         self.subscription_renews_in.grid(row=2, column=1, pady=0, sticky="ns")
 
         self.subscription_cancel_button = ctk.CTkButton(self, text="Cancel", corner_radius=15, command=lambda: self.cancel_subscription(sub))
