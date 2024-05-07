@@ -118,7 +118,7 @@ def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0):
 
     # Back Button
     back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
-    back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', width=35, height=30, corner_radius=7, command=self.open_main))
+    back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=(10, pad_bottom), sticky="w")
 
 

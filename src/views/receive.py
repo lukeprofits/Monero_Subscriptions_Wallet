@@ -28,8 +28,18 @@ class ReceiveView(View):
     def build(self):
         self._app.geometry(styles.RECEIVE_VIEW_GEOMETRY)
 
-        # Back button and title
-        styles.back_and_title(self, ctk, cfg, title='Your Wallet:')
+        # Title
+        label = self.add(ctk.CTkLabel(self._app, text='Your Wallet:', font=styles.HEADINGS_FONT_SIZE))
+        label.grid(row=0, column=0, columnspan=3, padx=10, pady=(10, 0), sticky="ew")
+
+        # Back Button
+        back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
+        back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
+        back_button.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="w")
+
+        add_image = ctk.CTkImage(Image.open("plus_icon.png"), size=(24, 24))
+        add_button = self.add(ctk.CTkButton(self._app, image=add_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
+        add_button.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="e")
 
         # QR Code
         qr_image_name = generate_monero_qr(Wallet().address if rpc() else DUMMY_WALLET)
