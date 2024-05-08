@@ -37,8 +37,9 @@ class ReceiveView(View):
         back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
         back_button.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="w")
 
+        # Plus Button
         add_image = ctk.CTkImage(Image.open("plus_icon.png"), size=(24, 24))
-        add_button = self.add(ctk.CTkButton(self._app, image=add_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
+        add_button = self.add(ctk.CTkButton(self._app, image=add_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_create_payment_request))
         add_button.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="e")
 
         # QR Code
@@ -54,6 +55,9 @@ class ReceiveView(View):
 
     def open_main(self):
         self._app.switch_view('main')
+
+    def open_create_payment_request(self):
+        self._app.switch_view('create_payment_request')
 
     def copy_wallet_address(self):
         clipboard.copy(Wallet().address if rpc() else DUMMY_WALLET)
