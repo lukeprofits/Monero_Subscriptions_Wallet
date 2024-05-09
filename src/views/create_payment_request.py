@@ -1,6 +1,9 @@
 import customtkinter as ctk
 import tkinter
+
+from src.exchange import Exchange
 from src.interfaces.view import View
+from config import default_currency
 import config as cfg
 import styles
 import clipboard
@@ -10,6 +13,9 @@ from src.wallet import Wallet
 
 class CreatePaymentRequestView(View):
     def build(self):
+        def selected_currency_callback(choice):
+            cfg.CURRENT_CREATE_PAYMENT_REQUEST_CURRENCY = choice
+
         self._app.geometry(styles.CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY)
 
         # Back button and title
@@ -26,7 +32,12 @@ class CreatePaymentRequestView(View):
         self.custom_label_input.grid(row=1, column=0, columnspan=3, padx=x, pady=(10+y, y), sticky="ew")
 
         self.currency_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Pricing based on what currency?", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.currency_input.grid(row=2, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
+
+        selected_currency = ctk.StringVar(value=default_currency())
+        currency_input = self.add(ctk.CTkOptionMenu(self._app, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
+        currency_input.grid(row=2, column=0, padx=x, pady=y, sticky="ew")
+
+        #self.currency_input.grid(row=2, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
 
         self.amount_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Price per billing cycle?", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
         self.amount_input.grid(row=3, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
