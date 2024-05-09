@@ -5,7 +5,7 @@ from src.rpc_server import RPCServer
 from config import rpc, is_first_launch
 from src.views import (MainView, ReceiveView, PayView, SubscriptionsView, SettingsView, SetCurrencyView,
                        NodeSelectionView, AmountView, ReviewRequestView, ReviewSendView, ReviewDeleteRequestView,
-                       WelcomeView)
+                       WelcomeView, CreatePaymentRequestView)
 import config as cfg
 from src.exchange import Exchange
 
@@ -33,7 +33,8 @@ class App(ctk.CTk):
             'review_request': ReviewRequestView(self),
             'review_send': ReviewSendView(self),
             'review_delete': ReviewDeleteRequestView(self),
-            'welcome': WelcomeView(self)
+            'welcome': WelcomeView(self),
+            'create_payment_request': CreatePaymentRequestView(self)
         }
 
     def spawn_appropriate_initial_window(self):

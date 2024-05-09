@@ -64,6 +64,7 @@ if cfg.platform == 'Windows':
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x470'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
 
 elif cfg.platform == 'Mac':
     # Views
@@ -78,6 +79,7 @@ elif cfg.platform == 'Mac':
     AMOUNT_VIEW_GEOMETRY = '500x200'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
 
 elif cfg.platform == 'Linux':
     # Views
@@ -92,8 +94,9 @@ elif cfg.platform == 'Linux':
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '475x515'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
 
-else:  # Right now this is unneeded because anything not mac/windows is assumed to be linux.
+else:  # Not sure if we even need this
     # Views
     MAIN_VIEW_GEOMETRY = '500x195'
     PAY_VIEW_GEOMETRY = '500x195'
@@ -106,6 +109,7 @@ else:  # Right now this is unneeded because anything not mac/windows is assumed 
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
 
 
 # =====================
@@ -118,7 +122,7 @@ def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0):
 
     # Back Button
     back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
-    back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', width=35, height=30, corner_radius=7, command=self.open_main))
+    back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=(10, pad_bottom), sticky="w")
 
 

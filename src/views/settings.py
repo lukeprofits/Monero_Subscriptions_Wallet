@@ -31,12 +31,6 @@ class SettingsView(View):
         set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", corner_radius=15, command=self.open_set_currency))
         set_currency_button.grid(row=2, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
 
-        manually_create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Manually Create Monero Payment Request", corner_radius=15, command=self.open_manually_create_payment_request))
-        manually_create_payment_request_button.grid(row=3, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
-
-        # welcome_message_button = self.add(ctk.CTkButton(self._app, text="Welcome Message", corner_radius=15, command=self.open_welcome_message))
-        # welcome_message_button.grid(row=4, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
-
         return self
 
     def open_main(self):
@@ -51,12 +45,7 @@ class SettingsView(View):
     def open_add_payment_request(self):
         self._app.switch_view('payment_request')
 
-    def open_manually_create_payment_request(self):
-        self._app.switch_view('manual_payment')
-
-    # TODO: This does not exist yet and needs to be created.
     def open_set_currency(self):
-        # Code for view (can't seem to get this working. It messes up any subsequest windows when closed)
         self._app.switch_view('set_currency')
 
         #''' # Code for pop-up window
