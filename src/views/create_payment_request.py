@@ -24,29 +24,28 @@ class CreatePaymentRequestView(View):
         # TODO: Can we set the border color through the theme file instead?
         # Border Color
         bc = styles.monero_orange
-        x = 70
+        x = 5  #70
         y = 5  #(27.5, 20)
 
 
         self.custom_label_input = self.add(ctk.CTkEntry(self._app, placeholder_text="What is it for?", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
         self.custom_label_input.grid(row=1, column=0, columnspan=3, padx=x, pady=(10+y, y), sticky="ew")
 
-        self.currency_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Pricing based on what currency?", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
+        self.amount_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Price per billing cycle?", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
+        self.amount_input.grid(row=2, column=0, columnspan=2, padx=x, pady=y, sticky="ew")
 
         selected_currency = ctk.StringVar(value=default_currency())
         currency_input = self.add(ctk.CTkOptionMenu(self._app, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
-        currency_input.grid(row=2, column=0, padx=x, pady=y, sticky="ew")
-
-        #self.currency_input.grid(row=2, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
-
-        self.amount_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Price per billing cycle?", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.amount_input.grid(row=3, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
+        currency_input.grid(row=2, column=2, padx=(x, 0), pady=y, sticky="ew")
 
         self.days_per_billing_cycle_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Billing every _ days", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.days_per_billing_cycle_input.grid(row=4, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
+        self.days_per_billing_cycle_input.grid(row=3, column=0, padx=(x, 0), pady=y, sticky="ew")
 
-        self.start_date_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Start Date? (mm/dd/yyyy)", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
-        self.start_date_input.grid(row=5, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
+        starting_on = self.add(ctk.CTkLabel(self._app, text="starting on", font=styles.BODY_FONT_SIZE))
+        starting_on.grid(row=3, column=1, padx=0, pady=y, sticky="ew")
+
+        self.start_date_input = self.add(ctk.CTkEntry(self._app, placeholder_text="mm/dd/yyyy", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
+        self.start_date_input.grid(row=3, column=2, columnspan=3, padx=(0, x), pady=y, sticky="ew")
 
         self.number_of_payments_input = self.add(ctk.CTkEntry(self._app, placeholder_text="Number of Payments (use 0 for until canceled)", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
         self.number_of_payments_input.grid(row=6, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
