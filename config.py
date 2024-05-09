@@ -41,7 +41,8 @@ config_options = {
         'secondary_currency': 'XMR'
     },
     'other': {
-        'is_first_launch': True
+        'is_first_launch': True,
+        'send_payments': True
     }
 
 }

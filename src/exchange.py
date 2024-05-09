@@ -3,7 +3,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from src.clients.goldback import scrape as goldback_scrape
 from src.clients.xe import scrape as xe_scrape
 from src.clients.rpc import RPCClient
-from monero_usd_price import median_price
+from monero_usd_price import median_price, calculate_atomic_units_from_monero
 from config import rpc
 
 class Exchange():
@@ -51,12 +51,15 @@ class Exchange():
         return str(cls._round(converted, to_sym))
 
     @classmethod
-    def to_xmr(cls, from_sym, amount):
+    def to_atomic_units(cls, from_sym, amount):
         if from_sym == 'XGB':
             sym_value = goldback_scrape()
         else:
             sym_value = xe_scrape(from_sym)
-        return amount
+
+        usd_value = float(sym_value) * amount
+        xmr_value = usd_value / float(cls.US_EXCHANGE)
+        return calculate_atomic_units_from_monero(float(xmr_value))
 
     @classmethod
     def _round(cls, value, to_sym):

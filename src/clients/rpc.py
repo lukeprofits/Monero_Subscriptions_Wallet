@@ -116,6 +116,44 @@ class RPCClient():
             "method": "get_balance"
         }
 
+    def make_integrated_address(self, wallet, payment_id):
+        try:
+            return self.post(self._make_integrated_address(wallet, payment_id))['result']
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _make_integrated_address(self, wallet, payment_id):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "make_integrated_address",
+            "params": {
+                "standard_address": wallet,
+                "payment_id": payment_id
+            }
+        }
+
+    def transfer(self, destination, amount):
+        try:
+            return self.post(self._transfer(destination, amount))['result']
+        except requests.exceptions.ConnectionError as e:
+            self.logger.debug(str(e))
+            return False
+
+    def _transfer(self, destination, amount):
+        return {
+            "jsonrpc": "2.0",
+            "id": "0",
+            "method": "transfer",
+            "params": {
+                "destinations": {
+                    'address': destination,
+                    'amount': amount
+                }
+            }
+        }
+
     @property
     def headers(self):
         if not self._headers:

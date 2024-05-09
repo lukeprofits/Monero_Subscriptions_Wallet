@@ -2,10 +2,14 @@
 A class for each individual Subscription object
 """
 
+import logging
+import logging.config
 from datetime import datetime, timedelta
 import monerorequest
 from sched import scheduler
 from src.clients.rpc import RPCClient
+from src.logging import config as logging_config
+from config import send_payments
 
 class Subscription:
     def __init__(self, custom_label, sellers_wallet, currency, amount,  payment_id, start_date, days_per_billing_cycle, number_of_payments, change_indicator_url=''):
@@ -18,7 +22,8 @@ class Subscription:
         self.days_per_billing_cycle = days_per_billing_cycle if monerorequest.Check.days_per_billing_cycle(days_per_billing_cycle) else 30
         self.number_of_payments = number_of_payments if monerorequest.Check.number_of_payments(number_of_payments) else 1
         self.change_indicator_url = change_indicator_url if monerorequest.Check.change_indicator_url(change_indicator_url) else ''
-
+        logging.config.dictConfig(logging_config)
+        self.logger = logging.getLogger(self.__module__)
 
     def json_friendly(self):
         json_data = {
@@ -69,8 +74,17 @@ class Subscription:
         Need to check if the number of payments has already been hit
         Need to convert the desired currency to XMR
         '''
-        # if Exchange.XMR_AMOUNT > Exchange:
-
+        xmr_to_send = Exchange.to_atomic_units(self.currency, self.amount)
+        if Exchange.XMR_AMOUNT > xmr_to_send:
+            logger.info('Sending Funds %s XMR', xmr_to_send)
+            if send_payments():
+                client = RPCClient()
+                integrated_address = client.make_integrated_address(self.sellers_wallet, self.payment_id)['integrated_address']
+                client.transfer(integrated_address, self.amount)
+            else:
+                logger.info('Sending Funds Disabled')
+        else:
+            logger.error('Insuffient Funds Attempted to Send: %s Balance: %s', xmr_to_send, Exchange.XMR_AMOUNT)
         #Last step
         Exchange.refresh_prices()
 
