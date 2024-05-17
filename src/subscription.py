@@ -56,7 +56,8 @@ class Subscription:
         return monero_request
 
     def next_payment_time(self):
-        next_time = self.start_date
+        next_time = datetime.strptime(self.start_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+
         while next_time < datetime.now():
             next_time = next_time + timedelta(days=self.days_per_billing_cycle)
         return next_time
@@ -68,12 +69,6 @@ class Subscription:
         return subscription_data_as_json
 
     def make_payment(self):
-        '''
-        What are the steps required for this?
-        Need to check for sufficient funds
-        Need to check if the number of payments has already been hit
-        Need to convert the desired currency to XMR
-        '''
         xmr_to_send = Exchange.to_atomic_units(self.currency, self.amount)
         if Exchange.XMR_AMOUNT > xmr_to_send:
             logger.info('Sending Funds %s XMR', xmr_to_send)

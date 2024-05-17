@@ -12,6 +12,8 @@ monerorequest = "*"
 clipboard = "*"
 qrcode = "*"
 pillow = "*"
+factory_boy = "*"
+time-machine = "*"
 
 [dev-packages]
 
