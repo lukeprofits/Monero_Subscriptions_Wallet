@@ -6,7 +6,8 @@ from config import rpc, is_first_launch
 from src.views import (MainView, ReceiveView, PayView, SubscriptionsView, SettingsView, SetCurrencyView,
                        NodeSelectionView, AmountView, ReviewRequestView, ReviewSendView, ReviewDeleteRequestView,
                        WelcomeView, CreatePaymentRequestView)
-
+import config as cfg
+from src.exchange import Exchange
 
 ctk.set_default_color_theme("monero_theme.json")
 
@@ -47,6 +48,7 @@ class App(ctk.CTk):
             self.rpc_server = RPCServer.get()
             self.rpc_server.start()
             self.rpc_server.check_readiness()
+            Exchange.refresh_prices()
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()

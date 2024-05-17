@@ -2,9 +2,14 @@
 A class for each individual Subscription object
 """
 
-from datetime import datetime
+import logging
+import logging.config
+from datetime import datetime, timedelta
 import monerorequest
-
+from sched import scheduler
+from src.clients.rpc import RPCClient
+from src.logging import config as logging_config
+from config import send_payments
 
 class Subscription:
     def __init__(self, custom_label, sellers_wallet, currency, amount,  payment_id, start_date, days_per_billing_cycle, number_of_payments, change_indicator_url=''):
@@ -17,7 +22,8 @@ class Subscription:
         self.days_per_billing_cycle = days_per_billing_cycle if monerorequest.Check.days_per_billing_cycle(days_per_billing_cycle) else 30
         self.number_of_payments = number_of_payments if monerorequest.Check.number_of_payments(number_of_payments) else 1
         self.change_indicator_url = change_indicator_url if monerorequest.Check.change_indicator_url(change_indicator_url) else ''
-
+        logging.config.dictConfig(logging_config)
+        self.logger = logging.getLogger(self.__module__)
 
     def json_friendly(self):
         json_data = {
@@ -49,8 +55,33 @@ class Subscription:
 
         return monero_request
 
+    def next_payment_time(self):
+        next_time = datetime.strptime(self.start_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+        while next_time < datetime.now():
+            next_time = next_time + timedelta(days=self.days_per_billing_cycle)
+        return next_time
+
     @classmethod
     def decode(cls, code):
         subscription_data_as_json = monerorequest.Decode.monero_payment_request_from_code(monero_payment_request=code)
 
         return subscription_data_as_json
+
+    def make_payment(self):
+        xmr_to_send = Exchange.to_atomic_units(self.currency, self.amount)
+        if Exchange.XMR_AMOUNT > xmr_to_send:
+            logger.info('Sending Funds %s XMR', xmr_to_send)
+            if send_payments():
+                client = RPCClient()
+                integrated_address = client.make_integrated_address(self.sellers_wallet, self.payment_id)['integrated_address']
+                client.transfer(integrated_address, self.amount)
+            else:
+                logger.info('Sending Funds Disabled')
+        else:
+            logger.error('Insuffient Funds Attempted to Send: %s Balance: %s', xmr_to_send, Exchange.XMR_AMOUNT)
+        #Last step
+        Exchange.refresh_prices()
+
+    def schedule(self):
+        scheduler.enterabs(self.next_payment_time(), 1, self.make_payment)

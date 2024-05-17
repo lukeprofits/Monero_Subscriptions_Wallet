@@ -15,11 +15,9 @@ import csv
 import monero_usd_price
 from lxml import html
 from decimal import Decimal, ROUND_HALF_UP
-import argparse
 from configparser import ConfigParser
 import re
 import json
-from src.subscription import Subscription
 
 SHOULD_CENTER_WINDOW = True
 
@@ -43,28 +41,11 @@ config_options = {
         'secondary_currency': 'XMR'
     },
     'other': {
-        'is_first_launch': True
+        'is_first_launch': True,
+        'send_payments': True
     }
 
 }
-
-parser=argparse.ArgumentParser()
-parser.add_argument('--rpc-bind-port', type=int)
-parser.add_argument('--local-rpc-url')
-parser.add_argument('--rpc-username')
-parser.add_argument('--rpc-password')
-parser.add_argument('--rpc', type=bool, action=argparse.BooleanOptionalAction)
-parser.add_argument('--node-url')
-parser.add_argument('--cli-path')
-parser.add_argument('--daemon-url')
-parser.add_argument('--config-file')
-parser.add_argument('--wallet-dir')
-parser.add_argument('--subscriptions')
-parser.add_argument('--default-currency')
-parser.add_argument('--secondary-currency')
-parser.add_argument('--is-first-launch')
-args=parser.parse_args()
-
 
 class ConfigFile():
     def __init__(self, path='./config.ini'):
@@ -120,12 +101,10 @@ class ConfigFile():
         self.write()
         return True
 
-config_file = ConfigFile(args.config_file or './config.ini')
+config_file = ConfigFile('./config.ini')
 
-def variable_value(args, section, option):
-    # Get From CLI Options
-    value = getattr(args, option)
-
+def variable_value(section, option):
+    value = None
     # Get From Config File
     if value is None:
         value = config_file.get(section, option)
@@ -144,17 +123,7 @@ def variable_value(args, section, option):
 # Set CLI Options as importable variables
 for section, options in config_options.items():
     for option in options.keys():
-        exec(f'{option} = lambda: variable_value(args, "{section}", "{option}")')
-
-
-# =====================
-# Placeholders and Dynamic Values
-# =====================
-xmr_unlocked_balance = '--.------------'
-wallet_balance_xmr = '--.------------'
-wallet_balance_usd = '---.--'
-current_monero_price = 150.00
-wallet_address = ''
+        exec(f'{option} = lambda: variable_value("{section}", "{option}")')
 
 
 def get_platform(os=platform.system()):
@@ -174,20 +143,8 @@ platform = get_platform()
 
 SHOW_DEFAULT_CURRENCY = True
 
-rounded_differently = {"BTC": 8,
-                       "LTC": 8,
-                       "BCH": 8,
-                       "ADA": 6,
-                       "DOGE": 8,
-                       "DTO": 8,  # 10, but rounded to fit well
-                       "ETH": 8,  # 18, but that does not fit on the window
-                       "LINK": 8,  # 18, but that does not fit on the window
-                       "UNI": 8  # 18, but that does not fit on the window
-                       }
-
-
-LATEST_XMR_AMOUNT = 1.01
-LASTEST_USD_AMOUNT = monero_usd_price.calculate_usd_from_monero(monero_amount=LATEST_XMR_AMOUNT, print_price_to_console=False, monero_price=False)
+monero_orange = '#ff6600'
+ui_overall_background = '#1D1D1D'
 
 CURRENT_PAYMENT_REQUEST = ''
 SEND_TO_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
