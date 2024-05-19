@@ -18,7 +18,11 @@ class Subscription:
         self.currency = currency if monerorequest.Check.currency(currency) else ''
         self.amount = amount if monerorequest.Check.amount(amount) else ''
         self.payment_id = payment_id if monerorequest.Check.payment_id(payment_id) else monerorequest.make_random_payment_id()
-        self.start_date = start_date if monerorequest.Check.start_date(start_date) else monerorequest.convert_datetime_object_to_truncated_RFC3339_timestamp_format(datetime.now())
+        if monerorequest.Check.start_date(start_date):
+            start_date = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+        else:
+            start_date = datetime.now()
+        self.start_date = start_date
         self.days_per_billing_cycle = days_per_billing_cycle if monerorequest.Check.days_per_billing_cycle(days_per_billing_cycle) else 30
         self.number_of_payments = number_of_payments if monerorequest.Check.number_of_payments(number_of_payments) else 1
         self.change_indicator_url = change_indicator_url if monerorequest.Check.change_indicator_url(change_indicator_url) else ''
@@ -32,7 +36,7 @@ class Subscription:
             "currency": self.currency,
             "amount": self.amount,
             "payment_id": self.payment_id,
-            "start_date": self.start_date,
+            "start_date":  monerorequest.convert_datetime_object_to_truncated_RFC3339_timestamp_format(self.start_date),
             "days_per_billing_cycle": self.days_per_billing_cycle,
             "number_of_payments": self.number_of_payments,
             "change_indicator_url": self.change_indicator_url
@@ -48,7 +52,7 @@ class Subscription:
                                 currency=self.currency,
                                 amount=self.amount,
                                 payment_id=self.payment_id,
-                                start_date=self.start_date,
+                                start_date=monerorequest.convert_datetime_object_to_truncated_RFC3339_timestamp_format(self.start_date),
                                 days_per_billing_cycle=self.days_per_billing_cycle,
                                 number_of_payments=self.number_of_payments,
                                 change_indicator_url=self.change_indicator_url)
@@ -56,7 +60,7 @@ class Subscription:
         return monero_request
 
     def next_payment_time(self):
-        next_time = datetime.strptime(self.start_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+        next_time = self.start_date
 
         while next_time < datetime.now():
             next_time = next_time + timedelta(days=self.days_per_billing_cycle)

@@ -24,7 +24,7 @@ class TestSubscription(unittest.TestCase):
             'currency': subscription.currency,
             'amount': subscription.amount,
             'payment_id': subscription.payment_id,
-            'start_date': subscription.start_date,
+            'start_date': subscription.start_date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]+'Z',
             'days_per_billing_cycle': subscription.days_per_billing_cycle,
             'number_of_payments': subscription.number_of_payments,
             'change_indicator_url': subscription.change_indicator_url
