@@ -44,7 +44,7 @@ class App(ctk.CTk):
             self.current_view = self.views['main'].build()
 
     def start_rpc_server_if_appropriate(self):
-        if rpc():
+        if rpc() == 'True':
             self.rpc_server = RPCServer.get()
             self.rpc_server.start()
             self.rpc_server.check_readiness()

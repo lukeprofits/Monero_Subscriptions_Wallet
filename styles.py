@@ -64,7 +64,7 @@ if cfg.platform == 'Windows':
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x470'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x300'
 
 elif cfg.platform == 'Mac':
     # Views
@@ -79,7 +79,7 @@ elif cfg.platform == 'Mac':
     AMOUNT_VIEW_GEOMETRY = '500x200'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x300'
 
 elif cfg.platform == 'Linux':
     # Views
@@ -94,7 +94,7 @@ elif cfg.platform == 'Linux':
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '475x515'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x300'
 
 else:  # Not sure if we even need this
     # Views
@@ -109,16 +109,16 @@ else:  # Not sure if we even need this
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x300'
 
 
 # =====================
 # GUI Components
 # =====================
-def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0):
+def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0, column_count=3):
     # Title
     label = self.add(ctk.CTkLabel(self._app, text=title, font=HEADINGS_FONT_SIZE))
-    label.grid(row=0, column=0, columnspan=3, padx=10, pady=(10, pad_bottom), sticky="ew")
+    label.grid(row=0, column=0, columnspan=column_count, padx=10, pady=(10, pad_bottom), sticky="ew")
 
     # Back Button
     back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
