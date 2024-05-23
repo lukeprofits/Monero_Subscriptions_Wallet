@@ -9,17 +9,14 @@ from config import default_currency, secondary_currency
 class SetCurrencyView(View):
     def build(self):
         self._app.geometry(styles.SET_CURRENCY_VIEW_GEOMETRY)
-        #self._app.columnconfigure([0, 1, 2, 3], weight=1)
 
         def default_currency_selector_callback(choice):
             cfg.config_file.set(section='subscriptions', option='default_currency', value=choice)
             cfg.config_file.write()
-            #print("User chose:", choice)
 
         def secondary_currency_selector_callback(choice):
             cfg.config_file.set(section='subscriptions', option='secondary_currency', value=choice)
             cfg.config_file.write()
-            # print("User chose:", choice)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title=' Set Currency:')
