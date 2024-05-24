@@ -53,55 +53,64 @@ class CreatePaymentRequestView(View):
         self.custom_label_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Title", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
         self.custom_label_input.grid(row=0, column=0, columnspan=10, padx=x, pady=(10 + y, y), sticky="ew")
 
+
+        #'''
         # Pricing & Payments
         self.number_of_payments_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="# Payments", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        payment_count_options = ["Subscription", "1 payment"]
+        payment_count_options = ["A Subscription", "1 Payment"]
         for i in range(366):
             if i > 1:
-                payment_count_options.append(f"{i} payments")
-        selected_number_of_payments = ctk.StringVar(value=payment_count_options[2])
+                payment_count_options.append(f"{i} Payments")
+        selected_number_of_payments = ctk.StringVar(value=payment_count_options[0])
         self.number_of_payments_input = self.add(ctk.CTkOptionMenu(content_frame, values=payment_count_options, corner_radius=15,command=selected_currency_callback, variable=selected_number_of_payments))
-        self.number_of_payments_input.grid(row=1, column=0, columnspan=4, padx=x, pady=y, sticky="ew")
+        self.number_of_payments_input.grid(row=1, column=0, columnspan=4, padx=(x, (x / 2)), pady=y, sticky="ew")
 
         payments_of = self.add(ctk.CTkLabel(content_frame, text="of", font=styles.BODY_FONT_SIZE))
-        payments_of.grid(row=1, column=4, columnspan=2, padx=x, pady=y, sticky="ew")
+        payments_of.grid(row=1, column=4, columnspan=2, padx=(x / 2), pady=y, sticky="ew")
 
         self.amount_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Price", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.amount_input.grid(row=1, column=6, columnspan=2, padx=x, pady=y, sticky="ew")
+        self.amount_input.grid(row=1, column=6, columnspan=2, padx=(x / 2), pady=y, sticky="ew")
 
         selected_currency = ctk.StringVar(value=default_currency())
         currency_input = self.add(ctk.CTkOptionMenu(content_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
-        currency_input.grid(row=1, column=8, columnspan=2, padx=x, pady=y, sticky="ew")
+        currency_input.grid(row=1, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+        #'''
 
 
+        #'''
+        # Billing Dates
+        #billing_every = self.add(ctk.CTkLabel(content_frame, text="Bills", font=styles.BODY_FONT_SIZE))
+        #billing_every.grid(row=2, column=0, columnspan=3, padx=(x, (x / 2)), pady=y, sticky="ew")
 
-        billing_every = self.add(ctk.CTkLabel(content_frame, text="Bills every", font=styles.BODY_FONT_SIZE))
-        billing_every.grid(row=2, column=0, columnspan=3, padx=x, pady=y, sticky="ew")
-
-        self.days_per_billing_cycle_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="30 days", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.days_per_billing_cycle_input.grid(row=2, column=3, columnspan=4, padx=x, pady=y, sticky="ew")
-
-        starting_on = self.add(ctk.CTkLabel(content_frame, text="starting:", font=styles.BODY_FONT_SIZE))
-        starting_on.grid(row=2, column=7, columnspan=1, padx=x, pady=y, sticky="ew")
-
-        self.start_date_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="mm/dd/yyyy", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
-        self.start_date_input.grid(row=2, column=8, columnspan=2, padx=x, pady=y, sticky="ew")
+        day_options = []
+        for i in range(366):
+            if i > 0:
+                day_options.append(f"Bills every {i} days")
+        selected_number_of_days = ctk.StringVar(value=day_options[29])
+        self.days_per_billing_cycle = self.add(
+            ctk.CTkOptionMenu(content_frame, values=day_options, corner_radius=15, command=selected_currency_callback, variable=selected_number_of_days))
+        self.days_per_billing_cycle.grid(row=2, column=0, columnspan=7, padx=(x, (x / 2)), pady=y, sticky="ew")
 
 
+        starting_on = self.add(ctk.CTkLabel(content_frame, text="starting on", font=styles.BODY_FONT_SIZE))
+        starting_on.grid(row=2, column=7, columnspan=1, padx=(x / 2), pady=y, sticky="ew")
+
+        self.start_date_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="mm/dd/yyyy", corner_radius=15, border_color=bc))
+        self.start_date_input.grid(row=2, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+        # '''
 
 
         # Consider having these as ADVANCED settings that you have to expand to see
         self.sellers_wallet_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Sellers Wallet", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.sellers_wallet_input.grid(row=3, column=0, columnspan=6, padx=x, pady=y, sticky="ew")
+        self.sellers_wallet_input.grid(row=3, column=0, columnspan=10, padx=x, pady=y, sticky="ew")
 
-
-
+        #'''
         self.change_indicator_url_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Change Indicator URL (Optional)", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
-        self.change_indicator_url_input.grid(row=4, column=0, columnspan=4, padx=(x, 5), pady=(y, 5 + y), sticky="ew")
+        self.change_indicator_url_input.grid(row=4, column=0, columnspan=8, padx=(x, 5), pady=(y, 5 + y), sticky="ew")
 
         self.payment_id_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Payment ID (Optional)", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
-        self.payment_id_input.grid(row=4, column=4, columnspan=2, padx=(5, x), pady=(y, 5 + y), sticky="ew")
-
+        self.payment_id_input.grid(row=4, column=8, columnspan=2, padx=(5, x), pady=(y, 5 + y), sticky="ew")
+        #''
 
 
         # Create button

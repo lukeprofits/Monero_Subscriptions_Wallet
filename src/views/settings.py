@@ -31,6 +31,14 @@ class SettingsView(View):
         set_currency_button = self.add(ctk.CTkButton(self._app, text="Set Currency", corner_radius=15, command=self.open_set_currency))
         set_currency_button.grid(row=2, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
 
+        import_subscriptions_file = self.add(ctk.CTkButton(self._app, text="Import Subscriptions File", corner_radius=15, command=self.open_main))
+        import_subscriptions_file.grid(row=3, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
+
+        export_subscriptions_file = self.add(ctk.CTkButton(self._app, text="Export Subscriptions File", corner_radius=15, command=self.open_main))
+        export_subscriptions_file.grid(row=4, column=BUTTONS_COL, columnspan=BUTTONS_COL_SPAN, padx=BUTTONS_PADX, pady=BUTTONS_PADY, sticky=BUTTONS_STICKY)
+
+        # wallet too
+
         return self
 
     def open_main(self):
