@@ -50,6 +50,10 @@ class AmountView(View):
         # Send function
         wallet = cfg.SEND_TO_WALLET
 
+        # TODO: consider setting this immedialtly, so we dont need this line, and clearing out all temp values on back to main view.
+        if not cfg.CURRENT_SEND_CURRENCY:
+            cfg.CURRENT_SEND_CURRENCY = default_currency()
+
         # TODO: Validate that amount is valid.
         cfg.CURRENT_SEND_AMOUNT = Decimal(self.input_box_for_amount.get().strip())
 
