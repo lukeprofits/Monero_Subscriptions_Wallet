@@ -104,11 +104,14 @@ class CreatePaymentRequestView(View):
         self.sellers_wallet_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Sellers Wallet", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
         self.sellers_wallet_input.grid(row=3, column=0, columnspan=10, padx=x, pady=y, sticky="ew")
 
-        #'''
-        self.change_indicator_url_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Change Indicator URL (Optional)", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
-        self.change_indicator_url_input.grid(row=4, column=0, columnspan=8, padx=(x, 5), pady=(y, 5 + y), sticky="ew")
+        # '''
+        optional_text = self.add(ctk.CTkLabel(content_frame, text="Optional:", font=styles.SUBHEADING_FONT_SIZE))
+        optional_text.grid(row=4, column=0, columnspan=2, padx=((x * 2), 5), pady=y, sticky="ew")
 
-        self.payment_id_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Payment ID (Optional)", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
+        self.change_indicator_url_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Change Indicator URL", corner_radius=15, border_color=bc))  #font=(styles.font, 12),
+        self.change_indicator_url_input.grid(row=4, column=2, columnspan=6, padx=(x, 5), pady=(y, 5 + y), sticky="ew")
+
+        self.payment_id_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Payment ID", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
         self.payment_id_input.grid(row=4, column=8, columnspan=2, padx=(5, x), pady=(y, 5 + y), sticky="ew")
         #''
 
