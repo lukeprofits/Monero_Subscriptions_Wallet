@@ -117,4 +117,5 @@ class CreatePaymentRequestView(View):
         self._app.switch_view('main')
 
     def create_button(self):
-        self._app.switch_view('main')
+        # Pull in all info and process
+        self._app.switch_view('copy_payment_request')
