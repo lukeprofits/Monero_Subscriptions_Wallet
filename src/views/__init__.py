@@ -11,3 +11,4 @@ from .review_send import ReviewSendView
 from .review_delete_request import ReviewDeleteRequestView
 from .welcome import WelcomeView
 from .create_payment_request import CreatePaymentRequestView
+from .copy_payment_request import CopyPaymentRequestView

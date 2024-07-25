@@ -38,6 +38,8 @@ class ReviewSendView(View):
 
         self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
 
+
+
         # Title
         label = self.add(ctk.CTkLabel(self._app, text='Send Payment?', font=styles.HEADINGS_FONT_SIZE))
         label.grid(row=0, column=0, columnspan=3, padx=10, pady=(45, 5), sticky="ew")

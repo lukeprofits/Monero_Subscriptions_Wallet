@@ -97,7 +97,7 @@ class RPCServer(Notifier):
                 self.status_message = 'RPC Server: Failed To Start'
                 self.notify()
 
-            if not rpc():
+            if not rpc() == 'True':
                 self.status_message = "( Test Mode )"
                 self.notify()
 

@@ -32,13 +32,13 @@ class AmountView(View):
         currency_selector = self.add(ctk.CTkOptionMenu(center_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
         currency_selector.grid(row=0, column=3, padx=(5, 10), pady=0, sticky="ew")
 
+        # Send button
+        send_button = self.add(ctk.CTkButton(self._app, text="Send", corner_radius=15, command=self.send_button))
+        send_button.grid(row=2, column=0, columnspan=3, padx=120, pady=(5, 0), sticky="ew")
+
         # Wallet
         wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
         wallet.grid(row=3, column=0, columnspan=3, padx=10, pady=15, sticky="ew")
-
-        # Send button
-        send_button = self.add(ctk.CTkButton(self._app, text="Send", corner_radius=15, command=self.send_button))
-        send_button.grid(row=2, column=0, columnspan=3, padx=120, pady=(10, 0), sticky="ew")
 
         return self
 
@@ -49,6 +49,10 @@ class AmountView(View):
         # TODO: Make sure we are getting the wallet the right way
         # Send function
         wallet = cfg.SEND_TO_WALLET
+
+        # TODO: consider setting this immedialtly, so we dont need this line, and clearing out all temp values on back to main view.
+        if not cfg.CURRENT_SEND_CURRENCY:
+            cfg.CURRENT_SEND_CURRENCY = default_currency()
 
         # TODO: Validate that amount is valid.
         cfg.CURRENT_SEND_AMOUNT = Decimal(self.input_box_for_amount.get().strip())

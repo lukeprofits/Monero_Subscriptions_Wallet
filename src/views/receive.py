@@ -43,10 +43,10 @@ class ReceiveView(View):
         add_button.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="e")
 
         # QR Code
-        qr_image_name = generate_monero_qr(Wallet().address if rpc() else DUMMY_WALLET)
+        qr_image_name = generate_monero_qr(Wallet().address if rpc() == 'True' else DUMMY_WALLET)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
-        qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(20, 15))
+        qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(15, 15))
 
         copy_wallet_button = self.add(ctk.CTkButton(self._app, text="Copy Wallet Address", corner_radius=15, command=self.copy_wallet_address))
         copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=165, pady=(0, 15), sticky="ew")
@@ -60,5 +60,5 @@ class ReceiveView(View):
         self._app.switch_view('create_payment_request')
 
     def copy_wallet_address(self):
-        clipboard.copy(Wallet().address if rpc() else DUMMY_WALLET)
+        clipboard.copy(Wallet().address if rpc() == 'True' else DUMMY_WALLET)
         self._app.switch_view('main')

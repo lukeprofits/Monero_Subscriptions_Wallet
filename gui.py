@@ -44,7 +44,7 @@ class App(ctk.CTk):
             self.current_view = self.views['main'].build()
 
     def start_rpc_server_if_appropriate(self):
-        if rpc():
+        if rpc() == 'True':
             self.rpc_server = RPCServer.get()
             self.rpc_server.start()
             self.rpc_server.check_readiness()
@@ -64,4 +64,5 @@ app = App()
 app.title("Monero Subscriptions Wallet")
 app.iconphoto(True, PhotoImage(file='icon_orange.png'))
 app.protocol("WM_DELETE_WINDOW", app.shutdown_steps)
+app.resizable(False, False)  # Make the window non-resizable
 app.mainloop()

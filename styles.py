@@ -58,13 +58,13 @@ if cfg.platform == 'Windows':
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x215'
-    RECEIVE_VIEW_GEOMETRY = '500x325'
-    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    RECEIVE_VIEW_GEOMETRY = '500x305'
+    SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x470'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
 
 elif cfg.platform == 'Mac':
     # Views
@@ -73,13 +73,13 @@ elif cfg.platform == 'Mac':
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x200'
-    RECEIVE_VIEW_GEOMETRY = '500x325'
-    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    RECEIVE_VIEW_GEOMETRY = '500x305'
+    SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x200'
     AMOUNT_VIEW_GEOMETRY = '500x200'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
 
 elif cfg.platform == 'Linux':
     # Views
@@ -88,13 +88,13 @@ elif cfg.platform == 'Linux':
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x215'
-    RECEIVE_VIEW_GEOMETRY = '500x325'
-    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    RECEIVE_VIEW_GEOMETRY = '500x305'
+    SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x215'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '475x515'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
 
 else:  # Not sure if we even need this
     # Views
@@ -103,22 +103,22 @@ else:  # Not sure if we even need this
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x195'
-    RECEIVE_VIEW_GEOMETRY = '500x325'
-    SET_CURRENCY_VIEW_GEOMETRY = '360x165'
+    RECEIVE_VIEW_GEOMETRY = '500x305'
+    SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
-    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x480'
+    CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
 
 
 # =====================
 # GUI Components
 # =====================
-def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0):
+def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0, column_count=3):
     # Title
     label = self.add(ctk.CTkLabel(self._app, text=title, font=HEADINGS_FONT_SIZE))
-    label.grid(row=0, column=0, columnspan=3, padx=10, pady=(10, pad_bottom), sticky="ew")
+    label.grid(row=0, column=0, columnspan=column_count, padx=10, pady=(10, pad_bottom), sticky="ew")
 
     # Back Button
     back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
