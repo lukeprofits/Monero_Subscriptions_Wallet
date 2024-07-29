@@ -62,7 +62,7 @@ class RPCServer(Notifier):
         self.process.kill()
 
     def ready(self):
-        rpc_client = RPCClient()
+        rpc_client = RPCClient.get()
         while True:
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
                 output = self.process.stdout.readline()

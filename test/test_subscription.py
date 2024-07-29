@@ -57,5 +57,13 @@ class TestSubscription(unittest.TestCase):
         self.assertEqual(subscription.number_of_payments, sub_copy.number_of_payments)
         self.assertEqual(subscription.change_indicator_url, sub_copy.change_indicator_url)
 
+    def test_make_payment(self):
+        with patch('src.subscription.Subscription.payable', return_value=True):
+            with patch('src.subscription.RPCClient.transfer', return_value={'result': {}}):
+                with patch('src.subscription.Exchange.refresh_prices'):
+                    with patch('src.subscription.RPCClient.make_integrated_address'):
+                        subscription = SubscriptionFactory()
+                        self.assertEqual(subscription.make_payment(), True)
+
 if __name__ == '__main__':
     unittest.main()
