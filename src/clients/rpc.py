@@ -74,9 +74,9 @@ class RPCClient(Notifier):
             "method": "refresh"
         }
 
-    def create_wallet(self):
+    def create_wallet(self, filename='subscriptions_wallet'):
         try:
-            return self.post(self._create_wallet())
+            return self.post(self._create_wallet(filename))
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False

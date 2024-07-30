@@ -20,6 +20,7 @@ class MainView(View):
         self._rpc_client = RPCClient.get()
         self._element_observers = []
         self.toplevel_window = None
+        Exchange.refresh_prices()
 
     def build(self):
 

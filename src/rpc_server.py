@@ -36,7 +36,8 @@ class RPCServer(Notifier):
         self._observers.append(observer)
 
     def detach(self, observer: Observer):
-        self._observers.remove(observer)
+        if observer in self._observers:
+            self._observers.remove(observer)
 
     def notify(self):
         for observer in self._observers:
