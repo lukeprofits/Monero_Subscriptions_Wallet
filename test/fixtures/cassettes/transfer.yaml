@@ -1,0 +1,44 @@
+interactions:
+- request:
+    body: '{"jsonrpc": "2.0", "id": "0", "method": "transfer", "params": {"destinations":
+      [{"address": "59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC",
+      "amount": 1000}]}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '209'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.3
+    method: POST
+    uri: http://127.0.0.1:18088/json_rpc
+  response:
+    body:
+      string: "{\r\n  \"id\": \"0\",\r\n  \"jsonrpc\": \"2.0\",\r\n  \"result\": {\r\n
+        \   \"amount\": 1000,\r\n    \"amounts_by_dest\": {\r\n      \"amounts\":
+        [1000]\r\n    },\r\n    \"fee\": 114460000,\r\n    \"multisig_txset\": \"\",\r\n
+        \   \"spent_key_images\": {\r\n      \"key_images\": [\"d40cb1fb222ec82901115cc0cfae77e6ddd05c2b4c0d7b46c3ce14630a0bdfe7\",\"7de6af5a55bc4ad3e3e15f6e4539f6740789952215e78e5a2f5c041dea8b387b\"]\r\n
+        \   },\r\n    \"tx_blob\": \"\",\r\n    \"tx_hash\": \"af1969dd96a3700c887a24fa8609f71ea3a8451d5cf065812ba992819b08010a\",\r\n
+        \   \"tx_key\": \"\",\r\n    \"tx_metadata\": \"\",\r\n    \"unsigned_txset\":
+        \"\",\r\n    \"weight\": 2201\r\n  }\r\n}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '575'
+      Content-Type:
+      - application/json
+      Last-Modified:
+      - Thu, 01 Aug 2024 04:21:45 GMT
+      Server:
+      - Epee-based
+    status:
+      code: 200
+      message: Ok
+version: 1

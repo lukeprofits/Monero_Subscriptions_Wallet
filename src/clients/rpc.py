@@ -170,10 +170,10 @@ class RPCClient(Notifier):
             "id": "0",
             "method": "transfer",
             "params": {
-                "destinations": {
+                "destinations": [{
                     'address': destination,
                     'amount': amount
-                }
+                 }]
             }
         }
 

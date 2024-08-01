@@ -1,0 +1,44 @@
+interactions:
+- request:
+    body: '{"jsonrpc": "2.0", "id": "0", "method": "get_balance"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '54'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.3
+    method: POST
+    uri: http://127.0.0.1:18088/json_rpc
+  response:
+    body:
+      string: "{\r\n  \"id\": \"0\",\r\n  \"jsonrpc\": \"2.0\",\r\n  \"result\": {\r\n
+        \   \"balance\": 52561416412713,\r\n    \"blocks_to_unlock\": 0,\r\n    \"multisig_import_needed\":
+        false,\r\n    \"per_subaddress\": [{\r\n      \"account_index\": 0,\r\n      \"address\":
+        \"59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC\",\r\n
+        \     \"address_index\": 0,\r\n      \"balance\": 52561416412713,\r\n      \"blocks_to_unlock\":
+        0,\r\n      \"label\": \"Primary account\",\r\n      \"num_unspent_outputs\":
+        32,\r\n      \"time_to_unlock\": 0,\r\n      \"unlocked_balance\": 52561416412713\r\n
+        \   }],\r\n    \"time_to_unlock\": 0,\r\n    \"unlocked_balance\": 52561416412713\r\n
+        \ }\r\n}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '632'
+      Content-Type:
+      - application/json
+      Last-Modified:
+      - Thu, 01 Aug 2024 03:55:09 GMT
+      Server:
+      - Epee-based
+    status:
+      code: 200
+      message: Ok
+version: 1

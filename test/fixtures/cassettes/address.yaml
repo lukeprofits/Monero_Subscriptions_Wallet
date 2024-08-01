@@ -1,0 +1,40 @@
+interactions:
+- request:
+    body: '{"jsonrpc": "2.0", "id": "0", "method": "get_address"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '54'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.3
+    method: POST
+    uri: http://127.0.0.1:18088/json_rpc
+  response:
+    body:
+      string: "{\r\n  \"id\": \"0\",\r\n  \"jsonrpc\": \"2.0\",\r\n  \"result\": {\r\n
+        \   \"address\": \"59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC\",\r\n
+        \   \"addresses\": [{\r\n      \"address\": \"59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC\",\r\n
+        \     \"address_index\": 0,\r\n      \"label\": \"Primary account\",\r\n      \"used\":
+        true\r\n    }]\r\n  }\r\n}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '402'
+      Content-Type:
+      - application/json
+      Last-Modified:
+      - Thu, 01 Aug 2024 03:52:25 GMT
+      Server:
+      - Epee-based
+    status:
+      code: 200
+      message: Ok
+version: 1
