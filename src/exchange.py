@@ -52,13 +52,16 @@ class Exchange():
 
     @classmethod
     def to_atomic_units(cls, from_sym, amount):
-        if from_sym == 'XGB':
-            sym_value = goldback_scrape()
-        else:
-            sym_value = xe_scrape(from_sym)
+        if from_sym != 'XMR':
+            if from_sym == 'XGB':
+                sym_value = goldback_scrape()
+            else:
+                sym_value = xe_scrape(from_sym)
 
-        usd_value = float(sym_value) * amount
-        xmr_value = usd_value / float(cls.US_EXCHANGE)
+            usd_value = float(sym_value) * amount
+            xmr_value = usd_value / float(cls.US_EXCHANGE)
+        else:
+            xmr_value = amount
         return calculate_atomic_units_from_monero(float(xmr_value))
 
     @classmethod

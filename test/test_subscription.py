@@ -1,10 +1,11 @@
 import unittest
 import time_machine
+import vcr
 from unittest.mock import patch
 from datetime import datetime, timedelta
 from src.subscription import Subscription
 from test.factories.subscription import SubscriptionFactory
-
+from test.utils.rpc_server_helper import rpc_server_test
 class TestSubscription(unittest.TestCase):
     @time_machine.travel('2024-05-16 12:00:00')
     def test_next_payment_time(self):
@@ -58,12 +59,10 @@ class TestSubscription(unittest.TestCase):
         self.assertEqual(subscription.change_indicator_url, sub_copy.change_indicator_url)
 
     def test_make_payment(self):
-        with patch('src.subscription.Subscription.payable', return_value=True):
-            with patch('src.subscription.RPCClient.transfer', return_value={'result': {}}):
-                with patch('src.subscription.Exchange.refresh_prices'):
-                    with patch('src.subscription.RPCClient.make_integrated_address'):
-                        subscription = SubscriptionFactory()
-                        self.assertEqual(subscription.make_payment(), True)
+        with vcr.use_cassette('test/fixtures/cassettes/make_payment.yaml'):
+            with patch('src.subscription.send_payments', return_value=True):
+                subscription = SubscriptionFactory(payment_id='c2c9f284c33a4903', sellers_wallet='59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC')
+                self.assertEqual(subscription.make_payment(), True)
 
 if __name__ == '__main__':
     unittest.main()

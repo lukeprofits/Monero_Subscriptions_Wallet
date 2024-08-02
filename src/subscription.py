@@ -78,9 +78,9 @@ class Subscription:
             if send_payments():
                 client = RPCClient.get()
                 integrated_address = client.make_integrated_address(self.sellers_wallet, self.payment_id)['integrated_address']
-                client.transfer(integrated_address, self.amount)
+                transfer_result = client.transfer(integrated_address, self.amount)
                 Exchange.refresh_prices()
-                return True
+                return transfer_result['amount'] == int(self.amount)
             else:
                 self.logger.info('Sending Funds Disabled')
                 return False
@@ -92,7 +92,7 @@ class Subscription:
         Exchange.refresh_prices()
         xmr_to_send = Exchange.to_atomic_units(self.currency, float(self.amount))
         self.logger.info('Able to send funds %s XMR', xmr_to_send)
-        return Exchange.XMR_AMOUNT > xmr_to_send
+        return Exchange.to_atomic_units('XMR', Exchange.XMR_AMOUNT) > xmr_to_send
 
     def schedule(self):
         scheduler.enterabs(self.next_payment_time(), 1, self.make_payment)

@@ -1,7 +1,6 @@
 import unittest
 import vcr
 from src.clients.rpc import RPCClient
-from test.utils.rpc_server_helper import rpc_server_test
 
 class testRPCClient(unittest.TestCase):
     def test_version(self):
@@ -36,6 +35,19 @@ class testRPCClient(unittest.TestCase):
             address = '59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC'
             result = client.transfer(address, 1000)
         self.assertEqual(result['amount'], 1000)
+
+    def test_create_wallet(self):
+        with vcr.use_cassette('test/fixtures/cassettes/create_wallet.yaml'):
+            client = RPCClient()
+            result = client.create_wallet('test_wallet_2')
+        self.assertEqual(result, {})
+
+    def test_open_wallet(self):
+        with vcr.use_cassette('test/fixtures/cassettes/open_wallet.yaml'):
+            client = RPCClient()
+            result = client.open_wallet('test_wallet_2')
+        self.assertEqual(result, {})
+
 '''
 To create a new test with the wallet rpc server started use
 for _ in rpc_server_test():
