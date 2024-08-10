@@ -7,6 +7,7 @@ from src.interfaces.view import View
 import config as cfg
 import styles
 import json
+from PIL import Image
 from src.subscription import Subscription
 
 class SubscriptionsView(View):
@@ -21,6 +22,11 @@ class SubscriptionsView(View):
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
 
+        # Plus Button
+        add_image = ctk.CTkImage(Image.open("plus_icon.png"), size=(24, 24))
+        add_button = self.add(ctk.CTkButton(self._app, image=add_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.add_subscription))
+        add_button.grid(row=0, column=2, padx=10, pady=(10, 20), sticky="e")
+
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
 
@@ -32,6 +38,10 @@ class SubscriptionsView(View):
 
     def open_main(self):
         self._app.switch_view('main')
+
+    def add_subscription(self):
+        self._app.switch_view('pay')
+        # self.master.master.master.switch_view('pay')
 
     def destroy(self):
         self._app.grid_rowconfigure(1, weight=0)
@@ -52,15 +62,8 @@ class SubscriptionsScrollableFrame(ctk.CTkScrollableFrame):
                 self._create_subscription(Subscription(**sub), i)
 
         else:
-            no_subs_text = ctk.CTkLabel(self, text="You haven't added any subscriptions.", )
-            no_subs_text.pack(padx=10, pady=(20, 0))
-
-            # TODO: Have this close the window
-            subscription_cancel_button = ctk.CTkButton(self, text="Add Subscription", corner_radius=15, command=self.add_subscription)
-            subscription_cancel_button.pack(pady=10)
-
-            separator = ctk.CTkFrame(self, height=2)
-            separator.pack(fill='x', padx=10, pady=20)
+            no_subs_text = ctk.CTkLabel(self, text="     You haven't added any subscriptions yet.", )
+            no_subs_text.pack(padx=10, pady=(50, 0))
 
     def add_subscription(self):
         self.master.master.master.switch_view('pay')
