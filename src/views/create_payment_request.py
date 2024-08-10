@@ -24,7 +24,7 @@ class CreatePaymentRequestView(View):
         x = 10  # 70
         y = 5  # (27.5, 20)
 
-        heading_frame = ctk.CTkFrame(self._app)
+        heading_frame = self.add(ctk.CTkFrame(self._app))
         heading_frame.columnconfigure([0, 1, 2], weight=1)
         heading_frame.pack(fill='x', padx=0, pady=0)
 
@@ -41,7 +41,9 @@ class CreatePaymentRequestView(View):
         spacer = self.add(ctk.CTkLabel(heading_frame, text=''))
         spacer.grid(row=0, column=3, padx=10, pady=(10, 0), sticky="e")
 
-        content_frame = ctk.CTkFrame(self._app)
+
+
+        content_frame = self.add(ctk.CTkFrame(self._app))
         content_frame.pack(fill='both', expand=True, padx=0, pady=0)
         # Configure the grid layout to have 100 columns with equal size
         for i in range(10):
