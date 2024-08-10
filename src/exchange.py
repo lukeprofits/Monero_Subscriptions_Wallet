@@ -34,9 +34,11 @@ class Exchange():
         "AUD": "$"
     }
 
+    DUMMY_AMOUNT = 1  # Show an amount if running in test mode without RPC
+
     US_EXCHANGE = 0
-    XMR_AMOUNT = 0
-    USD_AMOUNT = 0
+    XMR_AMOUNT = 0 if rpc() == 'True' else DUMMY_AMOUNT
+    USD_AMOUNT = 0 if rpc() == 'True' else round(median_price() * DUMMY_AMOUNT, 2)
 
     @classmethod
     def convert(cls, to_sym):
