@@ -24,7 +24,7 @@ class SubscriptionsView(View):
         # TODO: Would be cool to have a little section for "Assuming no price fluctuations, your wallet has enough funds to cover your subscription costs until X date."
         # TODO: There is probably a better way to word this, and we may want to assume a 20% price drop or something to be safe.
 
-        self._app.grid_rowconfigure(1, weight=1)
+        self._app.grid_rowconfigure(1, weight=1)  # Changes this globally. Set back when closing view.
 
         self.my_frame = self.add(SubscriptionsScrollableFrame(master=self._app, corner_radius=0, fg_color="transparent"))
 
@@ -34,6 +34,7 @@ class SubscriptionsView(View):
         self._app.switch_view('main')
 
     def destroy(self):
+        self._app.grid_rowconfigure(1, weight=0)
         self.my_frame._parent_frame.destroy()
         super().destroy()
 
