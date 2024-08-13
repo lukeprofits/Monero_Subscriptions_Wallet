@@ -23,24 +23,37 @@ class CopyPaymentRequestView(View):
         self._app.geometry(styles.COPY_PAYMENT_REQUEST_VIEW_GEOMETRY)
 
         # Back button and title
-        styles.back_and_title(self, ctk, cfg, title='Copy Payment Request:')
+        styles.back_and_title(self, ctk, cfg, title='Created Payment Request:')
 
         # TODO: Can we set the border color through the theme file instead?
 
         # Generated Payment Request To Copy
-        #pr = "monero-request:1:H4sIAAAAAAAC/y1QXU/DMAz8KyjPG0o/ttK+tWuHBAKJrcDYS5Q07hqRJlOSDlrEfyedkCzZd2edT/5BtNeDcihDAb7FGC1Q01F1AiIUFw112pDBSC/PymAMqGb06HVfXgnrdE8kZTCvlHABqc9gbkqtqBNa+R1OR0s8R5iQUqgTacZGAsoivEBq6JlXdEvOdOxBOYsyT/8DIrg3je9YG4dxgoEFIU9Tb2lBSjCWfFHf5+hx7qLDylzexnOt21M/wHNq0xdnJr6DVTHA1tjP/CiCpNAfrJtGq6dJP22L9fSu6kd+v1nn31XOqmrVTNtd1Pnpgdk+7jZwCPfzSUeNI5w6nxyFOIyWAV6GSY1xdi3/OnxEv3/sOZmDTwEAAA=="
-        payment_request_text = self.add(ctk.CTkButton(self._app, text="Payment ID: 9fc88080d1d5dc09", font=styles.SUBHEADING_FONT_SIZE, fg_color='transparent'))
-        payment_request_text.grid(row=1, column=0, columnspan=3, padx=(5, 10), pady=(27.5, 0), sticky='ew')
+        pr = "monero-request:1:H4sIAAAAAAAC/y1QXU/DMAz8KyjPG0o/ttK+tWuHBAKJrcDYS5Q07hqRJlOSDlrEfyedkCzZd2edT/5BtNeDcihDAb7FGC1Q01F1AiIUFw112pDBSC/PymAMqGb06HVfXgnrdE8kZTCvlHABqc9gbkqtqBNa+R1OR0s8R5iQUqgTacZGAsoivEBq6JlXdEvOdOxBOYsyT/8DIrg3je9YG4dxgoEFIU9Tb2lBSjCWfFHf5+hx7qLDylzexnOt21M/wHNq0xdnJr6DVTHA1tjP/CiCpNAfrJtGq6dJP22L9fSu6kd+v1nn31XOqmrVTNtd1Pnpgdk+7jZwCPfzSUeNI5w6nxyFOIyWAV6GSY1xdi3/OnxEv3/sOZmDTwEAAA=="
+        pr_id = "9fc88080d1d5dc09"
 
-        copy_request_button = self.add(ctk.CTkButton(self._app, text="Copy Payment Request", corner_radius=15, command=self.copy_payment_request))
-        copy_request_button.grid(row=2, column=0, columnspan=3, padx=160, pady=(17.5, 0), sticky="ew")
+        main_text = self.add(ctk.CTkButton(self._app, text="The Payment Request has been copied to your clipboard.", font=styles.BODY_FONT_SIZE, fg_color='transparent'))
+        main_text.grid(row=1, column=0, columnspan=3, padx=10, pady=(5, 0), sticky='ew')
 
-        #copy_payment_id_button = self.add(ctk.CTkButton(self._app, text="Copy Payment ID", corner_radius=15, command=self.copy_payment_request))
-        #copy_payment_id_button.grid(row=3, column=0, columnspan=3, padx=70, pady=10, sticky="ew")
+        #second_text = self.add(ctk.CTkButton(self._app, text="Send it to someone so they can pay you.", font=styles.BODY_FONT_SIZE, fg_color='transparent'))
+        #second_text.grid(row=2, column=0, columnspan=3, padx=10, pady=0, sticky='ew')
+
+        third_text = self.add(ctk.CTkButton(self._app, text=f"Received payments will use payment_id: {pr_id}", font=styles.BODY_FONT_SIZE, fg_color='transparent'))
+        third_text.grid(row=3, column=0, columnspan=3, padx=10, pady=0, sticky='ew')
+
+        # Frame to hold buttons
+        center_frame = self.add(ctk.CTkFrame(self._app, ))
+        center_frame.grid(row=4, column=0, columnspan=3, padx=0, pady=(10, 0), sticky="nsew")
+        center_frame.columnconfigure([0, 1, 2, 3], weight=1)
+
+        copy_request_button = self.add(ctk.CTkButton(center_frame, text="Copy Payment Request", corner_radius=15, command=self.copy_payment_request))
+        copy_request_button.grid(row=0, column=1, padx=(10, 5), pady=0, sticky="ew")
+
+        copy_payment_id_button = self.add(ctk.CTkButton(center_frame, text="Copy Payment ID", corner_radius=15, command=self.copy_payment_id))
+        copy_payment_id_button.grid(row=0, column=2, padx=(5, 10), pady=0, sticky="ew")
 
         # Next button
-        #next_button = self.add(ctk.CTkButton(self._app, text="Done", corner_radius=15, command=self.open_main))
-        #next_button.grid(row=4, column=0, columnspan=3, padx=120, pady=15, sticky="ew")
+        next_button = self.add(ctk.CTkButton(self._app, text="Finished", corner_radius=15, command=self.open_main))
+        next_button.grid(row=5, column=0, columnspan=3, padx=120, pady=(10, 15), sticky="ew")
 
         return self
 
@@ -49,4 +62,6 @@ class CopyPaymentRequestView(View):
 
     def copy_payment_request(self):
         print('Copied Payment Request!')
-        self._app.switch_view('main')
+
+    def copy_payment_id(self):
+        print('Copied Payment ID!')
