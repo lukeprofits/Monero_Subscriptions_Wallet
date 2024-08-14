@@ -65,6 +65,7 @@ if cfg.platform == 'Windows':
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x470'
     CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
+    COPY_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x215'
 
 elif cfg.platform == 'Mac':
     # Views
@@ -80,6 +81,7 @@ elif cfg.platform == 'Mac':
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
     CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
+    COPY_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x215'
 
 elif cfg.platform == 'Linux':
     # Views
@@ -95,6 +97,7 @@ elif cfg.platform == 'Linux':
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '475x515'
     CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
+    COPY_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x215'
 
 else:  # Not sure if we even need this
     # Views
@@ -110,6 +113,7 @@ else:  # Not sure if we even need this
     REVIEW_REQUEST_PROMPT_VIEW_GEOMETRY = '500x215'
     WELCOME_VIEW_GEOMETRY = '500x480'
     CREATE_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x255'
+    COPY_PAYMENT_REQUEST_VIEW_GEOMETRY = '500x215'
 
 
 # =====================
