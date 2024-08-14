@@ -120,4 +120,15 @@ class CreatePaymentRequestView(View):
 
     def create_button(self):
         # Pull in all info and process
+        # payment_request = monerorequest.make_monero_payment_request(
+        #     custom_label: str = self.custom_label_input.get(),
+        #     sellers_wallet: str = '',
+        #     currency: str = '',
+        #     amount: str = '',
+        #     payment_id: str = '',
+        #     start_date: str = '',
+        #     days_per_billing_cycle: int = 30,
+        #     number_of_payments: int = 1,
+        #     change_indicator_url: str = '',
+        #     version: str = '1'):
         self._app.switch_view('copy_payment_request')
