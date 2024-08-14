@@ -7,7 +7,7 @@
 
 > :warning: The GUI library that we use now requires a license. We are working on creating a replacement GUI that uses a different library.
 
-A Monero wallet that automatically pays subscriptions.
+A Monero wallet that automatically pays subscriptions, using the [Monero Payment Request Protocol](https://github.com/lukeprofits/Monero_Payment_Request_Standard).
 
 <p align="center">
   <br><img src="Example.jpg" alt="Monero Subscriptions Wallet"><br>
