@@ -20,6 +20,10 @@ def insert_newlines(input_string, characters_per_line):
 
 class CopyPaymentRequestView(View):
     def build(self):
+        self.payment_request = clipboard.paste()
+        print(monerorequest.decode_monero_payment_request(self.payment_request))
+        self.payment_request_payment_id = monerorequest.decode_monero_payment_request(self.payment_request)["payment_id"]
+
         self._app.geometry(styles.COPY_PAYMENT_REQUEST_VIEW_GEOMETRY)
 
         # Back button and title
@@ -28,16 +32,13 @@ class CopyPaymentRequestView(View):
         # TODO: Can we set the border color through the theme file instead?
 
         # Generated Payment Request To Copy
-        self.pr = "monero-request:1:H4sIAAAAAAAC/y1QXU/DMAz8KyjPG0o/ttK+tWuHBAKJrcDYS5Q07hqRJlOSDlrEfyedkCzZd2edT/5BtNeDcihDAb7FGC1Q01F1AiIUFw112pDBSC/PymAMqGb06HVfXgnrdE8kZTCvlHABqc9gbkqtqBNa+R1OR0s8R5iQUqgTacZGAsoivEBq6JlXdEvOdOxBOYsyT/8DIrg3je9YG4dxgoEFIU9Tb2lBSjCWfFHf5+hx7qLDylzexnOt21M/wHNq0xdnJr6DVTHA1tjP/CiCpNAfrJtGq6dJP22L9fSu6kd+v1nn31XOqmrVTNtd1Pnpgdk+7jZwCPfzSUeNI5w6nxyFOIyWAV6GSY1xdi3/OnxEv3/sOZmDTwEAAA=="
-        self.pr_id = "9fc88080d1d5dc09"
-
         main_text = self.add(ctk.CTkLabel(self._app, text="It’s on your clipboard. Use unique payment requests for each", font=styles.BODY_FONT_SIZE))
         main_text.grid(row=1, column=0, columnspan=3, padx=10, pady=(5, 0), sticky='ew')
 
         second_text = self.add(ctk.CTkLabel(self._app, text="buyer if you want to know who to credit with a purchase.", font=styles.BODY_FONT_SIZE))
         second_text.grid(row=2, column=0, columnspan=3, padx=10, pady=0, sticky='ew')
 
-        third_text = self.add(ctk.CTkLabel(self._app, text=f"Only you can see the payment ID: {self.pr_id}", font=styles.BODY_FONT_SIZE))
+        third_text = self.add(ctk.CTkLabel(self._app, text=f"Only you can see the payment ID: {self.payment_request_payment_id}", font=styles.BODY_FONT_SIZE))
         third_text.grid(row=3, column=0, columnspan=3, padx=10, pady=0, sticky='ew')
 
         # Frame to hold buttons
@@ -60,11 +61,10 @@ class CopyPaymentRequestView(View):
     def open_main(self):
         self._app.switch_view('main')
 
-
     def copy_payment_request(self):
-        clipboard.copy(self.pr)
         print('Copied Payment Request!')
+        clipboard.copy(self.payment_request)
 
     def copy_payment_id(self):
+        clipboard.copy(self.payment_request_payment_id)
         print('Copied Payment ID!')
-        clipboard.copy(self.pr_id)
