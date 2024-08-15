@@ -94,7 +94,12 @@ class RPCClient(Notifier):
 
     def open_wallet(self, filename='subscriptions_wallet'):
         try:
-            return self.post(self._open_wallet(filename))['result']
+            request_result = self.post(self._open_wallet(filename))
+            if request_result.get('error'):
+                self.logger.debug(request_result['error'])
+                return False
+            else:
+                return request_result['result']
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
@@ -111,7 +116,7 @@ class RPCClient(Notifier):
 
     def get_address(self):
         try:
-            return self.post(self._get_address())['result']['address']
+            return self.post(self._get_address()).get('result', {}).get('address')
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
