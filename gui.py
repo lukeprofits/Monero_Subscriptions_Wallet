@@ -57,7 +57,8 @@ class App(ctk.CTk):
 
     def shutdown_steps(self):
         self.destroy()
-        self.rpc_server.kill()
+        if rpc() == 'True':
+            self.rpc_server.kill()
 
 
 app = App()
