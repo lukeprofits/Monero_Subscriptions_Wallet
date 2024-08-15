@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter
 
+from datetime import datetime, timezone
 from src.exchange import Exchange
 from src.interfaces.view import View
 from config import default_currency
@@ -9,6 +10,7 @@ import styles
 import clipboard
 import monerorequest
 from src.wallet import Wallet
+import re
 
 
 class CreatePaymentRequestView(View):
@@ -24,7 +26,7 @@ class CreatePaymentRequestView(View):
         x = 10  # 70
         y = 5  # (27.5, 20)
 
-        heading_frame = ctk.CTkFrame(self._app)
+        heading_frame = self.add(ctk.CTkFrame(self._app))
         heading_frame.columnconfigure([0, 1, 2], weight=1)
         heading_frame.pack(fill='x', padx=0, pady=0)
 
@@ -41,7 +43,9 @@ class CreatePaymentRequestView(View):
         spacer = self.add(ctk.CTkLabel(heading_frame, text=''))
         spacer.grid(row=0, column=3, padx=10, pady=(10, 0), sticky="e")
 
-        content_frame = ctk.CTkFrame(self._app)
+
+
+        content_frame = self.add(ctk.CTkFrame(self._app))
         content_frame.pack(fill='both', expand=True, padx=0, pady=0)
         # Configure the grid layout to have 100 columns with equal size
         for i in range(10):
@@ -68,8 +72,8 @@ class CreatePaymentRequestView(View):
         self.amount_input.grid(row=1, column=6, columnspan=2, padx=(x / 2), pady=y, sticky="ew")
 
         selected_currency = ctk.StringVar(value=default_currency())
-        currency_input = self.add(ctk.CTkOptionMenu(content_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
-        currency_input.grid(row=1, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+        self.currency_input = self.add(ctk.CTkOptionMenu(content_frame, values=Exchange.options(), corner_radius=15, command=selected_currency_callback, variable=selected_currency))
+        self.currency_input.grid(row=1, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
 
         # Billing Frequency Section
         day_options = []
@@ -118,4 +122,50 @@ class CreatePaymentRequestView(View):
 
     def create_button(self):
         # Pull in all info and process
+        custom_label = self.custom_label_input.get().strip()
+        print(custom_label, type(custom_label))
+
+        sellers_wallet = self.sellers_wallet_input.get().strip()
+        print(sellers_wallet, type(sellers_wallet))
+
+        currency = self.currency_input.get().strip()
+        print(currency, type(currency))
+
+        amount = self.amount_input.get().strip()
+        print(amount, type(amount))
+
+        payment_id = monerorequest.make_random_payment_id()
+        print(payment_id, type(payment_id))
+
+        # TODO: FIX THIS TO USE THE TIME ENTERED AND SHOW DEFAULT TIME AS PLACEHOLDER
+        start_date = self.start_date_input.get().strip() if self.start_date_input.get().strip() else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        print(start_date, type(start_date))
+
+        days_per_billing_cycle = int(re.sub(r'\D', '', self.days_per_billing_cycle.get().strip()))
+        print(days_per_billing_cycle, type(days_per_billing_cycle))
+
+        number_of_payments = int(re.sub(r'\D', '', self.number_of_payments_input.get().strip())) if re.sub(r'\D', '', self.number_of_payments_input.get().strip()) else 0
+        print(number_of_payments, type(number_of_payments))
+
+        change_indicator_url = ''
+        print(change_indicator_url, type(change_indicator_url))
+
+        version = '1'
+        print(version, type(version))
+
+        payment_request = monerorequest.make_monero_payment_request(
+            custom_label=custom_label,
+            sellers_wallet=sellers_wallet,
+            currency=currency,
+            amount=amount,
+            payment_id=payment_id,
+            start_date=start_date,
+            days_per_billing_cycle=days_per_billing_cycle,
+            number_of_payments=number_of_payments,
+            change_indicator_url=change_indicator_url,
+            version=version
+        )
+
+        clipboard.copy(payment_request)
+        print(payment_request)
         self._app.switch_view('copy_payment_request')

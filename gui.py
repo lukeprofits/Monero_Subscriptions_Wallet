@@ -5,7 +5,9 @@ from src.rpc_server import RPCServer
 from config import rpc, is_first_launch
 from src.views import (MainView, ReceiveView, PayView, SubscriptionsView, SettingsView, SetCurrencyView,
                        NodeSelectionView, AmountView, ReviewRequestView, ReviewSendView, ReviewDeleteRequestView,
-                       WelcomeView, CreatePaymentRequestView)
+                       WelcomeView, CreatePaymentRequestView, CopyPaymentRequestView)
+import config as cfg
+from src.exchange import Exchange
 
 ctk.set_default_color_theme("monero_theme.json")
 
@@ -32,7 +34,8 @@ class App(ctk.CTk):
             'review_send': ReviewSendView(self),
             'review_delete': ReviewDeleteRequestView(self),
             'welcome': WelcomeView(self),
-            'create_payment_request': CreatePaymentRequestView(self)
+            'create_payment_request': CreatePaymentRequestView(self),
+            'copy_payment_request': CopyPaymentRequestView(self)
         }
 
     def spawn_appropriate_initial_window(self):
