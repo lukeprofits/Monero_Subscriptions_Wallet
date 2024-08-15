@@ -1,7 +1,9 @@
 import customtkinter as ctk
 from src.interfaces.view import View
 from src.rpc_server import RPCServer
+from src.clients.rpc import RPCClient
 from src.observers.status_label_observer import StatusLabelObserver
+from src.observers.balance_observer import BalanceObserver
 from config import default_currency, secondary_currency, rpc
 import config as cfg
 import styles
@@ -15,8 +17,10 @@ class MainView(View):
         super().__init__(app)
         self._wallet = Wallet()
         self._rpc_server = RPCServer.get(self._wallet)
+        self._rpc_client = RPCClient.get()
         self._element_observers = []
         self.toplevel_window = None
+        Exchange.refresh_prices()
 
     def build(self):
 
@@ -40,6 +44,9 @@ class MainView(View):
 
         # Amount
         self.amount = self.add(ctk.CTkLabel(self._app, text=self._get_currency_text(), font=(styles.font, 48)))
+        balance_observer = BalanceObserver(self.amount)
+        self._element_observers.append(balance_observer)
+        self._rpc_client.attach(balance_observer)
         self.amount.grid(row=1, column=0, columnspan=3, padx=10, pady=0, sticky="nsew")
 
         # Bind the click event

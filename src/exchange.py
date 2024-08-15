@@ -3,7 +3,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from src.clients.goldback import scrape as goldback_scrape
 from src.clients.xe import scrape as xe_scrape
 from src.clients.rpc import RPCClient
-from monero_usd_price import median_price, calculate_atomic_units_from_monero
+from monero_usd_price import median_price, calculate_atomic_units_from_monero, calculate_monero_from_atomic_units
 from config import rpc
 
 class Exchange():
@@ -54,13 +54,16 @@ class Exchange():
 
     @classmethod
     def to_atomic_units(cls, from_sym, amount):
-        if from_sym == 'XGB':
-            sym_value = goldback_scrape()
-        else:
-            sym_value = xe_scrape(from_sym)
+        if from_sym != 'XMR':
+            if from_sym == 'XGB':
+                sym_value = goldback_scrape()
+            else:
+                sym_value = xe_scrape(from_sym)
 
-        usd_value = float(sym_value) * amount
-        xmr_value = usd_value / float(cls.US_EXCHANGE)
+            usd_value = float(sym_value) * amount
+            xmr_value = usd_value / float(cls.US_EXCHANGE)
+        else:
+            xmr_value = amount
         return calculate_atomic_units_from_monero(float(xmr_value))
 
     @classmethod
@@ -92,5 +95,5 @@ class Exchange():
     @classmethod
     def refresh_prices(cls):
         cls.US_EXCHANGE = median_price()
-        cls.XMR_AMOUNT = RPCClient().get_balance()
+        cls.XMR_AMOUNT = calculate_monero_from_atomic_units(RPCClient.get().get_balance())
         cls.USD_AMOUNT = round(cls.US_EXCHANGE * cls.XMR_AMOUNT, 2)

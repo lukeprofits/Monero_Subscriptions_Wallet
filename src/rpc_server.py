@@ -36,7 +36,8 @@ class RPCServer(Notifier):
         self._observers.append(observer)
 
     def detach(self, observer: Observer):
-        self._observers.remove(observer)
+        if observer in self._observers:
+            self._observers.remove(observer)
 
     def notify(self):
         for observer in self._observers:
@@ -62,7 +63,7 @@ class RPCServer(Notifier):
         self.process.kill()
 
     def ready(self):
-        rpc_client = RPCClient()
+        rpc_client = RPCClient.get()
         while True:
             while not rpc_client.local_healthcheck() and not self.failed_to_start:
                 output = self.process.stdout.readline()
@@ -89,7 +90,8 @@ class RPCServer(Notifier):
 
             if not self.failed_to_start:
                 self.status_message = 'RPC Server: Ready'
-                rpc_client.open_wallet()
+                if not rpc_client.open_wallet():
+                    self.status_message = 'RPC Server: Failed to Open Wallet'
                 self.logger.debug(rpc_client.refresh())
                 self.notify()
 

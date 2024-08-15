@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: '{"jsonrpc": "2.0", "id": "0", "method": "create_wallet", "params": {"filename":
+      "test_wallet_2", "language": "English"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '120'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.3
+    method: POST
+    uri: http://127.0.0.1:18088/json_rpc
+  response:
+    body:
+      string: "{\r\n  \"id\": \"0\",\r\n  \"jsonrpc\": \"2.0\",\r\n  \"result\": {\r\n
+        \ }\r\n}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '59'
+      Content-Type:
+      - application/json
+      Last-Modified:
+      - Fri, 02 Aug 2024 02:09:25 GMT
+      Server:
+      - Epee-based
+    status:
+      code: 200
+      message: Ok
+version: 1

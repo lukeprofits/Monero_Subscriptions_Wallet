@@ -24,7 +24,7 @@ class Wallet():
 
     def get_current_block_height(self):
         # Send the JSON-RPC request to the daemon
-        return RPCClient().current_block_height()
+        return RPCClient.get().current_block_height()
 
     def _daemon_address(self):
         node = node_url().split(':')
@@ -46,7 +46,7 @@ class Wallet():
     @property
     def address(self):
         if self._address is None:
-            self._address = RPCClient().get_address()
+            self._address = RPCClient.get().get_address()
         return self._address
 
 
@@ -54,4 +54,4 @@ class Wallet():
         return os.path.isfile(f'{wallet_dir()}/{self.name}.keys') or os.path.isfile(f'{wallet_dir()}/{self.name}')
 
     def create(self):
-        RPCClient().create_wallet()
+        RPCClient.get().create_wallet(self.name)

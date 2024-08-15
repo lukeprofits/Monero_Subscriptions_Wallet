@@ -49,7 +49,6 @@ class App(ctk.CTk):
             self.rpc_server = RPCServer.get()
             self.rpc_server.start()
             self.rpc_server.check_readiness()
-            Exchange.refresh_prices()
 
     def switch_view(self, view_name: str):
         self.current_view.destroy()
@@ -58,7 +57,8 @@ class App(ctk.CTk):
 
     def shutdown_steps(self):
         self.destroy()
-        self.rpc_server.kill()
+        if rpc() == 'True':
+            self.rpc_server.kill()
 
 
 app = App()

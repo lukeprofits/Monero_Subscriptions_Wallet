@@ -3,12 +3,33 @@ import json
 import logging
 from config import local_rpc_url, daemon_url
 from src.logging import config as logging_config
+from src.interfaces.observer import Observer
+from src.interfaces.notifier import Notifier
 
-class RPCClient():
+class RPCClient(Notifier):
+    _instance = None
+    @classmethod
+    def get(cls):
+        if not cls._instance:
+            cls._instance = cls()
+        return cls._instance
+
     def __init__(self):
         self._headers = None
         logging.config.dictConfig(logging_config)
         self.logger = logging.getLogger(self.__module__)
+        self._observers = []
+        self._balance = ''
+
+    def attach(self, observer: Observer):
+        self._observers.append(observer)
+
+    def detach(self, observer: Observer):
+        self._observers.remove(observer)
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self)
 
     def current_block_height(self):
         result = self.daemon_post(self._current_block_height())
@@ -53,9 +74,9 @@ class RPCClient():
             "method": "refresh"
         }
 
-    def create_wallet(self):
+    def create_wallet(self, filename='subscriptions_wallet'):
         try:
-            return self.post(self._create_wallet())
+            return self.post(self._create_wallet(filename))['result']
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
@@ -71,9 +92,14 @@ class RPCClient():
             }
         }
 
-    def open_wallet(self):
+    def open_wallet(self, filename='subscriptions_wallet'):
         try:
-            return self.post(self._open_wallet())
+            request_result = self.post(self._open_wallet(filename))
+            if request_result.get('error'):
+                self.logger.debug(request_result['error'])
+                return False
+            else:
+                return request_result['result']
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
@@ -90,7 +116,7 @@ class RPCClient():
 
     def get_address(self):
         try:
-            return self.post(self._get_address())['result']['address']
+            return self.post(self._get_address()).get('result', {}).get('address')
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
@@ -104,7 +130,9 @@ class RPCClient():
 
     def get_balance(self):
         try:
-            return self.post(self._get_balance())['result']['balance']
+            self._balance = self.post(self._get_balance())['result']['balance']
+            self.notify()
+            return self._balance
         except requests.exceptions.ConnectionError as e:
             self.logger.debug(str(e))
             return False
@@ -147,10 +175,10 @@ class RPCClient():
             "id": "0",
             "method": "transfer",
             "params": {
-                "destinations": {
+                "destinations": [{
                     'address': destination,
                     'amount': amount
-                }
+                 }]
             }
         }
 

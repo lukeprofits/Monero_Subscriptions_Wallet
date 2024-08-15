@@ -1,0 +1,40 @@
+interactions:
+- request:
+    body: '{"jsonrpc": "2.0", "id": "0", "method": "make_integrated_address", "params":
+      {"standard_address": "59fhPNhFLEx3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEKpAMFKC",
+      "payment_id": "075eed614ebea072"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '231'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.3
+    method: POST
+    uri: http://127.0.0.1:18088/json_rpc
+  response:
+    body:
+      string: "{\r\n  \"id\": \"0\",\r\n  \"jsonrpc\": \"2.0\",\r\n  \"result\": {\r\n
+        \   \"integrated_address\": \"5KNNQBWjwWU3zP16ZAPaeHXsPoNczVaGo245CgDSW9WpiMxvP1N7WdxX1RA4vob6ABGGBxUgjcCN2LjeSGPiH8AEUmgrwoxBZLKDt8PcKB\",\r\n
+        \   \"payment_id\": \"075eed614ebea072\"\r\n  }\r\n}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '234'
+      Content-Type:
+      - application/json
+      Last-Modified:
+      - Thu, 01 Aug 2024 04:02:29 GMT
+      Server:
+      - Epee-based
+    status:
+      code: 200
+      message: Ok
+version: 1
