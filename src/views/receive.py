@@ -17,7 +17,7 @@ def generate_monero_qr(wallet_address):
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color=styles.monero_orange, back_color=styles.ui_overall_background)
     # Save the image to a file
-    filename = "wallet_qr_code.png"
+    filename = styles.wallet_qr_code
     with open(filename, "wb") as f:
         qr_img.save(f)
     return filename

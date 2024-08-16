@@ -23,7 +23,7 @@ class SubscriptionsView(View):
         styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
 
         # Plus Button
-        add_image = ctk.CTkImage(Image.open("plus_icon.png"), size=(24, 24))
+        add_image = ctk.CTkImage(Image.open(styles.plus_icon), size=(24, 24))
         add_button = self.add(ctk.CTkButton(self._app, image=add_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.add_subscription))
         add_button.grid(row=0, column=2, padx=10, pady=(10, 20), sticky="e")
 

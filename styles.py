@@ -2,6 +2,9 @@ import tkinter as tk
 import config as cfg
 from PIL import Image
 
+import styles
+
+
 def make_centered_geometry(window_resolution):
     window_resolution = window_resolution.split('x')
     window_width = int(window_resolution[0])
@@ -47,6 +50,23 @@ def get_screen_size():
 
 
 SCREEN_WIDTH, SCREEN_HEIGHT = get_screen_size()
+
+# =====================
+# Images/Icons
+# =====================
+icon_orange_png = "./assets/icon_orange.png"
+icon_black_png = "./assets/icon_black.png"
+icon_orange_ico = "./assets/icon_orange.ico"
+settings_gears_icon = "./assets/settings_icon_gears.png"
+settings_sliders_icon = "./assets/settings_icon_sliders.png"
+history_icon = "./assets/history_icon.png"
+back_icon = "./assets/back_icon.png"
+plus_icon = "./assets/plus_icon.png"
+wallet_qr_code = "./assets/wallet_qr_code.png"
+
+icon = icon_orange_png
+settings_icon = settings_sliders_icon
+
 
 # =====================
 # Platform-Dependent Configurations
@@ -125,7 +145,7 @@ def back_and_title(self, ctk, cfg, title='Enter A Title', pad_bottom=0, column_c
     label.grid(row=0, column=0, columnspan=column_count, padx=10, pady=(10, pad_bottom), sticky="ew")
 
     # Back Button
-    back_image = ctk.CTkImage(Image.open("back_icon.png"), size=(24, 24))
+    back_image = ctk.CTkImage(Image.open(styles.back_icon), size=(24, 24))
     back_button = self.add(ctk.CTkButton(self._app, image=back_image, text='', fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_main))
     back_button.grid(row=0, column=0, padx=10, pady=(10, pad_bottom), sticky="w")
 
