@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter
+from tkcalendar import Calendar, DateEntry  # TODO: only some of this is used for calendar view
 
 from datetime import datetime, timezone
 from src.exchange import Exchange
@@ -15,6 +16,11 @@ import re
 
 class CreatePaymentRequestView(View):
     def build(self):
+        def on_date_click(event):
+            # This function can be used to handle any additional actions when the date is clicked
+            print("Date selected:", self.start_date_input.get())
+            self.start_date_input.focus_force()
+
         def selected_currency_callback(choice):
             cfg.CURRENT_CREATE_PAYMENT_REQUEST_CURRENCY = choice
 
@@ -87,8 +93,18 @@ class CreatePaymentRequestView(View):
         starting_on = self.add(ctk.CTkLabel(content_frame, text="starting on", font=styles.BODY_FONT_SIZE))
         starting_on.grid(row=2, column=7, columnspan=1, padx=(x / 2), pady=y, sticky="ew")
 
+        # input field
         self.start_date_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="mm/dd/yyyy", corner_radius=15, border_color=bc))
         self.start_date_input.grid(row=2, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+
+        # Calendar
+        #self.start_date_input = self.add(Calendar(content_frame))
+        #self.start_date_input.grid(row=2, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+
+        # Click open calendar
+        #self.start_date_input = self.add(DateEntry(content_frame, width=12, background='darkblue', foreground='white', borderwidth=2))
+        #self.start_date_input.grid(row=2, column=8, columnspan=2, padx=((x / 2), x), pady=y, sticky="ew")
+        #self.start_date_input.bind("<Button-1>", on_date_click)
 
         # Sellers Wallet Section
         self.sellers_wallet_input = self.add(ctk.CTkEntry(content_frame, placeholder_text="Sellers Wallet", corner_radius=15, border_color=bc))  # font=(styles.font, 12),
