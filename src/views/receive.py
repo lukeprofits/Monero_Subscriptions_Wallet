@@ -42,11 +42,16 @@ class ReceiveView(View):
         qr_image = self.add(ctk.CTkLabel(self._app, image=qr_image_object, text=''),)
         qr_image.grid(row=1, column=0, columnspan=3, padx=10, pady=(15, 15))
 
-        copy_wallet_button = self.add(ctk.CTkButton(self._app, text="Copy Wallet Address", corner_radius=15, command=self.copy_wallet_address))
-        copy_wallet_button.grid(row=2, column=0, columnspan=3, padx=165, pady=(0, 10), sticky="ew")
+        # Frame to hold buttons
+        center_frame = self.add(ctk.CTkFrame(self._app, ))
+        center_frame.grid(row=2, column=0, columnspan=3, padx=0, pady=(5, 15), sticky="nsew")
+        center_frame.columnconfigure([0, 1, 2, 3], weight=1)
 
-        create_payment_request_button = self.add(ctk.CTkButton(self._app, text="Request Payment", corner_radius=15, command=self.open_create_payment_request))
-        create_payment_request_button.grid(row=3, column=0, columnspan=3, padx=165, pady=(0, 15), sticky="ew")
+        copy_wallet_button = self.add(ctk.CTkButton(center_frame, text="Copy Wallet", corner_radius=15, command=self.copy_wallet_address))
+        copy_wallet_button.grid(row=0, column=1, padx=(10, 5), pady=0, sticky="ew")
+
+        create_payment_request_button = self.add(ctk.CTkButton(center_frame, text="Request Payment", corner_radius=15, command=self.open_create_payment_request))
+        create_payment_request_button.grid(row=0, column=2, padx=(5, 10), pady=0, sticky="ew")
 
         return self
 
