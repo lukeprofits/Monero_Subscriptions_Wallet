@@ -63,6 +63,7 @@ history_icon = "./assets/history_icon.png"
 back_icon = "./assets/back_icon.png"
 plus_icon = "./assets/plus_icon.png"
 wallet_qr_code = "./assets/wallet_qr_code.png"
+qr_code_overlay = "./assets/overlay.png"
 
 icon = icon_orange_png
 settings_icon = settings_sliders_icon

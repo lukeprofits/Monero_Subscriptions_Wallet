@@ -12,14 +12,33 @@ DUMMY_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKd
 
 
 def generate_monero_qr(wallet_address):
+    # Create the QR code
     qr = qrcode.main.QRCode(version=1, box_size=25, border=0)
     qr.add_data("monero:" + wallet_address)
     qr.make(fit=True)
-    qr_img = qr.make_image(fill_color=styles.monero_orange, back_color=styles.ui_overall_background)
+    qr_img = qr.make_image(fill_color=styles.monero_orange, back_color=styles.ui_overall_background).convert('RGBA')
+
+    # Load the overlay image
+    overlay = Image.open(styles.qr_code_overlay)
+
+    # Calculate the size of the overlay image (scale it down)
+    overlay_size = (qr_img.size[0] // 3, qr_img.size[1] // 3)  # Adjust the size as needed
+    overlay = overlay.resize(overlay_size, Image.LANCZOS)
+
+    # Calculate the position to paste the overlay (centered)
+    overlay_position = (
+        (qr_img.size[0] - overlay_size[0]) // 2,
+        (qr_img.size[1] - overlay_size[1]) // 2
+    )
+
+    # Paste the overlay image onto the QR code
+    qr_img.paste(overlay, overlay_position, overlay)
+
     # Save the image to a file
     filename = styles.wallet_qr_code
     with open(filename, "wb") as f:
         qr_img.save(f)
+
     return filename
 
 
@@ -46,11 +65,6 @@ class ReceiveView(View):
         left_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
         left_frame.columnconfigure([0], weight=1)
 
-        # Right Frame
-        right_frame = self.add(ctk.CTkFrame(center_frame, fg_color='transparent'))
-        right_frame.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
-        right_frame.columnconfigure([0, 1, 2, 3], weight=1)
-
         # QR Code
         qr_image_name = generate_monero_qr(Wallet().address if rpc() == 'True' else DUMMY_WALLET)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
@@ -62,12 +76,40 @@ class ReceiveView(View):
 
 
 
+        # Right Frame
+        right_frame = self.add(ctk.CTkFrame(center_frame, fg_color='transparent'))
+        right_frame.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
+        right_frame.columnconfigure([0, 1, 2, 3], weight=1)
+
         # Label
         get_monero = self.add(ctk.CTkLabel(right_frame, text="Get Monero:", font=styles.SUBHEADING_FONT_SIZE))
-        get_monero.grid(row=0, column=0, columnspan=4, padx=10, pady=10, sticky="ew")
+        get_monero.grid(row=0, column=0, columnspan=4, padx=10, pady=(5, 0), sticky="ew")
 
+        # Buy Monero
+        buy_monero = self.add(ctk.CTkButton(right_frame, text="Buy Monero", corner_radius=15, command=self.open_main))
+        buy_monero.grid(row=1, column=0, columnspan=4, padx=40, pady=(0, 5), sticky="ew")
+
+        # Earn Monero
+        swap_monero = self.add(ctk.CTkButton(right_frame, text="Earn Monero", corner_radius=15, command=self.open_main))
+        swap_monero.grid(row=2, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
+
+        # Sell Stuff For Monero
+        buy_monero = self.add(ctk.CTkButton(right_frame, text="Sell for Monero", corner_radius=15, command=self.open_main))
+        buy_monero.grid(row=3, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
+
+        # Swap For Monero
+        swap_monero = self.add(ctk.CTkButton(right_frame, text="Swap for Monero", corner_radius=15, command=self.open_main))
+        swap_monero.grid(row=4, column=0, columnspan=4, padx=40, pady=(5, 0), sticky="ew")
+
+
+
+        # Label
+        get_monero = self.add(ctk.CTkLabel(right_frame, text="Seller Tools:", font=styles.SUBHEADING_FONT_SIZE))
+        get_monero.grid(row=5, column=0, columnspan=4, padx=10, pady=((15 + 2), 0), sticky="ew")  # The extra 2 is just so they line up
+
+        # Create Payment Request
         create_payment_request_button = self.add(ctk.CTkButton(right_frame, text="Create Payment Request", corner_radius=15, command=self.open_create_payment_request))
-        create_payment_request_button.grid(row=1, column=0, columnspan=4, padx=10, pady=0, sticky="ew")
+        create_payment_request_button.grid(row=6, column=0, columnspan=4, padx=20, pady=(0, 5), sticky="ew")
 
         return self
 
