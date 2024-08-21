@@ -43,7 +43,7 @@ class MainView(View):
 
         # Settings Button
         settings_image = ctk.CTkImage(Image.open(styles.settings_icon), size=(24, 24))
-        settings_button = self.add(ctk.CTkButton(self._app, image=settings_image, text="", fg_color='transparent', hover_color='red', width=35, height=30, corner_radius=7, command=self.open_settings))
+        settings_button = self.add(ctk.CTkButton(self._app, image=settings_image, text="", fg_color='transparent', width=35, height=30, corner_radius=7, command=self.open_settings))
         settings_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Amount
