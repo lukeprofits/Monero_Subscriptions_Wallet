@@ -65,7 +65,7 @@ plus_icon = "./assets/plus_icon.png"
 wallet_qr_code = "./assets/wallet_qr_code.png"
 qr_code_overlay = "./assets/overlay.png"
 
-icon = icon_orange_png
+icon = icon_black_png
 settings_icon = settings_sliders_icon
 
 
@@ -79,7 +79,7 @@ if cfg.platform == 'Windows':
     SETTINGS_VIEW_GEOMETRY = '500x215'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x215'
-    RECEIVE_VIEW_GEOMETRY = '500x315'
+    RECEIVE_VIEW_GEOMETRY = '500x330'
     SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x215'
@@ -95,7 +95,7 @@ elif cfg.platform == 'Mac':
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x200'
-    RECEIVE_VIEW_GEOMETRY = '500x315'
+    RECEIVE_VIEW_GEOMETRY = '500x330'
     SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x200'
     AMOUNT_VIEW_GEOMETRY = '500x200'
@@ -127,7 +127,7 @@ else:  # Not sure if we even need this
     SETTINGS_VIEW_GEOMETRY = '500x205'
     SUBSCRIPTIONS_VIEW_GEOMETRY = '500x325'
     REVIEW_PROMPT_GEOMETRY = '500x195'
-    RECEIVE_VIEW_GEOMETRY = '500x315'
+    RECEIVE_VIEW_GEOMETRY = '500x330'
     SET_CURRENCY_VIEW_GEOMETRY = '500x215'
     NODE_VIEW_GEOMETRY = '500x215'
     AMOUNT_VIEW_GEOMETRY = '500x195'

@@ -87,10 +87,10 @@ class ReceiveView(View):
         center_frame.grid(row=0, column=1, padx=0, pady=(0, 5), sticky="nsew")
         center_frame.columnconfigure([0], weight=1)
 
-        # Orange Line
+        # Line
         canvas = ctk.CTkCanvas(center_frame, width=2, height=200, bg=frame["bg"], highlightthickness=0)
         canvas.grid(row=0, padx=(27, 0), pady=(30, 0), column=0, sticky="ns")
-        canvas.create_line(1, 0, 1, 200, fill="grey", width=3)  #styles.monero_orange  # TODO: Incorrect Grey
+        canvas.create_line(1, 0, 1, 200, fill="grey", width=3)  # TODO: Incorrect Grey
 
 
 
