@@ -1,4 +1,6 @@
 import customtkinter as ctk
+
+import util
 from src.interfaces.view import View
 import qrcode
 import clipboard
@@ -9,6 +11,7 @@ import styles
 from src.wallet import Wallet
 
 DUMMY_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
+wallet = Wallet().address if rpc() == 'True' else DUMMY_WALLET
 
 
 def generate_monero_qr(wallet_address):
@@ -56,34 +59,49 @@ class ReceiveView(View):
         #add_button.grid(row=0, column=2, padx=10, pady=(10, 0), sticky="e")
 
         # Frame to hold buttons
-        center_frame = self.add(ctk.CTkFrame(self._app, fg_color='transparent'))
-        center_frame.grid(row=1, column=0, columnspan=3, padx=5, pady=0, sticky="nsew")
-        center_frame.columnconfigure([0, 1], weight=1)
+        frame = self.add(ctk.CTkFrame(self._app, fg_color='transparent'))
+        frame.grid(row=1, column=0, columnspan=3, padx=0, pady=0, sticky="nsew")
+        frame.columnconfigure([0, 1, 2], weight=1)
 
         # Left Frame
-        left_frame = self.add(ctk.CTkFrame(center_frame, fg_color='transparent'))
-        left_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
+        left_frame = self.add(ctk.CTkFrame(frame, fg_color='transparent'))
+        left_frame.grid(row=0, column=0, padx=(10, 5), pady=(0, 5), sticky="nsew")
         left_frame.columnconfigure([0], weight=1)
+
+        wallet_text = self.add(ctk.CTkLabel(left_frame, text=util.shortened_wallet(wallet=cfg.SEND_TO_WALLET)))
+        wallet_text.grid(row=0, column=0, padx=(5, 10), pady=(0, 5))
 
         # QR Code
         qr_image_name = generate_monero_qr(Wallet().address if rpc() == 'True' else DUMMY_WALLET)
         qr_image_object = ctk.CTkImage(dark_image=Image.open(qr_image_name), size=(190, 190))
         qr_image = self.add(ctk.CTkLabel(left_frame, image=qr_image_object, text=''), )
-        qr_image.grid(row=0, column=0, padx=10, pady=10)
+        qr_image.grid(row=1, column=0, padx=10, pady=(0, 10))
 
         copy_wallet_button = self.add(ctk.CTkButton(left_frame, text="Copy Wallet", corner_radius=15, command=self.copy_wallet_address))
-        copy_wallet_button.grid(row=1, column=0, padx=40, pady=10, sticky="ew")
+        copy_wallet_button.grid(row=2, column=0, padx=40, pady=10, sticky="ew")
+
+
+
+        # Center Frame
+        center_frame = self.add(ctk.CTkFrame(frame, fg_color='transparent'))
+        center_frame.grid(row=0, column=1, padx=0, pady=(0, 5), sticky="nsew")
+        center_frame.columnconfigure([0], weight=1)
+
+        # Orange Line
+        canvas = ctk.CTkCanvas(center_frame, width=2, height=200, bg=frame["bg"], highlightthickness=0)
+        canvas.grid(row=0, padx=(27, 0), pady=(30, 0), column=0, sticky="ns")
+        canvas.create_line(1, 0, 1, 200, fill="grey", width=3)  #styles.monero_orange  # TODO: Incorrect Grey
 
 
 
         # Right Frame
-        right_frame = self.add(ctk.CTkFrame(center_frame, fg_color='transparent'))
-        right_frame.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
+        right_frame = self.add(ctk.CTkFrame(frame, fg_color='transparent'))
+        right_frame.grid(row=0, column=2, padx=10, pady=(0, 5), sticky="nsew")
         right_frame.columnconfigure([0, 1, 2, 3], weight=1)
 
         # Label
         get_monero = self.add(ctk.CTkLabel(right_frame, text="Get Monero:", font=styles.SUBHEADING_FONT_SIZE))
-        get_monero.grid(row=0, column=0, columnspan=4, padx=10, pady=(5, 0), sticky="ew")
+        get_monero.grid(row=0, column=0, columnspan=4, padx=10, pady=(25, 0), sticky="ew")
 
         # Buy Monero
         buy_monero = self.add(ctk.CTkButton(right_frame, text="Buy Monero", corner_radius=15, command=self.open_main))
@@ -105,7 +123,7 @@ class ReceiveView(View):
 
         # Label
         get_monero = self.add(ctk.CTkLabel(right_frame, text="Seller Tools:", font=styles.SUBHEADING_FONT_SIZE))
-        get_monero.grid(row=5, column=0, columnspan=4, padx=10, pady=((15 + 2), 0), sticky="ew")  # The extra 2 is just so they line up
+        get_monero.grid(row=5, column=0, columnspan=4, padx=10, pady=((5 + 15), 0), sticky="ew")  # The extra is just so they line up
 
         # Create Payment Request
         create_payment_request_button = self.add(ctk.CTkButton(right_frame, text="Create Payment Request", corner_radius=15, command=self.open_create_payment_request))
@@ -120,5 +138,5 @@ class ReceiveView(View):
         self._app.switch_view('create_payment_request')
 
     def copy_wallet_address(self):
-        clipboard.copy(Wallet().address if rpc() == 'True' else DUMMY_WALLET)
+        clipboard.copy(wallet)
         self._app.switch_view('main')

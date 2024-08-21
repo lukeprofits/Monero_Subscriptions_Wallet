@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import styles
+import util
 from src.exchange import Exchange
 from src.interfaces.view import View
 import config as cfg
@@ -37,7 +38,7 @@ class AmountView(View):
         send_button.grid(row=2, column=0, columnspan=3, padx=120, pady=(5, 0), sticky="ew")
 
         # Wallet
-        wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {cfg.SEND_TO_WALLET[:5]}...{cfg.SEND_TO_WALLET[-5:]}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
+        wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {util.shortened_wallet(wallet=cfg.SEND_TO_WALLET)}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
         wallet.grid(row=3, column=0, columnspan=3, padx=10, pady=15, sticky="ew")
 
         return self
