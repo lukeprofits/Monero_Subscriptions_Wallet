@@ -9,6 +9,8 @@ Exchange rates scraped from XE.com
 
 import os
 import platform
+
+import monerorequest
 import requests
 from io import StringIO
 import csv
@@ -155,3 +157,33 @@ SELECTED_SUBSCRIPTION = ''
 CURRENT_CREATE_PAYMENT_REQUEST_CURRENCY = ''
 
 has_seen_welcome = False
+
+transactions = []
+
+tx1 = {"direction": "out",
+       "amount": "1.5755",
+       "date": "2017-05-21",
+       "payment_id": "Mulvad VPN",  #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhjkhgfdghjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
+tx2 = {"direction": "in",
+       "amount": "5.4305",
+       "date": "2018-05-21",
+       "payment_id": "Subs Wallet Tip", #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfadffffgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time": # not sure how we would keep this data??? would be cool to have though.
+       }
+
+tx3 = {"direction": "in",
+       "amount": "2.2982",
+       "date": "2019-05-21",
+       "payment_id": "My Phone Bill", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
+transactions.append(tx1)
+transactions.append(tx2)
+transactions.append(tx3)

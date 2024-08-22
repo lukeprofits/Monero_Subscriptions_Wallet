@@ -111,7 +111,7 @@ class MainView(View):
         self._app.switch_view('settings')
 
     def open_history(self):
-        self._app.switch_view('settings')
+        self._app.switch_view('history')
 
     def destroy(self):
         super().destroy()

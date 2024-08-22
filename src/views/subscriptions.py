@@ -1,7 +1,3 @@
-"""
-The "Manage Subscriptions" window
-"""
-
 import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
@@ -10,12 +6,11 @@ import json
 from PIL import Image
 from src.subscription import Subscription
 
+
 class SubscriptionsView(View):
     def build(self):
-        # If we have existing subscriptions
         if len(json.loads(cfg.subscriptions())) > 1:
             self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
-        # If we have no existing subscriptions
         else:
             self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
 
