@@ -184,6 +184,42 @@ tx3 = {"direction": "in",
        #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
        }
 
+tx4 = {"direction": "out",
+       "amount": "8.3200",
+       "date": "2020-05-21",
+       "payment_id": "Other stuff", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
+tx5 = {"direction": "out",
+       "amount": "3.2430",
+       "date": "2020-05-21",
+       "payment_id": "Other stuff 2", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
+tx6 = {"direction": "in",
+       "amount": "3.2430",
+       "date": "2021-05-21",
+       "payment_id": "Other stuff 3", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
+tx7 = {"direction": "in",
+       "amount": "5.2340",
+       "date": "2022-05-21",
+       "payment_id": "Other stuff 4", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
+       #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
+       }
+
 transactions.append(tx1)
 transactions.append(tx2)
 transactions.append(tx3)
+transactions.append(tx4)
+transactions.append(tx5)
+transactions.append(tx6)
+transactions.append(tx7)

@@ -10,9 +10,9 @@ from src.subscription import Subscription
 class SubscriptionsView(View):
     def build(self):
         if len(json.loads(cfg.subscriptions())) > 1:
-            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
+            self._app.geometry(styles.SUBSCRIPTIONS_LARGE_VIEW_GEOMETRY)
         else:
-            self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
+            self._app.geometry(styles.SUBSCRIPTIONS_SMALL_VIEW_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)

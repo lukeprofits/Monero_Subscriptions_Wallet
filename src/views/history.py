@@ -16,10 +16,10 @@ def center_string(s):
 
 class HistoryView(View):
     def build(self):
-        if len(cfg.transactions) > 1:
-            self._app.geometry(styles.SUBSCRIPTIONS_VIEW_GEOMETRY)
+        if len(cfg.transactions) > 4:
+            self._app.geometry(styles.HISTORY_LARGE_VIEW_GEOMETRY)
         else:
-            self._app.geometry(styles.REVIEW_PROMPT_GEOMETRY)
+            self._app.geometry(styles.HISTORY_SMALL_VIEW_GEOMETRY)
 
         # Back button and title
         styles.back_and_title(self, ctk, cfg, title='Transaction History:', pad_bottom=20)
@@ -74,8 +74,9 @@ class TransactionFrame(ctk.CTkFrame):
         self.grid(row=row, column=1, columnspan=3, sticky="nsew", padx=10, pady=(0, 10))
 
         symbol = "+" if tx["direction"] == "in" else "-"
-        tx_info_text = f"{symbol}{tx["amount"]} {center_string(tx["payment_id"])} {tx["date"]}"
-        self.tx_info = ctk.CTkLabel(self, text=tx_info_text, font=styles.SUBHEADING_FONT_SIZE)
+        text_color = styles.monero_orange if tx["direction"] == "in" else "grey"  # TODO: update colors
+        tx_info_text = f"{symbol} {tx["amount"]} {center_string(tx["payment_id"])} {tx["date"]}"
+        self.tx_info = ctk.CTkLabel(self, text=tx_info_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
         self.tx_info.grid(row=0, column=0, pady=0, sticky="ns")
 
         # Center the widgets within each column
