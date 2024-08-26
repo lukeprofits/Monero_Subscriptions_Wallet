@@ -161,23 +161,23 @@ has_seen_welcome = False
 transactions = []
 
 tx1 = {"direction": "out",
-       "amount": "1.5755",
+       "amount": "4.12",
        "date": "2017-05-21",
-       "payment_id": "Mulvad VPN",  #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "payment_id": "Mullvad VPN",  #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhjkhgfdghjgfdhjgfdhjgfd"
        #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
        }
 
 tx2 = {"direction": "in",
-       "amount": "5.4305",
+       "amount": "0.121212121212",
        "date": "2018-05-21",
-       "payment_id": "Subs Wallet Tip", #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "payment_id": "This Is A Reasonable Title This Is A Reasonable Title This Is A Reasonable Title This Is A Reasonable Title", #monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfadffffgfdhjgfdhjgfd"
        #"selected_currency_value_at_time": # not sure how we would keep this data??? would be cool to have though.
        }
 
 tx3 = {"direction": "in",
-       "amount": "2.2982",
+       "amount": "0.12",
        "date": "2019-05-21",
        "payment_id": "My Phone Bill", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
@@ -185,7 +185,7 @@ tx3 = {"direction": "in",
        }
 
 tx4 = {"direction": "out",
-       "amount": "8.3200",
+       "amount": "44",
        "date": "2020-05-21",
        "payment_id": "Other stuff", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
@@ -193,25 +193,25 @@ tx4 = {"direction": "out",
        }
 
 tx5 = {"direction": "out",
-       "amount": "3.2430",
+       "amount": "0.121212121212",
        "date": "2020-05-21",
-       "payment_id": "Other stuff 2", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "payment_id": "Calming Dog Beds Cat Cave Bed with - Hooded Cover, Anti-Anxiety SoftFEFEFEFEFEFEFEFFEFEFEFEFEFFEFEFEF", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
        #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
        }
 
 tx6 = {"direction": "in",
-       "amount": "3.2430",
+       "amount": "15.1212",
        "date": "2021-05-21",
-       "payment_id": "Other stuff 3", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "payment_id": "Calming Dog Beds Cat Cave Bed with - Hooded Cover, Anti-Anxiety Soft Plush Faux!", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
        #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
        }
 
 tx7 = {"direction": "in",
-       "amount": "5.2340",
+       "amount": "4444.121212121212",
        "date": "2022-05-21",
-       "payment_id": "Other stuff 4", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
+       "payment_id": "Other stuff 4 sdfgjksdfgjksdfgjkdfsgjkhdfkjhdfgkjhdfgskjhdfgkjhdfsjkhdfkhjdfskjhdfskjhsdfkjhskjfhsdfgkj", #"#monerorequest.make_random_payment_id(),  # Use this to get subscription name if available
        "paid_to": "4sakjhgfhjkkhgfdsghjkgfdhjkhgfdhjkgfdsghjkhgfdhjkjhgfdghjkhgfdhdfhjgfdhjgfdhjgfd"
        #"selected_currency_value_at_time"  # not sure how we would keep this data??? would be cool to have though.
        }

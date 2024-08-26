@@ -73,11 +73,27 @@ class TransactionFrame(ctk.CTkFrame):
         # Padding and stuff for each TransactionFrame
         self.grid(row=row, column=1, columnspan=3, sticky="nsew", padx=10, pady=(0, 10))
 
+        # Configure the main window grid for spacing and alignment
+        #self.columnconfigure([0, 1, 2], weight=1)  # 3 columns
+        self.columnconfigure(1, weight=1)
+
         symbol = "+" if tx["direction"] == "in" else "-"
+
+        amount_text = f"{symbol} {tx["amount"]} XMR"
+        payment_name_text = tx["payment_id"][:49] + "…" if len(tx["payment_id"]) >= 50 else tx["payment_id"]
+
+        date_text = tx["date"][5:].replace("-", "/")
+
         text_color = styles.monero_orange if tx["direction"] == "in" else "grey"  # TODO: update colors
-        tx_info_text = f"{symbol} {tx["amount"]} {center_string(tx["payment_id"])} {tx["date"]}"
-        self.tx_info = ctk.CTkLabel(self, text=tx_info_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
-        self.tx_info.grid(row=0, column=0, pady=0, sticky="ns")
+
+        self.date = ctk.CTkLabel(self, text=date_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
+        self.date.grid(row=0, column=0, padx=(10, 0), pady=0, sticky="w")
+
+        self.payment_name = ctk.CTkLabel(self, text=payment_name_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
+        self.payment_name.grid(row=0, column=1, padx=10, pady=0, sticky="w")
+
+        self.amount = ctk.CTkLabel(self, text=amount_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
+        self.amount.grid(row=0, column=2, padx=(0, 10), pady=0, sticky="e")
 
         # Center the widgets within each column
-        self.columnconfigure(0, weight=1)
+        #self.columnconfigure(0, weight=1)
