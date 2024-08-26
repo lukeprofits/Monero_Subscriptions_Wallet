@@ -8,6 +8,7 @@ from PIL import Image
 import config as cfg
 from config import rpc
 import styles
+import webbrowser
 from src.wallet import Wallet
 
 DUMMY_WALLET = '4Test5rvVypTofgmueN9s9QtrzdRe5BueFrskAZi17BoYbhzysozzoMFB6zWnTKdGC6AxEAbEE5czFR3hbEEJbsm4h4Test'
@@ -104,20 +105,20 @@ class ReceiveView(View):
         get_monero.grid(row=0, column=0, columnspan=4, padx=10, pady=(25, 0), sticky="ew")
 
         # Buy Monero
-        buy_monero = self.add(ctk.CTkButton(right_frame, text="Buy Monero", corner_radius=15, command=self.open_main))
+        buy_monero = self.add(ctk.CTkButton(right_frame, text="Buy Monero", corner_radius=15, command=self.buy_monero))
         buy_monero.grid(row=1, column=0, columnspan=4, padx=40, pady=(0, 5), sticky="ew")
 
         # Earn Monero
-        swap_monero = self.add(ctk.CTkButton(right_frame, text="Earn Monero", corner_radius=15, command=self.open_main))
-        swap_monero.grid(row=2, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
+        earn_monero = self.add(ctk.CTkButton(right_frame, text="Earn Monero", corner_radius=15, command=self.earn_monero))
+        earn_monero.grid(row=2, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
 
         # Sell Stuff For Monero
-        buy_monero = self.add(ctk.CTkButton(right_frame, text="Sell for Monero", corner_radius=15, command=self.open_main))
-        buy_monero.grid(row=3, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
+        sell_for_monero = self.add(ctk.CTkButton(right_frame, text="Sell for Monero", corner_radius=15, command=self.sell_for_monero))
+        sell_for_monero.grid(row=3, column=0, columnspan=4, padx=40, pady=5, sticky="ew")
 
         # Swap For Monero
-        swap_monero = self.add(ctk.CTkButton(right_frame, text="Swap for Monero", corner_radius=15, command=self.open_main))
-        swap_monero.grid(row=4, column=0, columnspan=4, padx=40, pady=(5, 0), sticky="ew")
+        swap_for_monero = self.add(ctk.CTkButton(right_frame, text="Swap for Monero", corner_radius=15, command=self.swap_for_monero))
+        swap_for_monero.grid(row=4, column=0, columnspan=4, padx=40, pady=(5, 0), sticky="ew")
 
 
 
@@ -140,3 +141,18 @@ class ReceiveView(View):
     def copy_wallet_address(self):
         clipboard.copy(wallet)
         self._app.switch_view('main')
+
+    @staticmethod
+    def buy_monero():
+        webbrowser.open("https://haveno.exchange/")
+
+    @staticmethod
+    def earn_monero():
+        webbrowser.open("https://monezon.com/register")
+    @staticmethod
+    def sell_for_monero():
+        webbrowser.open("https://moneromarket.io/")
+
+    @staticmethod
+    def swap_for_monero():
+        webbrowser.open("https://trocador.app/")
