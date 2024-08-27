@@ -76,6 +76,7 @@ class PayView(View):
         next_button = self.add(ctk.CTkButton(self._app, text="Continue", corner_radius=15, command=self.next_button))
         next_button.grid(row=2, column=0, columnspan=3, padx=120, pady=15, sticky="ew")
 
+        self._app.update_idletasks()
         return self
 
     def open_main(self):

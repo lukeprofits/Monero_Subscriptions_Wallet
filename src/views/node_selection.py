@@ -77,6 +77,7 @@ class NodeSelectionView(View):
         info = self.add(ctk.CTkLabel(self._app, text=info_text))
         info.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
+        self._app.update_idletasks()
         return self
 
     def open_main(self):

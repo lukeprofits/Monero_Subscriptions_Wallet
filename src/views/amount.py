@@ -41,6 +41,7 @@ class AmountView(View):
         wallet = self.add(ctk.CTkLabel(self._app, text=f'To Wallet: {util.shortened_wallet(wallet=cfg.SEND_TO_WALLET)}'))  # TODO: Make it so that they can click the wallet to go back to "pay" view
         wallet.grid(row=3, column=0, columnspan=3, padx=10, pady=15, sticky="ew")
 
+        self._app.update_idletasks()
         return self
 
     def open_main(self):
