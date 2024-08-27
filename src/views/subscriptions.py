@@ -15,7 +15,7 @@ class SubscriptionsView(View):
             self._app.geometry(styles.SUBSCRIPTIONS_SMALL_VIEW_GEOMETRY)
 
         # Back button and title
-        styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=20)
+        styles.back_and_title(self, ctk, cfg, title='Manage Subscriptions:', pad_bottom=10)
 
         # Plus Button
         add_image = ctk.CTkImage(Image.open(styles.plus_icon), size=(24, 24))

@@ -2,6 +2,7 @@ import customtkinter as ctk
 from src.interfaces.view import View
 import config as cfg
 import styles
+from datetime import datetime
 
 
 def center_string(s):
@@ -22,7 +23,7 @@ class HistoryView(View):
             self._app.geometry(styles.HISTORY_SMALL_VIEW_GEOMETRY)
 
         # Back button and title
-        styles.back_and_title(self, ctk, cfg, title='Transaction History:', pad_bottom=20)
+        styles.back_and_title(self, ctk, cfg, title='Transaction History:', pad_bottom=10)
 
         # Plus Button
         #add_image = ctk.CTkImage(Image.open(styles.plus_icon), size=(24, 24))
@@ -81,18 +82,22 @@ class TransactionFrame(ctk.CTkFrame):
         amount_text = f"{symbol} {tx["amount"]} XMR"
         payment_name_text = tx["payment_id"][:49] + "…" if len(tx["payment_id"]) >= 50 else tx["payment_id"]
 
-        date_text = f"On {tx["date"][5:].replace("-", "/")}"
+        date_format_string = "%Y-%m-%d"
+        date_text = f"On {datetime.strptime(tx["date"], date_format_string).strftime('%b %d').lstrip('0')}"
 
-        text_color = 'green' if tx["direction"] == "in" else "red"  # TODO: update colors
+        text_color = styles.green if tx["direction"] == "in" else styles.red  # TODO: update colors
 
-        self.payment_name = ctk.CTkLabel(self, text=payment_name_text, font=styles.SUBHEADING_FONT_SIZE, text_color=styles.monero_orange)  # TODO: UPDATE THIS
+        self.payment_name = ctk.CTkLabel(self, text=payment_name_text, font=styles.TX_NAME_FONT_SIZE, text_color=styles.monero_orange)  # TODO: UPDATE THIS
         self.payment_name.grid(row=0, column=0, padx=10, pady=0, sticky="w")
 
-        self.date = ctk.CTkLabel(self, text=date_text, font=styles.SUBHEADING_FONT_SIZE, text_color='grey')
-        self.date.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="w")
+        self.date = ctk.CTkLabel(self, text=date_text, font=styles.TX_DATE_FONT_SIZE, text_color='grey')
+        self.date.grid(row=1, column=0, padx=(10, 0), pady=(0, 20), sticky="w")
 
-        self.amount = ctk.CTkLabel(self, text=amount_text, font=styles.SUBHEADING_FONT_SIZE, text_color=text_color)
+        self.amount = ctk.CTkLabel(self, text=amount_text, font=styles.TX_AMOUNT_FONT_SIZE, text_color=text_color)
         self.amount.grid(row=0, column=2, padx=(0, 10), pady=0, sticky="e")
+
+
+
 
         # Center the widgets within each column
         #self.columnconfigure(0, weight=1)

@@ -30,12 +30,18 @@ HEADINGS_FONT_SIZE = (font, 26)
 SUBHEADING_FONT_SIZE = (font, 16)
 BODY_FONT_SIZE = (font, 14)
 
+TX_NAME_FONT_SIZE = (font, 18)
+TX_DATE_FONT_SIZE = (font, 13)
+TX_AMOUNT_FONT_SIZE = (font, 20)
+
 
 # =====================
 # Hex colors
 # =====================
 monero_orange = '#ff6600'
 ui_overall_background = '#1D1D1D'
+green = '#2cc939'
+red = '#ff0033'
 
 # =====================
 # Other
