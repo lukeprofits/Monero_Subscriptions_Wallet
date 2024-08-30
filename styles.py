@@ -17,6 +17,18 @@ def make_centered_geometry(window_resolution):
     return f'{window_width}x{window_height}+{int(x)}+{int(y)}'
 
 
+# TODO: Work in progress
+def center_window_x(app, to_geometry):
+    from_width = app.winfo_width()
+
+    to_width = int(to_geometry.split('x')[0])
+    to_height = int(to_geometry.split('x')[1])
+
+    shift_x = (to_width - from_width) // 2   # Calculate the difference in half-widths
+    new_x = app.winfo_x() - shift_x
+    return f"{to_width}x{to_height}+{new_x}+{app.winfo_y()}"
+
+
 # =====================
 # Fonts
 # =====================

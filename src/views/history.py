@@ -18,7 +18,8 @@ def center_string(s):
 class HistoryView(View):
     def build(self):
         if len(cfg.transactions) > 4:
-            self._app.geometry(styles.HISTORY_LARGE_VIEW_GEOMETRY)
+            self._app.geometry(styles.center_window_x(self._app, styles.HISTORY_LARGE_VIEW_GEOMETRY))
+            #self._app.geometry(styles.HISTORY_LARGE_VIEW_GEOMETRY)
         else:
             self._app.geometry(styles.HISTORY_SMALL_VIEW_GEOMETRY)
 

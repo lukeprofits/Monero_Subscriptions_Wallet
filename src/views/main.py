@@ -23,6 +23,7 @@ class MainView(View):
         Exchange.refresh_prices()
 
     def build(self):
+        # TODO: Work in progress
         self._app.geometry(self.make_appropriate_geometry())  # Centered on first launch only.
 
         # Configure the main window grid for spacing and alignment
