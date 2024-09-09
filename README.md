@@ -13,8 +13,8 @@ A Monero wallet that automatically pays subscriptions, using the [Monero Payment
   <br><img src="Example.jpg" alt="Monero Subscriptions Wallet"><br>
 </p>
 
-
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Orbitron&pause=2000&width=600&color=FF6600&size=24&lines=How+To+Use:" alt="Typing SVG" /></a>
+# How To Use:
+<!--<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Orbitron&pause=2000&width=600&color=FF6600&size=24&lines=How+To+Use:" alt="Typing SVG" /></a>-->
 
 (Video Coming Soon)
 
