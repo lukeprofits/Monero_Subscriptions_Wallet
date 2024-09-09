@@ -1,4 +1,7 @@
-# Monero Subscriptions Wallet
+<p align="center"> 
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Orbitron&pause=2000&width=600&color=FF6600&lines=Monero+Subscriptions+Wallet" alt="Typing SVG" /></a>
+</p>
+
 ![Supported OS](https://img.shields.io/badge/Supported%20OS-Windows%20/%20Mac%20/%20Linux-blueviolet.svg)
 ![Version 1.2.0](https://img.shields.io/badge/Version-1.2.0-blue.svg)
 ![Python 3.8+](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)
